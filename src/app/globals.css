@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+:root {
+  --color-ink: #0a0a0c;
+  --color-ink-soft: #17181c;
+  --color-navy: #0d1b33;
+  --color-navy-deep: #08121f;
+  --color-orange: #d9622c;
+  --color-orange-soft: #f2c9ae;
+  --color-paper: #faf9f6;
+  --color-paper-alt: #f2f0ea;
+  --color-line: #e6e3da;
+  --color-line-dark: #26282f;
+  --color-muted: #5c5d63;
+  --color-muted-on-dark: #a4a8b4;
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-navy: var(--color-navy);
+  --color-navy-deep: var(--color-navy-deep);
+  --color-orange: var(--color-orange);
+  --color-orange-soft: var(--color-orange-soft);
+  --color-paper: var(--color-paper);
+  --color-paper-alt: var(--color-paper-alt);
+  --color-line: var(--color-line);
+  --color-line-dark: var(--color-line-dark);
+  --color-muted: var(--color-muted);
+  --color-muted-on-dark: var(--color-muted-on-dark);
+
+  --font-sans: var(--font-plex-arabic), var(--font-plex-latin), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-fade-in: fade-in 0.8s ease forwards;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-orange);
+  color: var(--color-paper);
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.reveal.is-visible {
+  animation: var(--animate-fade-up);
+}
