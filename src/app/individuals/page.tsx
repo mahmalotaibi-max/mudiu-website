@@ -67,7 +67,7 @@ export default function IndividualsPage() {
               <RevealOnScroll key={product.slug} delay={i * 100}>
                 <a
                   href={`/products/${product.slug}`}
-                  className="group flex h-full flex-col justify-between rounded-2xl border border-line p-8 transition-all duration-300 hover:-translate-y-1 hover:border-ink hover:shadow-[0_20px_40px_-24px_rgba(10,10,12,0.25)]"
+                  className="group flex h-full flex-col justify-between rounded-2xl border border-line p-8 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-ink hover:shadow-[0_28px_56px_-28px_rgba(13,27,51,0.4)]"
                 >
                   <div>
                     <h3 className="text-lg font-semibold text-ink">{product.name}</h3>

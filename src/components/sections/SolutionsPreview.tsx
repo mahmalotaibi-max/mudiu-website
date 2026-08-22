@@ -21,7 +21,7 @@ export function SolutionsPreview() {
             <RevealOnScroll key={track.key} delay={i * 120}>
               <Link
                 href={track.href}
-                className="group flex h-full flex-col rounded-2xl border border-line bg-paper p-8 transition-all duration-300 hover:-translate-y-1 hover:border-ink hover:shadow-[0_20px_40px_-24px_rgba(10,10,12,0.25)] md:p-10"
+                className="group flex h-full flex-col rounded-2xl border border-line bg-paper p-8 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-ink hover:shadow-[0_28px_56px_-28px_rgba(13,27,51,0.4)] md:p-10"
               >
                 <span className="text-sm font-medium text-orange">{track.label}</span>
                 <p className="mt-4 text-lg leading-relaxed text-ink">{track.description}</p>
