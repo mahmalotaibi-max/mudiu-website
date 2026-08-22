@@ -5,7 +5,7 @@ import { wayOfWork } from "@/content/about";
 export const hero = {
   eyebrow: "استشارات استراتيجية وبناء قدرات مؤسسية",
   titleLines: ["من التحدي…", "إلى أثرٍ مُضيّ."],
-  body: "حلول استراتيجية وتطويرية تساعد الأفراد والمؤسسات على بناء القدرات، تحسين الأداء، وتحويل الطموح إلى نتائج قابلة للقياس.",
+  body: "لا نبدأ بالحل. نبدأ بفهم التحدي.",
   ctaPrimary: { label: "اكتشف حلولنا", href: "/solutions" },
   ctaSecondary: { label: "تعرّف على مُضيّ", href: "/about" },
 };
