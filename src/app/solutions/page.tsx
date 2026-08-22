@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { ServicesNetworkMark } from "@/components/sections/ServicesNetworkMark";
 import { getServicesByCategory, serviceCategories } from "@/content/solutions";
 
 export const metadata: Metadata = {
@@ -15,16 +16,23 @@ export default function SolutionsPage() {
   return (
     <>
       <section className="pt-16 pb-14 md:pt-24 md:pb-20">
-        <Container>
-          <RevealOnScroll className="max-w-2xl">
+        <Container className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
+          <RevealOnScroll>
             <Eyebrow>الخدمات</Eyebrow>
             <h1 className="mt-6 text-3xl font-semibold tracking-tight text-ink md:text-5xl">
               حلول مصممة لتُحرّك الأداء
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-muted md:text-lg">
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-muted md:text-lg">
               ست ركائز خدمية تجمع بين الاستشارات الاستراتيجية، بناء القدرات، والأدوات العملية —
               في منظومة واحدة متكاملة.
             </p>
+            <p className="mt-4 max-w-lg text-base font-medium text-ink">
+              لا نقدّم خدمات منفصلة — نربط النقاط في نظام واحد متكامل.
+            </p>
+          </RevealOnScroll>
+
+          <RevealOnScroll delay={150}>
+            <ServicesNetworkMark />
           </RevealOnScroll>
         </Container>
       </section>
