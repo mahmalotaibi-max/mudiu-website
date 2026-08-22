@@ -17,7 +17,8 @@ export type NavItem = {
 export const primaryNav: NavItem[] = [
   { label: "الرئيسية", href: "/" },
   { label: "من نحن", href: "/about" },
-  { label: "حلولنا", href: "/solutions" },
+  { label: "الخدمات", href: "/solutions" },
+  { label: "المنتجات", href: "/products" },
   { label: "للأفراد", href: "/individuals" },
   { label: "للمؤسسات", href: "/institutions" },
   { label: "المعرفة", href: "/knowledge" },
@@ -25,7 +26,7 @@ export const primaryNav: NavItem[] = [
 ];
 
 export const primaryCta: NavItem = {
-  label: "احجز جلسة تعريفية",
+  label: "ابدأ رحلتك نحو الأثر",
   href: "/contact#booking",
 };
 

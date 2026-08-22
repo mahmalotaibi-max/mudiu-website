@@ -1,6 +1,6 @@
 export type Service = {
   slug: string;
-  category: "strategy" | "capability" | "tools";
+  category: "strategy" | "performance" | "development" | "leadership" | "transformation" | "evaluation";
   name: string;
   summary: string;
   description: string;
@@ -10,18 +10,33 @@ export type Service = {
 export const serviceCategories = [
   {
     key: "strategy" as const,
-    label: "الاستراتيجية والأداء",
-    description: "من التخطيط إلى التنفيذ، وبناء أنظمة أداء تُركّز على ما يهم فعلاً.",
+    label: "الاستراتيجية",
+    description: "مساعدة المؤسسات على تحويل التوجهات الاستراتيجية إلى أولويات واضحة ومبادرات قابلة للتنفيذ والمتابعة.",
   },
   {
-    key: "capability" as const,
-    label: "بناء القدرات",
-    description: "تطوير القيادات والفرق والهياكل التي تحمل الاستراتيجية إلى الواقع.",
+    key: "performance" as const,
+    label: "الأداء والمؤشرات",
+    description: "تصميم وتطوير منظومات الأداء والمؤشرات وربط القياس بالأهداف والنتائج.",
   },
   {
-    key: "tools" as const,
-    label: "الحلول والأدوات",
-    description: "منهجيات وأدوات عملية قابلة للتطبيق المباشر داخل المؤسسة.",
+    key: "development" as const,
+    label: "التطوير المؤسسي",
+    description: "تحسين الهياكل والممارسات والعمليات بما يدعم كفاءة المؤسسة وقدرتها على تحقيق أهدافها.",
+  },
+  {
+    key: "leadership" as const,
+    label: "القيادة وبناء القدرات",
+    description: "تطوير القدرات القيادية والمؤسسية اللازمة لرفع جودة الأداء وتحقيق النتائج.",
+  },
+  {
+    key: "transformation" as const,
+    label: "التحول والتغيير",
+    description: "مساعدة المؤسسات على الانتقال من الوضع الحالي إلى الوضع المستهدف بطريقة منظمة وقابلة للإدارة.",
+  },
+  {
+    key: "evaluation" as const,
+    label: "التقييم والتحسين",
+    description: "تقييم الوضع الحالي، تحديد الفجوات، وتحويل النتائج إلى فرص تحسين عملية.",
   },
 ];
 
@@ -37,7 +52,7 @@ export const services: Service[] = [
   },
   {
     slug: "performance-and-kpis",
-    category: "strategy",
+    category: "performance",
     name: "الأداء والمؤشرات",
     summary: "بناء أنظمة أداء تساعد المنظمات على التركيز على ما يهم فعلاً.",
     description:
@@ -46,7 +61,7 @@ export const services: Service[] = [
   },
   {
     slug: "institutional-development",
-    category: "strategy",
+    category: "development",
     name: "التطوير المؤسسي",
     summary: "تحسين الهياكل ونماذج التشغيل والحوكمة والفعالية التنظيمية.",
     description:
@@ -55,7 +70,7 @@ export const services: Service[] = [
   },
   {
     slug: "institutional-readiness",
-    category: "strategy",
+    category: "evaluation",
     name: "الجاهزية المؤسسية",
     summary: "تقييم الجاهزية وتحويل النتائج إلى خطط تحسين عملية.",
     description:
@@ -64,7 +79,7 @@ export const services: Service[] = [
   },
   {
     slug: "leadership-and-capability",
-    category: "capability",
+    category: "leadership",
     name: "القيادة والقدرات",
     summary: "بناء القدرات التي يحتاجها القادة والفرق للأداء والتكيف.",
     description:
@@ -73,7 +88,7 @@ export const services: Service[] = [
   },
   {
     slug: "transformation-and-change",
-    category: "capability",
+    category: "transformation",
     name: "التحول والتغيير",
     summary: "إدارة التحول بوضوح وجاهزية وتقدّم قابل للقياس.",
     description:
@@ -82,7 +97,7 @@ export const services: Service[] = [
   },
   {
     slug: "institutional-training",
-    category: "capability",
+    category: "leadership",
     name: "التدريب المؤسسي",
     summary: "برامج تدريبية مؤسسية مصممة حول احتياج فعلي، لا محتوى جاهز.",
     description:
@@ -91,7 +106,7 @@ export const services: Service[] = [
   },
   {
     slug: "frameworks-and-tools",
-    category: "tools",
+    category: "development",
     name: "المنهجيات والأدوات",
     summary: "منهجيات وأدوات عملية جاهزة للاستخدام المباشر داخل فرقكم.",
     description:
@@ -100,7 +115,7 @@ export const services: Service[] = [
   },
   {
     slug: "assessment-tools",
-    category: "tools",
+    category: "evaluation",
     name: "أدوات التقييم",
     summary: "أدوات تقييم وقياس مصممة حول سياق كل مؤسسة.",
     description:

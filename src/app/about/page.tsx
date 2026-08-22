@@ -5,7 +5,7 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Button } from "@/components/ui/Button";
 import {
   aboutIntro,
-  positioning,
+  philosophy,
   visionMission,
   values,
   wayOfWork,
@@ -36,11 +36,12 @@ export default function AboutPage() {
       <section className="bg-navy-deep py-20 text-paper md:py-28">
         <Container>
           <RevealOnScroll className="max-w-2xl">
-            <h2 className="text-2xl font-semibold leading-snug tracking-tight md:text-3xl">
-              {positioning.title}
+            <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+              {philosophy.title}
             </h2>
+            <p className="mt-5 text-lg leading-relaxed md:text-xl">{philosophy.body}</p>
             <p className="mt-5 text-base leading-relaxed text-muted-on-dark md:text-lg">
-              {positioning.body}
+              {philosophy.lead}
             </p>
           </RevealOnScroll>
         </Container>
@@ -62,10 +63,10 @@ export default function AboutPage() {
           <RevealOnScroll>
             <Eyebrow>القيم</Eyebrow>
             <h2 className="mt-4 max-w-xl text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-              لماذا تختارنا؟
+              من التحدي إلى الأثر
             </h2>
           </RevealOnScroll>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2">
+          <div className="mt-12 grid gap-6 sm:grid-cols-3">
             {values.map((v, i) => (
               <RevealOnScroll
                 key={v.title}
@@ -106,7 +107,7 @@ export default function AboutPage() {
           <h2 className="max-w-md text-2xl font-semibold tracking-tight text-ink md:text-3xl">
             جاهز لتبدأ رحلتك مع مُضيّ؟
           </h2>
-          <Button href="/contact#booking">احجز جلسة تعريفية</Button>
+          <Button href="/contact#booking">ابدأ رحلتك نحو الأثر</Button>
         </Container>
       </section>
     </>

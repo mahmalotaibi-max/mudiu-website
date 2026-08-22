@@ -1,27 +1,23 @@
 // Homepage-specific content, separated from the section components.
 import { products } from "@/content/products";
+import { wayOfWork } from "@/content/about";
 
 export const hero = {
   eyebrow: "استشارات استراتيجية وبناء قدرات مؤسسية",
-  titleLines: ["من الفكرة…", "إلى أثرٍ مُضيّ."],
+  titleLines: ["من التحدي…", "إلى أثرٍ مُضيّ."],
   body: "حلول استراتيجية وتطويرية تساعد الأفراد والمؤسسات على بناء القدرات، تحسين الأداء، وتحويل الطموح إلى نتائج قابلة للقياس.",
   ctaPrimary: { label: "اكتشف حلولنا", href: "/solutions" },
   ctaSecondary: { label: "تعرّف على مُضيّ", href: "/about" },
 };
 
 export const whyMudiu = {
-  eyebrow: "لماذا مُضيّ؟",
-  title: "رحلة واضحة من الفهم إلى الأثر",
-  steps: [
-    { index: "01", verb: "نفهم", noun: "المشكلة", detail: "نبدأ بتشخيص دقيق للواقع قبل اقتراح أي حل." },
-    { index: "02", verb: "نبني", noun: "الحل", detail: "نصمم منهجيات وأدوات عملية تناسب السياق الفعلي." },
-    { index: "03", verb: "نُمكّن", noun: "الفرق", detail: "ننقل المعرفة إلى الفرق ليتمكنوا من التطبيق بأنفسهم." },
-    { index: "04", verb: "نقيس", noun: "الأثر", detail: "نتابع النتائج بمؤشرات واضحة قابلة للقياس." },
-  ],
+  eyebrow: "منهجية العمل",
+  title: "من التحدي إلى الأثر",
+  steps: wayOfWork.steps,
 };
 
 export const solutionsPreview = {
-  eyebrow: "حلولنا",
+  eyebrow: "الخدمات",
   title: "حلول مصممة لتُحرّك الأداء",
   tracks: [
     {
@@ -50,7 +46,7 @@ export const solutionsPreview = {
 
 export const productsPreview = {
   eyebrow: "منتجات مُضيّ",
-  title: "برامج تطبيقية جاهزة للانطلاق",
+  title: "أدوات وبرامج متخصصة تدعم مسيرتك",
   items: products.map((p) => ({
     slug: p.slug,
     name: p.name,
@@ -81,5 +77,5 @@ export const knowledgePreview = {
 export const ctaSection = {
   title: "جاهز للخطوة التالية؟",
   body: "سواء كنت تطور مسارك المهني أو تعمل على تطوير مؤسستك، لنبدأ من التحدي الحقيقي.",
-  cta: { label: "احجز جلسة تعريفية", href: "/contact#booking" },
+  cta: { label: "ابدأ رحلتك نحو الأثر", href: "/contact#booking" },
 };

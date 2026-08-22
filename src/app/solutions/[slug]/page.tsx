@@ -74,7 +74,7 @@ export default async function ServiceDetailPage({
               التزام مسبق.
             </p>
             <div className="mt-6">
-              <Button href="/contact#booking">احجز جلسة تعريفية</Button>
+              <Button href="/contact#booking">ابدأ رحلتك نحو الأثر</Button>
             </div>
           </RevealOnScroll>
         </Container>

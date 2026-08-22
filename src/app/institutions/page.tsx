@@ -4,7 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { institutionsHero, institutionsJourney, institutionsWhy } from "@/content/institutions";
-import { getServicesByCategory } from "@/content/solutions";
+import { serviceCategories, getServicesByCategory } from "@/content/solutions";
 
 export const metadata: Metadata = {
   title: "للمؤسسات",
@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default function InstitutionsPage() {
-  const strategyServices = getServicesByCategory("strategy");
 
   return (
     <>
@@ -42,18 +41,15 @@ export default function InstitutionsPage() {
             </h2>
           </RevealOnScroll>
 
-          <div className="relative mt-16 grid gap-10 md:grid-cols-5 md:gap-6">
-            <div className="absolute top-6 right-0 left-0 hidden h-px bg-line md:block" aria-hidden />
+          <div className="relative mt-16 grid gap-10 sm:grid-cols-2 md:gap-6 lg:grid-cols-6">
+            <div className="absolute top-6 right-0 left-0 hidden h-px bg-line lg:block" aria-hidden />
             {institutionsJourney.steps.map((step, i) => (
-              <RevealOnScroll key={step.key} delay={i * 80}>
+              <RevealOnScroll key={step.index} delay={i * 80}>
                 <div className="relative">
                   <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-line bg-paper text-xs font-medium text-muted">
-                    {String(i + 1).padStart(2, "0")}
+                    {step.index}
                   </span>
-                  <p className="mt-5 text-sm font-medium uppercase tracking-wide text-orange">
-                    {step.en}
-                  </p>
-                  <p className="mt-1 text-lg font-semibold text-ink">{step.ar}</p>
+                  <p className="mt-5 text-lg font-semibold text-ink">{step.title}</p>
                   <p className="mt-2 text-sm leading-relaxed text-muted">{step.detail}</p>
                 </div>
               </RevealOnScroll>
@@ -65,23 +61,28 @@ export default function InstitutionsPage() {
       <section className="py-20 md:py-28">
         <Container>
           <RevealOnScroll>
-            <Eyebrow>خدمات الاستراتيجية والأداء</Eyebrow>
+            <Eyebrow>الخدمات</Eyebrow>
             <h2 className="mt-4 max-w-xl text-3xl font-semibold tracking-tight text-ink md:text-4xl">
               نقطة انطلاق لكل مؤسسة
             </h2>
           </RevealOnScroll>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {strategyServices.map((s, i) => (
-              <RevealOnScroll key={s.slug} delay={i * 80}>
-                <a
-                  href={`/solutions/${s.slug}`}
-                  className="block h-full rounded-2xl border border-line p-6 transition-colors hover:border-ink"
-                >
-                  <p className="text-sm font-semibold text-ink">{s.name}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">{s.summary}</p>
-                </a>
-              </RevealOnScroll>
-            ))}
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {serviceCategories.map((category, i) => {
+              const firstService = getServicesByCategory(category.key)[0];
+              return (
+                <RevealOnScroll key={category.key} delay={i * 80}>
+                  <a
+                    href={`/solutions/${firstService.slug}`}
+                    className="block h-full rounded-2xl border border-line p-6 transition-colors hover:border-ink"
+                  >
+                    <p className="text-sm font-semibold text-ink">{category.label}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">
+                      {category.description}
+                    </p>
+                  </a>
+                </RevealOnScroll>
+              );
+            })}
           </div>
         </Container>
       </section>
@@ -111,7 +112,7 @@ export default function InstitutionsPage() {
           <h2 className="max-w-md text-2xl font-semibold tracking-tight text-ink md:text-3xl">
             لنبدأ من التحدي الفعلي لمؤسستكم.
           </h2>
-          <Button href="/contact#booking">احجز جلسة تعريفية</Button>
+          <Button href="/contact#booking">ابدأ رحلتك نحو الأثر</Button>
         </Container>
       </section>
     </>

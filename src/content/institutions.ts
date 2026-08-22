@@ -1,3 +1,5 @@
+import { wayOfWork } from "@/content/about";
+
 export const institutionsHero = {
   eyebrow: "للمؤسسات",
   title: "حين يكون التحدي مؤسسيًا، نبدأ من الصورة الكاملة.",
@@ -5,40 +7,9 @@ export const institutionsHero = {
 };
 
 export const institutionsJourney = {
-  eyebrow: "رحلة العمل",
-  title: "من التشخيص إلى استدامة الأثر",
-  steps: [
-    {
-      key: "diagnose",
-      en: "Diagnose",
-      ar: "نُشخّص",
-      detail: "فهم الوضع الحالي بدقة — البيانات، الفجوات، والفرص الفعلية.",
-    },
-    {
-      key: "design",
-      en: "Design",
-      ar: "نُصمّم",
-      detail: "تصميم الحل المناسب لسياق مؤسستكم تحديدًا، لا حلًا جاهزًا موحدًا.",
-    },
-    {
-      key: "enable",
-      en: "Enable",
-      ar: "نُمكّن",
-      detail: "تمكين الفرق من الأدوات والمعرفة اللازمة للتطبيق الفعلي.",
-    },
-    {
-      key: "measure",
-      en: "Measure",
-      ar: "نقيس",
-      detail: "قياس النتائج بمؤشرات واضحة، لا انطباعات عامة.",
-    },
-    {
-      key: "sustain",
-      en: "Sustain",
-      ar: "نُستدام",
-      detail: "استدامة الأثر داخل المؤسسة بعد انتهاء المشاركة المباشرة.",
-    },
-  ],
+  eyebrow: "منهجية العمل",
+  title: "من التحدي إلى الأثر",
+  steps: wayOfWork.steps,
 };
 
 export const institutionsWhy = [

@@ -21,6 +21,12 @@ export async function POST(request: NextRequest) {
   if (!product) {
     return NextResponse.json({ error: "المنتج غير موجود." }, { status: 404 });
   }
+  if (!product.price || !product.currency) {
+    return NextResponse.json(
+      { error: "هذا المنتج غير متاح للشراء حاليًا. تواصل معنا لمعرفة التفاصيل." },
+      { status: 400 }
+    );
+  }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? request.nextUrl.origin;
 

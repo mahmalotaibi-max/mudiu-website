@@ -7,8 +7,8 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { getServicesByCategory, serviceCategories } from "@/content/solutions";
 
 export const metadata: Metadata = {
-  title: "حلولنا",
-  description: "حلول استراتيجية وتطويرية مصممة لتُحرّك الأداء — للأفراد وللمؤسسات.",
+  title: "الخدمات",
+  description: "ست ركائز خدمية تجمع بين الاستشارات الاستراتيجية، بناء القدرات، والأدوات العملية.",
 };
 
 export default function SolutionsPage() {
@@ -17,12 +17,12 @@ export default function SolutionsPage() {
       <section className="pt-16 pb-14 md:pt-24 md:pb-20">
         <Container>
           <RevealOnScroll className="max-w-2xl">
-            <Eyebrow>حلولنا</Eyebrow>
+            <Eyebrow>الخدمات</Eyebrow>
             <h1 className="mt-6 text-3xl font-semibold tracking-tight text-ink md:text-5xl">
               حلول مصممة لتُحرّك الأداء
             </h1>
             <p className="mt-5 text-base leading-relaxed text-muted md:text-lg">
-              ثلاث ركائز تجمع بين الاستشارات الاستراتيجية، بناء القدرات، والأدوات العملية —
+              ست ركائز خدمية تجمع بين الاستشارات الاستراتيجية، بناء القدرات، والأدوات العملية —
               في منظومة واحدة متكاملة.
             </p>
           </RevealOnScroll>

@@ -55,9 +55,9 @@ export default function IndividualsPage() {
         <Container>
           <RevealOnScroll className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <Eyebrow>البرامج والمنتجات</Eyebrow>
+              <Eyebrow>منتجات مُضيّ</Eyebrow>
               <h2 className="mt-4 max-w-xl text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-                برامج تطبيقية جاهزة للانطلاق
+                أدوات وبرامج تدعم تطورك المهني
               </h2>
             </div>
           </RevealOnScroll>
@@ -77,7 +77,9 @@ export default function IndividualsPage() {
                   </div>
                   <div className="mt-8 flex items-center justify-between">
                     <span className="text-sm font-semibold text-ink">
-                      {product.price.toLocaleString("ar-SA")} {product.currency}
+                      {product.price
+                        ? `${product.price.toLocaleString("ar-SA")} ${product.currency}`
+                        : ""}
                     </span>
                     <span className="inline-flex items-center gap-2 text-sm font-medium text-navy">
                       التفاصيل
@@ -99,7 +101,7 @@ export default function IndividualsPage() {
           <h2 className="max-w-md text-2xl font-semibold tracking-tight text-ink md:text-3xl">
             جاهز تطوّر مسارك المهني؟
           </h2>
-          <Button href="/contact#booking">احجز جلسة تعريفية</Button>
+          <Button href="/contact#booking">ابدأ رحلتك نحو الأثر</Button>
         </Container>
       </section>
     </>

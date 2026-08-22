@@ -35,7 +35,7 @@ export function Header() {
           <span className="text-xs text-muted">{brand.nameEn}</span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden xl:flex items-center gap-6">
           {primaryNav.map((item) => {
             const active = pathname === item.href;
             return (
@@ -56,7 +56,7 @@ export function Header() {
           })}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <Link
             href={primaryCta.href}
             className="inline-flex items-center rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-navy"
@@ -68,7 +68,7 @@ export function Header() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full text-ink"
+          className="xl:hidden inline-flex h-10 w-10 items-center justify-center rounded-full text-ink"
           aria-label={open ? "إغلاق القائمة" : "فتح القائمة"}
           aria-expanded={open}
         >
@@ -77,7 +77,7 @@ export function Header() {
       </Container>
 
       {open && (
-        <div className="lg:hidden border-t border-line bg-paper">
+        <div className="xl:hidden border-t border-line bg-paper">
           <Container className="flex flex-col gap-1 py-4">
             {primaryNav.map((item) => (
               <Link

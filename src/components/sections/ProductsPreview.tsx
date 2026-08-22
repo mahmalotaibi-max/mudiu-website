@@ -17,7 +17,7 @@ export function ProductsPreview() {
             </h2>
           </div>
           <Link
-            href="/individuals"
+            href="/products"
             className="hidden shrink-0 items-center gap-2 text-sm font-medium text-ink hover:text-navy sm:inline-flex"
           >
             كل المنتجات
@@ -40,7 +40,9 @@ export function ProductsPreview() {
                 </div>
                 <div className="mt-8 flex items-center justify-between">
                   <span className="text-sm font-semibold text-ink">
-                    {product.price.toLocaleString("ar-SA")} {product.currency}
+                    {product.price
+                      ? `${product.price.toLocaleString("ar-SA")} ${product.currency}`
+                      : ""}
                   </span>
                   <span className="inline-flex items-center gap-2 text-sm font-medium text-navy">
                     التفاصيل
@@ -53,13 +55,6 @@ export function ProductsPreview() {
               </Link>
             </RevealOnScroll>
           ))}
-
-          <RevealOnScroll
-            delay={productsPreview.items.length * 100}
-            className="flex h-full flex-col items-start justify-center rounded-2xl border border-dashed border-line p-8 text-sm text-muted"
-          >
-            منتجات جديدة قادمة قريبًا.
-          </RevealOnScroll>
         </div>
       </Container>
     </section>

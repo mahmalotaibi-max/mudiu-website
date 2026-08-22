@@ -16,7 +16,7 @@ export function HeroMark() {
         xmlns="http://www.w3.org/2000/svg"
         className="h-full w-full"
         role="img"
-        aria-label="رمز يعبر عن التقدم من الفكرة إلى الأثر"
+        aria-label="رمز يعبر عن التقدم من التحدي إلى الأثر"
       >
         <defs>
           <linearGradient id="mudiuProgress" x1="70" y1="360" x2="400" y2="110" gradientUnits="userSpaceOnUse">
@@ -63,7 +63,7 @@ export function HeroMark() {
           className="fill-muted"
           style={{ font: "500 12px var(--font-sans)" }}
         >
-          الفكرة
+          التحدي
         </text>
 
         <text

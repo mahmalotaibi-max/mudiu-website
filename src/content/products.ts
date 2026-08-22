@@ -3,14 +3,16 @@ export type Product = {
   name: string;
   tagline: string;
   description: string;
-  price: number;
-  currency: "SAR";
-  duration: string;
-  forWhom: string[];
-  whatYouLearn: string[];
-  whatYouGet: string[];
-  howItWorks: { title: string; detail: string }[];
-  faq: { question: string; answer: string }[];
+  // Commerce/curriculum details are optional — a product can be listed in
+  // the portfolio before its full offer (price, duration, curriculum) is defined.
+  price?: number;
+  currency?: "SAR";
+  duration?: string;
+  forWhom?: string[];
+  whatYouLearn?: string[];
+  whatYouGet?: string[];
+  howItWorks?: { title: string; detail: string }[];
+  faq?: { question: string; answer: string }[];
 };
 
 export const products: Product[] = [
@@ -60,6 +62,24 @@ export const products: Product[] = [
         answer: "ستحصل على تسجيل الجلسة وملخصًا عمليًا لضمان عدم فقدان أي جزء من المحتوى.",
       },
     ],
+  },
+  {
+    slug: "research",
+    name: "البحث",
+    tagline: "منتج متخصص في دعم البحث وتطوير المخرجات البحثية.",
+    description: "منتج متخصص في دعم البحث وتطوير المخرجات البحثية.",
+  },
+  {
+    slug: "indicators",
+    name: "المؤشرات",
+    tagline: "منتج متخصص في المؤشرات وقياس الأداء.",
+    description: "منتج متخصص في المؤشرات وقياس الأداء.",
+  },
+  {
+    slug: "institutional-performance-evaluation",
+    name: "تقييم الأداء المؤسسي",
+    tagline: "منتج متخصص في تقييم الأداء المؤسسي.",
+    description: "منتج متخصص في تقييم الأداء المؤسسي.",
   },
 ];
 
