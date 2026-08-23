@@ -1,21 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  /* Olive Editorial Consulting identity */
-  --color-ink: #252722; /* Charcoal */
-  --color-ink-soft: #2f322b;
-  --color-navy: #3f4a3c; /* Deep Olive — replaces the old navy role everywhere */
-  --color-navy-deep: #262b23; /* darker olive/charcoal for dark sections */
-  --color-orange: #b49a62; /* Muted Gold — used sparingly, as before */
-  --color-orange-soft: #d9c9a3;
-  --color-paper: #f6f1e7; /* Warm Ivory */
-  --color-paper-alt: #ded0b6; /* Sand, softened for large section fills */
-  --color-line: #ded6bf;
-  --color-line-dark: #454c40;
-  --color-muted: #6b6f60;
-  --color-muted-on-dark: #b9c0ab;
-  --color-sage: #a8b19e;
-  --color-sand: #d8cbb8;
+  /* White + charcoal, orange as the primary accent, navy as a light touch
+     (hover depth, dark sections) — same editorial layout, recolored. */
+  --color-ink: #17181c; /* Charcoal-black */
+  --color-ink-soft: #23242a;
+  --color-navy: #1e2f52; /* the "light touch of blue" — hover depth, dark sections */
+  --color-navy-deep: #12203b;
+  --color-orange: #c1622e; /* primary accent */
+  --color-orange-soft: #e8c6a8;
+  --color-paper: #ffffff;
+  --color-paper-alt: #f5f6f7; /* faint cool-neutral for section breaks */
+  --color-line: #e6e7e6;
+  --color-line-dark: #2b2f38;
+  --color-muted: #5b5d63;
+  --color-muted-on-dark: #a9b2c4;
 }
 
 @theme inline {
@@ -31,8 +30,6 @@
   --color-line-dark: var(--color-line-dark);
   --color-muted: var(--color-muted);
   --color-muted-on-dark: var(--color-muted-on-dark);
-  --color-sage: var(--color-sage);
-  --color-sand: var(--color-sand);
 
   --font-sans: var(--font-plex-arabic), var(--font-plex-latin), ui-sans-serif, system-ui, sans-serif;
 

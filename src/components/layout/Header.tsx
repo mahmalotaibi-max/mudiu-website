@@ -59,7 +59,7 @@ export function Header() {
         <div className="hidden xl:block">
           <Link
             href={primaryCta.href}
-            className="inline-flex items-center rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-all duration-300 hover:-translate-y-0.5 hover:bg-navy hover:shadow-[0_16px_32px_-16px_rgba(63,74,60,0.5)]"
+            className="inline-flex items-center rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-all duration-300 hover:-translate-y-0.5 hover:bg-navy hover:shadow-[0_16px_32px_-16px_rgba(30,47,82,0.5)]"
           >
             {primaryCta.label}
           </Link>
