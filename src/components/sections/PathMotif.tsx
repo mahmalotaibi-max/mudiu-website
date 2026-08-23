@@ -5,7 +5,7 @@ export function PathMotif() {
       preserveAspectRatio="none"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="pointer-events-none absolute inset-0 h-full w-full"
+      className="pointer-events-none absolute inset-x-0 top-0 h-28 w-full md:h-36"
       aria-hidden
     >
       <defs>
