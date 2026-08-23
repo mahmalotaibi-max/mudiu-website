@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Button } from "@/components/ui/Button";
+import { PathMotif } from "@/components/sections/PathMotif";
 import {
   aboutIntro,
   philosophy,
@@ -33,14 +34,15 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="bg-navy-deep py-20 text-paper md:py-28">
-        <Container>
+      <section className="relative overflow-hidden py-20 md:py-28">
+        <PathMotif />
+        <Container className="relative">
           <RevealOnScroll className="max-w-2xl">
-            <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
               {philosophy.title}
             </h2>
-            <p className="mt-5 text-lg leading-relaxed md:text-xl">{philosophy.body}</p>
-            <p className="mt-5 text-base leading-relaxed text-muted-on-dark md:text-lg">
+            <p className="mt-5 text-lg leading-relaxed text-ink md:text-xl">{philosophy.body}</p>
+            <p className="mt-5 text-base leading-relaxed text-muted md:text-lg">
               {philosophy.lead}
             </p>
           </RevealOnScroll>
