@@ -11,7 +11,7 @@ type ButtonProps = {
 
 const variants = {
   primary:
-    "bg-ink text-paper hover:bg-navy hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(13,27,51,0.5)] focus-visible:outline-orange",
+    "bg-ink text-paper hover:bg-navy hover:-translate-y-0.5 hover:shadow-[0_16px_32px_-16px_rgba(63,74,60,0.5)] focus-visible:outline-orange",
   secondary:
     "border border-line text-ink hover:border-ink hover:-translate-y-0.5 focus-visible:outline-orange",
   "ghost-on-dark":

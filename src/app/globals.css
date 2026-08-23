@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --color-ink: #0a0a0c;
-  --color-ink-soft: #17181c;
-  --color-navy: #0d1b33;
-  --color-navy-deep: #08121f;
-  --color-orange: #d9622c;
-  --color-orange-soft: #f2c9ae;
-  --color-paper: #ffffff;
-  --color-paper-alt: #f5f5f4;
-  --color-line: #e7e7e5;
-  --color-line-dark: #26282f;
-  --color-muted: #5c5d63;
-  --color-muted-on-dark: #a4a8b4;
+  /* Olive Editorial Consulting identity */
+  --color-ink: #252722; /* Charcoal */
+  --color-ink-soft: #2f322b;
+  --color-navy: #3f4a3c; /* Deep Olive — replaces the old navy role everywhere */
+  --color-navy-deep: #262b23; /* darker olive/charcoal for dark sections */
+  --color-orange: #b49a62; /* Muted Gold — used sparingly, as before */
+  --color-orange-soft: #d9c9a3;
+  --color-paper: #f6f1e7; /* Warm Ivory */
+  --color-paper-alt: #ded0b6; /* Sand, softened for large section fills */
+  --color-line: #ded6bf;
+  --color-line-dark: #454c40;
+  --color-muted: #6b6f60;
+  --color-muted-on-dark: #b9c0ab;
+  --color-sage: #a8b19e;
+  --color-sand: #d8cbb8;
 }
 
 @theme inline {
@@ -28,6 +31,8 @@
   --color-line-dark: var(--color-line-dark);
   --color-muted: var(--color-muted);
   --color-muted-on-dark: var(--color-muted-on-dark);
+  --color-sage: var(--color-sage);
+  --color-sand: var(--color-sand);
 
   --font-sans: var(--font-plex-arabic), var(--font-plex-latin), ui-sans-serif, system-ui, sans-serif;
 

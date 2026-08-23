@@ -36,7 +36,7 @@ export default function ProductsPage() {
               <RevealOnScroll key={product.slug} delay={i * 80}>
                 <Link
                   href={`/products/${product.slug}`}
-                  className="group flex h-full flex-col justify-between rounded-2xl border border-line p-8 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-ink hover:shadow-[0_28px_56px_-28px_rgba(13,27,51,0.4)]"
+                  className="group flex h-full flex-col justify-between rounded-2xl border border-line p-8 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-ink hover:shadow-[0_28px_56px_-28px_rgba(63,74,60,0.4)]"
                 >
                   <div>
                     <h2 className="text-lg font-semibold text-ink">{product.name}</h2>

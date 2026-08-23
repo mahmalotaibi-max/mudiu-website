@@ -16,34 +16,6 @@ export const whyMudiu = {
   steps: wayOfWork.steps,
 };
 
-export const solutionsPreview = {
-  eyebrow: "الخدمات",
-  title: "حلول مصممة لتُحرّك الأداء",
-  tracks: [
-    {
-      key: "individuals",
-      label: "للأفراد",
-      href: "/individuals",
-      description: "مسارات تطوير مهني تبني القدرة الفعلية لا الشهادة فقط.",
-      items: ["التطوير المهني", "البرامج التدريبية", "المهارات التطبيقية", "الأدوات والمعرفة"],
-    },
-    {
-      key: "institutions",
-      label: "للمؤسسات",
-      href: "/institutions",
-      description: "شراكة استراتيجية تبدأ من التشخيص وتنتهي باستدامة الأثر.",
-      items: [
-        "الاستراتيجية",
-        "تطوير الأداء المؤسسي",
-        "المؤشرات وقياس الأداء",
-        "بناء القدرات",
-        "المنهجيات والأدوات",
-        "التدريب المؤسسي",
-      ],
-    },
-  ],
-};
-
 export const productsPreview = {
   eyebrow: "منتجات مُضيّ",
   title: "أدوات وبرامج متخصصة تدعم مسيرتك",

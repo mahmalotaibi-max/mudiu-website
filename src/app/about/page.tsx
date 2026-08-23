@@ -58,7 +58,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="bg-paper-alt py-20 md:py-28">
+      <section className="bg-paper-alt py-24 md:py-32">
         <Container>
           <RevealOnScroll>
             <Eyebrow>القيم</Eyebrow>
@@ -66,15 +66,22 @@ export default function AboutPage() {
               من التحدي إلى الأثر
             </h2>
           </RevealOnScroll>
-          <div className="mt-12 grid gap-6 sm:grid-cols-3">
+          <div className="mt-16 flex flex-col divide-y divide-line border-t border-line">
             {values.map((v, i) => (
               <RevealOnScroll
                 key={v.title}
                 delay={i * 100}
-                className="rounded-2xl border border-line bg-paper p-8"
+                className="flex flex-col gap-3 py-10 md:flex-row md:items-baseline md:gap-14"
               >
-                <h3 className="text-base font-semibold text-ink">{v.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{v.body}</p>
+                <span className="shrink-0 text-sm font-medium text-orange md:w-16">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="shrink-0 text-2xl font-semibold tracking-tight text-ink md:w-56 md:text-3xl">
+                  {v.title}
+                </h3>
+                <p className="max-w-xl text-base leading-relaxed text-muted md:text-lg">
+                  {v.body}
+                </p>
               </RevealOnScroll>
             ))}
           </div>

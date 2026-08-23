@@ -3,48 +3,48 @@ import { ArrowLeft } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { solutionsPreview } from "@/content/home";
+import { serviceCategories, getServicesByCategory } from "@/content/solutions";
 
 export function SolutionsPreview() {
   return (
-    <section className="bg-paper-alt py-20 md:py-28">
+    <section className="bg-paper-alt py-24 md:py-32">
       <Container>
-        <RevealOnScroll>
-          <Eyebrow>{solutionsPreview.eyebrow}</Eyebrow>
-          <h2 className="mt-4 max-w-xl text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-            {solutionsPreview.title}
+        <RevealOnScroll className="max-w-xl">
+          <Eyebrow>الخدمات</Eyebrow>
+          <h2 className="mt-4 text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+            محفظة مُضيّ — ست ركائز، نظام واحد
           </h2>
+          <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
+            لا نقدّم خدمات منفصلة — كل ركيزة تُبنى على ما قبلها في رحلة واحدة نحو الأثر.
+          </p>
         </RevealOnScroll>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-2">
-          {solutionsPreview.tracks.map((track, i) => (
-            <RevealOnScroll key={track.key} delay={i * 120}>
-              <Link
-                href={track.href}
-                className="group flex h-full flex-col rounded-2xl border border-line bg-paper p-8 transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-ink hover:shadow-[0_28px_56px_-28px_rgba(13,27,51,0.4)] md:p-10"
-              >
-                <span className="text-sm font-medium text-orange">{track.label}</span>
-                <p className="mt-4 text-lg leading-relaxed text-ink">{track.description}</p>
-
-                <ul className="mt-8 flex flex-1 flex-col gap-3">
-                  {track.items.map((item) => (
-                    <li key={item} className="flex items-center gap-3 text-sm text-muted">
-                      <span className="h-1 w-1 rounded-full bg-navy" aria-hidden />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-
-                <span className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-ink">
-                  اطّلع على التفاصيل
+        <div className="mt-16 flex flex-col divide-y divide-line border-t border-line">
+          {serviceCategories.map((category, i) => {
+            const firstService = getServicesByCategory(category.key)[0];
+            return (
+              <RevealOnScroll key={category.key} delay={i * 80}>
+                <Link
+                  href={`/solutions/${firstService.slug}`}
+                  className="group flex flex-col gap-3 py-8 transition-colors md:flex-row md:items-baseline md:gap-14"
+                >
+                  <span className="shrink-0 text-sm font-medium text-orange md:w-16">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="shrink-0 text-xl font-semibold tracking-tight text-ink transition-colors group-hover:text-navy md:w-64 md:text-2xl">
+                    {category.label}
+                  </h3>
+                  <p className="max-w-xl text-sm leading-relaxed text-muted md:text-base">
+                    {category.description}
+                  </p>
                   <ArrowLeft
-                    className="size-4 transition-transform duration-300 group-hover:-translate-x-1"
+                    className="mt-1 size-4 shrink-0 text-ink transition-transform duration-300 group-hover:-translate-x-1 md:ms-auto"
                     aria-hidden
                   />
-                </span>
-              </Link>
-            </RevealOnScroll>
-          ))}
+                </Link>
+              </RevealOnScroll>
+            );
+          })}
         </div>
       </Container>
     </section>

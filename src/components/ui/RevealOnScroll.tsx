@@ -7,10 +7,12 @@ export function RevealOnScroll({
   children,
   className,
   delay = 0,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  style?: React.CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -41,7 +43,7 @@ export function RevealOnScroll({
     <div
       ref={ref}
       className={cn("reveal", className)}
-      style={{ animationDelay: `${delay}ms` }}
+      style={{ animationDelay: `${delay}ms`, ...style }}
     >
       {children}
     </div>
