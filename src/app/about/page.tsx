@@ -71,17 +71,22 @@ export default function AboutPage() {
               <RevealOnScroll
                 key={v.title}
                 delay={i * 100}
-                className="flex flex-col gap-3 py-10 md:flex-row md:items-baseline md:gap-14"
+                className="group flex flex-col gap-2 overflow-hidden py-10 md:flex-row md:items-center md:gap-16"
               >
-                <span className="shrink-0 text-sm font-medium text-orange md:w-16">
+                <span
+                  className="pointer-events-none select-none text-[6.5rem] font-bold leading-none text-ink/[0.06] transition-colors duration-500 group-hover:text-orange/10 md:w-44 md:shrink-0 md:text-[8.5rem]"
+                  aria-hidden
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="shrink-0 text-2xl font-semibold tracking-tight text-ink md:w-56 md:text-3xl">
-                  {v.title}
-                </h3>
-                <p className="max-w-xl text-base leading-relaxed text-muted md:text-lg">
-                  {v.body}
-                </p>
+                <div>
+                  <h3 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
+                    {v.title}
+                  </h3>
+                  <p className="mt-3 max-w-xl text-base leading-relaxed text-muted md:text-lg">
+                    {v.body}
+                  </p>
+                </div>
               </RevealOnScroll>
             ))}
           </div>
