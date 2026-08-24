@@ -43,14 +43,11 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative py-1 text-sm transition-colors",
+                  "py-1 text-sm transition-colors",
                   active ? "text-ink" : "text-muted hover:text-ink"
                 )}
               >
                 {item.label}
-                {active && (
-                  <span className="absolute -bottom-1 right-0 left-0 h-px bg-orange" />
-                )}
               </Link>
             );
           })}

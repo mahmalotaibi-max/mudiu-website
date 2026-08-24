@@ -4,6 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { InstitutionsSystemMark } from "@/components/sections/InstitutionsSystemMark";
+import { MethodologyPath } from "@/components/sections/MethodologyPath";
 import { institutionsHero, institutionsJourney, institutionsWhy } from "@/content/institutions";
 import { serviceCategories, getServicesByCategory } from "@/content/solutions";
 
@@ -46,20 +47,7 @@ export default function InstitutionsPage() {
             </h2>
           </RevealOnScroll>
 
-          <div className="relative mt-16 grid gap-10 sm:grid-cols-2 md:gap-6 lg:grid-cols-6">
-            <div className="absolute top-6 right-0 left-0 hidden h-px bg-line lg:block" aria-hidden />
-            {institutionsJourney.steps.map((step, i) => (
-              <RevealOnScroll key={step.index} delay={i * 80}>
-                <div className="relative">
-                  <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-line bg-paper text-xs font-medium text-muted">
-                    {step.index}
-                  </span>
-                  <p className="mt-5 text-lg font-semibold text-ink">{step.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">{step.detail}</p>
-                </div>
-              </RevealOnScroll>
-            ))}
-          </div>
+          <MethodologyPath steps={institutionsJourney.steps} />
         </Container>
       </section>
 

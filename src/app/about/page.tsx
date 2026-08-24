@@ -4,6 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Button } from "@/components/ui/Button";
 import { PathMotif } from "@/components/sections/PathMotif";
+import { MethodologyPath } from "@/components/sections/MethodologyPath";
 import {
   aboutIntro,
   philosophy,
@@ -104,15 +105,7 @@ export default function AboutPage() {
             </h2>
           </RevealOnScroll>
 
-          <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {wayOfWork.steps.map((step, i) => (
-              <RevealOnScroll key={step.index} delay={i * 80} className="border-t border-line pt-5">
-                <span className="text-xs font-medium text-orange">{step.index}</span>
-                <p className="mt-2 text-lg font-semibold text-ink">{step.title}</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{step.detail}</p>
-              </RevealOnScroll>
-            ))}
-          </div>
+          <MethodologyPath steps={wayOfWork.steps} />
         </Container>
       </section>
 
