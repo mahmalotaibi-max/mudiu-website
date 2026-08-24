@@ -47,7 +47,7 @@ export const knowledgePreview = {
 };
 
 export const ctaSection = {
-  title: "جاهز للخطوة التالية؟",
+  title: "ابدأ رحلتك نحو الأثر",
   body: "سواء كنت تطور مسارك المهني أو تعمل على تطوير مؤسستك، لنبدأ من التحدي الحقيقي.",
-  cta: { label: "ابدأ رحلتك نحو الأثر", href: "/contact#booking" },
+  cta: { label: "احجز جلسة تعريفية", href: "/contact#booking" },
 };

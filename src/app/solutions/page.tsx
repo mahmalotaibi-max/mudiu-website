@@ -50,6 +50,7 @@ export default function SolutionsPage() {
                   <h2 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
                     {category.label}
                   </h2>
+                  <p className="mt-1 text-sm font-medium text-orange">{category.shift}</p>
                   <p className="mt-2 max-w-xl text-sm text-muted">{category.description}</p>
                 </div>
               </RevealOnScroll>

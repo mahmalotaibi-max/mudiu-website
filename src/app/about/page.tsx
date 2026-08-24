@@ -114,7 +114,7 @@ export default function AboutPage() {
           <h2 className="max-w-md text-2xl font-semibold tracking-tight text-ink md:text-3xl">
             جاهز لتبدأ رحلتك مع مُضيّ؟
           </h2>
-          <Button href="/contact#booking">ابدأ رحلتك نحو الأثر</Button>
+          <Button href="/contact#booking">احجز جلسة تعريفية</Button>
         </Container>
       </section>
     </>

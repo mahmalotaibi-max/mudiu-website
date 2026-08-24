@@ -31,9 +31,12 @@ export function SolutionsPreview() {
                   <span className="shrink-0 text-sm font-medium text-orange md:w-16">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="shrink-0 text-xl font-semibold tracking-tight text-ink transition-colors group-hover:text-navy md:w-64 md:text-2xl">
-                    {category.label}
-                  </h3>
+                  <div className="shrink-0 md:w-64">
+                    <h3 className="text-xl font-semibold tracking-tight text-ink transition-colors group-hover:text-navy md:text-2xl">
+                      {category.label}
+                    </h3>
+                    <p className="mt-1 text-sm font-medium text-orange">{category.shift}</p>
+                  </div>
                   <p className="max-w-xl text-sm leading-relaxed text-muted md:text-base">
                     {category.description}
                   </p>

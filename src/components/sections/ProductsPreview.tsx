@@ -15,6 +15,10 @@ export function ProductsPreview() {
             <h2 className="mt-4 max-w-xl text-3xl font-semibold tracking-tight text-ink md:text-4xl">
               {productsPreview.title}
             </h2>
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted md:text-base">
+              الاستشارات نأتي فيها إلى مشكلتكم ونصمم الحل معكم. المنتجات أدوات ومنهجيات جاهزة
+              تساعدكم على التحرك الآن.
+            </p>
           </div>
           <Link
             href="/products"

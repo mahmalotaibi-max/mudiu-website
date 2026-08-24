@@ -69,6 +69,7 @@ export default function InstitutionsPage() {
                     className="block h-full rounded-2xl border border-line p-6 transition-colors hover:border-ink"
                   >
                     <p className="text-sm font-semibold text-ink">{category.label}</p>
+                    <p className="mt-1 text-xs font-medium text-orange">{category.shift}</p>
                     <p className="mt-2 text-sm leading-relaxed text-muted">
                       {category.description}
                     </p>
@@ -105,7 +106,7 @@ export default function InstitutionsPage() {
           <h2 className="max-w-md text-2xl font-semibold tracking-tight text-ink md:text-3xl">
             لنبدأ من التحدي الفعلي لمؤسستكم.
           </h2>
-          <Button href="/contact#booking">ابدأ رحلتك نحو الأثر</Button>
+          <Button href="/contact#booking">احجز جلسة تعريفية</Button>
         </Container>
       </section>
     </>

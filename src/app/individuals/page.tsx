@@ -106,7 +106,7 @@ export default function IndividualsPage() {
           <h2 className="max-w-md text-2xl font-semibold tracking-tight text-ink md:text-3xl">
             جاهز تطوّر مسارك المهني؟
           </h2>
-          <Button href="/contact#booking">ابدأ رحلتك نحو الأثر</Button>
+          <Button href="/contact#booking">احجز جلسة تعريفية</Button>
         </Container>
       </section>
     </>
