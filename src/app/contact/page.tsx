@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { ContactForm } from "@/components/ContactForm";
+import { ContactConnectMark } from "@/components/sections/ContactConnectMark";
 import { contact } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -15,7 +16,8 @@ export default function ContactPage() {
   return (
     <section id="booking" className="pt-16 pb-24 md:pt-24 md:pb-32">
       <Container className="grid gap-16 lg:grid-cols-[1fr_1.2fr]">
-        <RevealOnScroll>
+        <RevealOnScroll className="relative">
+          <ContactConnectMark />
           <Eyebrow>تواصل معنا</Eyebrow>
           <h1 className="mt-6 text-3xl font-semibold tracking-tight text-ink md:text-5xl">
             لنبدأ من التحدي.

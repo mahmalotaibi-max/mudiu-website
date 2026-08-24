@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { individualsHero, individualsTracks } from "@/content/individuals";
 import { productsPreview } from "@/content/home";
+import { IndividualsGrowthMark } from "@/components/sections/IndividualsGrowthMark";
 
 export const metadata: Metadata = {
   title: "للأفراد",
@@ -16,15 +17,19 @@ export default function IndividualsPage() {
   return (
     <>
       <section className="pt-16 pb-16 md:pt-24 md:pb-20">
-        <Container className="max-w-3xl">
+        <Container className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
           <RevealOnScroll>
             <Eyebrow>{individualsHero.eyebrow}</Eyebrow>
             <h1 className="mt-6 text-3xl font-semibold leading-snug tracking-tight text-ink md:text-5xl">
               {individualsHero.title}
             </h1>
-            <p className="mt-6 text-base leading-relaxed text-muted md:text-lg">
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted md:text-lg">
               {individualsHero.body}
             </p>
+          </RevealOnScroll>
+
+          <RevealOnScroll delay={150}>
+            <IndividualsGrowthMark />
           </RevealOnScroll>
         </Container>
       </section>
