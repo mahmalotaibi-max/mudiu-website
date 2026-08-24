@@ -68,8 +68,7 @@ export function MethodologyPath({ steps }: { steps: Step[] }) {
               className="mudiu-step w-[15%] text-center"
               style={{ marginTop: i % 2 === 0 ? "5.5rem" : "0.5rem" }}
             >
-              <span className="text-xs font-medium text-orange">{step.index}</span>
-              <p className="mt-2 text-lg font-semibold text-ink">{step.title}</p>
+              <p className="text-lg font-semibold text-ink">{step.title}</p>
               <p className="mt-2 text-sm leading-relaxed text-muted">{step.detail}</p>
             </RevealOnScroll>
           ))}
@@ -92,8 +91,7 @@ export function MethodologyPath({ steps }: { steps: Step[] }) {
               }}
               aria-hidden
             />
-            <span className="text-xs font-medium text-orange">{step.index}</span>
-            <p className="mt-1 text-lg font-semibold text-ink">{step.title}</p>
+            <p className="text-lg font-semibold text-ink">{step.title}</p>
             <p className="mt-2 text-sm leading-relaxed text-muted">{step.detail}</p>
           </RevealOnScroll>
         ))}
