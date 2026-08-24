@@ -7,7 +7,7 @@ export default function PurchaseTermsPage() {
   return (
     <LegalPage
       title="شروط وأحكام الشراء"
-      updated="—"
+      updated="٢٤ أغسطس ٢٠٢٦"
       sections={[
         {
           heading: "الأسعار والدفع",

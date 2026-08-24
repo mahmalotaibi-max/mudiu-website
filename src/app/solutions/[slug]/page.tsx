@@ -70,7 +70,7 @@ export default async function ServiceDetailPage({
 
           <RevealOnScroll delay={100} className="mt-14 rounded-2xl border border-line p-8">
             <p className="text-sm leading-relaxed text-muted">
-              كل مشاركة تبدأ من جلسة تعريفية نفهم فيها التحدي الفعلي قبل اقتراح أي حل — دون
+              كل مشاركة تبدأ من جلسة تعريفية نفهم فيها التحدي الفعلي قبل اقتراح أي حل، دون
               التزام مسبق.
             </p>
             <div className="mt-6">

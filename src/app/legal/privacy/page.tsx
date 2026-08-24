@@ -7,7 +7,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="سياسة الخصوصية"
-      updated="—"
+      updated="٢٤ أغسطس ٢٠٢٦"
       sections={[
         {
           heading: "البيانات التي نجمعها",

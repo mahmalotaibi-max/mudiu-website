@@ -8,7 +8,7 @@ import { contact } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "تواصل معنا",
-  description: "لنبدأ من التحدي — تواصل مع فريق مُضيّ وابدأ رحلتك نحو الأثر.",
+  description: "لنبدأ من التحدي. تواصل مع فريق مُضيّ وابدأ رحلتك نحو الأثر.",
 };
 
 export default function ContactPage() {

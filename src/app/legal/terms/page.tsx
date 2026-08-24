@@ -7,7 +7,7 @@ export default function TermsPage() {
   return (
     <LegalPage
       title="الشروط والأحكام"
-      updated="—"
+      updated="٢٤ أغسطس ٢٠٢٦"
       sections={[
         {
           heading: "نطاق الخدمة",

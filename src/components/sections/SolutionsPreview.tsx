@@ -12,10 +12,10 @@ export function SolutionsPreview() {
         <RevealOnScroll className="max-w-xl">
           <Eyebrow>الخدمات</Eyebrow>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-            محفظة مُضيّ — ست ركائز، نظام واحد
+            محفظة مُضيّ: ست ركائز في نظام واحد
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted md:text-lg">
-            لا نقدّم خدمات منفصلة — كل ركيزة تُبنى على ما قبلها في رحلة واحدة نحو الأثر.
+            لا نقدّم خدمات منفصلة. كل ركيزة تُبنى على ما قبلها في رحلة واحدة نحو الأثر.
           </p>
         </RevealOnScroll>
 

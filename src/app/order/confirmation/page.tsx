@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const statusCopy: Record<string, { title: string; body: string }> = {
   paid: {
     title: "تم الدفع بنجاح",
-    body: "شكرًا لك — تم تأكيد طلبك وستصلك تفاصيل الوصول إلى المنتج على بريدك الإلكتروني.",
+    body: "شكرًا لك، تم تأكيد طلبك وستصلك تفاصيل الوصول إلى المنتج على بريدك الإلكتروني.",
   },
   unpaid: {
     title: "الدفع قيد المعالجة",

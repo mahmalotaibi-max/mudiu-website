@@ -8,7 +8,7 @@ import { products } from "@/content/products";
 
 export const metadata: Metadata = {
   title: "المنتجات",
-  description: "محفظة مُضيّ من المنتجات والأدوات المتخصصة — منفصلة عن خدماتنا الاستشارية.",
+  description: "محفظة مُضيّ من المنتجات والأدوات المتخصصة، منفصلة عن خدماتنا الاستشارية.",
 };
 
 export default function ProductsPage() {
@@ -22,7 +22,7 @@ export default function ProductsPage() {
               أدوات وبرامج متخصصة تدعم مسيرتك
             </h1>
             <p className="mt-5 text-base leading-relaxed text-muted md:text-lg">
-              منتجات مُضيّ منفصلة عن خدماتنا الاستشارية — أدوات وبرامج تطبيقية جاهزة للاستخدام
+              منتجات مُضيّ منفصلة عن خدماتنا الاستشارية. أدوات وبرامج تطبيقية جاهزة للاستخدام
               المباشر.
             </p>
           </RevealOnScroll>

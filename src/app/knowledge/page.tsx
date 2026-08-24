@@ -53,7 +53,7 @@ export default function KnowledgePage() {
           {articles.length === 0 ? (
             <RevealOnScroll className="rounded-3xl border border-dashed border-line px-8 py-20 text-center">
               <p className="text-base text-muted">
-                المحتوى المعرفي قيد الإعداد — أول مقالاتنا في الطريق قريبًا.
+                المحتوى المعرفي قيد الإعداد. أول مقالاتنا في الطريق قريبًا.
               </p>
             </RevealOnScroll>
           ) : (

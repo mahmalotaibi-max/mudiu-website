@@ -23,11 +23,11 @@ export default function SolutionsPage() {
               حلول مصممة لتُحرّك الأداء
             </h1>
             <p className="mt-5 max-w-lg text-base leading-relaxed text-muted md:text-lg">
-              ست ركائز خدمية تجمع بين الاستشارات الاستراتيجية، بناء القدرات، والأدوات العملية —
+              ست ركائز خدمية تجمع بين الاستشارات الاستراتيجية، بناء القدرات، والأدوات العملية،
               في منظومة واحدة متكاملة.
             </p>
             <p className="mt-4 max-w-lg text-base font-medium text-ink">
-              لا نقدّم خدمات منفصلة — نربط النقاط في نظام واحد متكامل.
+              لا نقدّم خدمات منفصلة. نربط النقاط في نظام واحد متكامل.
             </p>
           </RevealOnScroll>
 

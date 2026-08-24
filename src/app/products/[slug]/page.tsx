@@ -58,7 +58,7 @@ export default async function ProductPage({
             ) : (
               <div className="flex flex-col gap-4">
                 <p className="text-sm leading-relaxed text-muted">
-                  تفاصيل هذا المنتج (المدة والسعر) قيد الإعداد — تواصل معنا لمعرفة أحدث المعلومات.
+                  تفاصيل هذا المنتج (المدة والسعر) قيد الإعداد. تواصل معنا لمعرفة أحدث المعلومات.
                 </p>
                 <Button href="/contact#booking">تواصل معنا</Button>
               </div>
