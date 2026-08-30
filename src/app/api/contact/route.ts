@@ -1,16 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { appendRecord } from "@/lib/fileStore";
-
-type ContactSubmission = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  clientType: "individual" | "institution";
-  requestType: string;
-  message: string;
-  submittedAt: string;
-};
+import { sendMail } from "@/lib/mailer";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -28,18 +17,31 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "بيانات الطلب غير مكتملة." }, { status: 400 });
   }
 
-  const submission: ContactSubmission = {
-    id: crypto.randomUUID(),
-    name: name.trim(),
-    email: email.trim(),
-    phone: typeof phone === "string" ? phone.trim() : "",
-    clientType,
-    requestType: typeof requestType === "string" ? requestType.trim() : "",
-    message: message.trim(),
-    submittedAt: new Date().toISOString(),
-  };
+  const clientTypeAr = clientType === "individual" ? "فرد" : "مؤسسة";
+  const phoneTrimmed = typeof phone === "string" ? phone.trim() : "";
+  const requestTypeTrimmed = typeof requestType === "string" ? requestType.trim() : "";
 
-  await appendRecord<ContactSubmission>("contact-submissions.json", submission);
+  try {
+    await sendMail({
+      subject: `طلب تواصل جديد من ${name.trim()}`,
+      replyTo: email.trim(),
+      text: [
+        `الاسم: ${name.trim()}`,
+        `البريد الإلكتروني: ${email.trim()}`,
+        `رقم الجوال: ${phoneTrimmed || "—"}`,
+        `نوع المتواصل: ${clientTypeAr}`,
+        `نوع الطلب: ${requestTypeTrimmed || "—"}`,
+        "",
+        "الرسالة:",
+        message.trim(),
+      ].join("\n"),
+    });
+  } catch {
+    return NextResponse.json(
+      { error: "تعذّر إرسال رسالتك حاليًا. حاول لاحقًا أو تواصل معنا مباشرة على الجوال أو واتساب." },
+      { status: 503 }
+    );
+  }
 
-  return NextResponse.json({ ok: true, id: submission.id });
+  return NextResponse.json({ ok: true });
 }
