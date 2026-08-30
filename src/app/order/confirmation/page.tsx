@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import type Stripe from "stripe";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { getStripe } from "@/lib/stripe";
-import { getOrderBySessionId } from "@/lib/orders";
+import { getProductBySlug } from "@/content/products";
 
 export const metadata: Metadata = {
   title: "تأكيد الطلب",
@@ -39,18 +40,15 @@ export default async function OrderConfirmationPage({
     );
   }
 
-  let paymentStatus: string | null = null;
+  let session: Stripe.Checkout.Session | null = null;
   try {
     const stripe = getStripe();
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    paymentStatus = session.payment_status;
+    session = await stripe.checkout.sessions.retrieve(sessionId);
   } catch {
-    paymentStatus = null;
+    session = null;
   }
 
-  const order = await getOrderBySessionId(sessionId);
-
-  if (!paymentStatus || !order) {
+  if (!session) {
     return (
       <EmptyState
         title="تعذّر تأكيد حالة الطلب"
@@ -58,6 +56,11 @@ export default async function OrderConfirmationPage({
       />
     );
   }
+
+  const paymentStatus = session.payment_status;
+  const productSlug = session.metadata?.productSlug;
+  const product = productSlug ? getProductBySlug(productSlug) : undefined;
+  const customerEmail = session.customer_details?.email ?? session.customer_email ?? "—";
 
   const copy = statusCopy[paymentStatus] ?? {
     title: "حالة الطلب غير معروفة",
@@ -74,9 +77,9 @@ export default async function OrderConfirmationPage({
           <p className="mt-4 text-sm leading-relaxed text-muted">{copy.body}</p>
 
           <dl className="mt-8 flex flex-col gap-3 border-t border-line pt-6 text-right">
-            <Row label="المنتج" value={order.productName} />
-            <Row label="رقم الطلب" value={order.id} mono />
-            <Row label="البريد المستخدم" value={order.customerEmail} />
+            <Row label="المنتج" value={product?.name ?? "—"} />
+            <Row label="رقم الطلب" value={session.id} mono />
+            <Row label="البريد المستخدم" value={customerEmail} />
             <Row
               label="حالة الدفع"
               value={paymentStatus === "paid" ? "مدفوع" : paymentStatus}
