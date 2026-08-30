@@ -56,6 +56,27 @@ function Block({ block }: { block: ArticleBlock }) {
           {block.text}
         </blockquote>
       );
+    case "references":
+      return (
+        <div className="my-8 rounded-2xl border border-line p-6">
+          <h3 className="text-sm font-semibold text-muted">المراجع والمصادر</h3>
+          <ol className="mt-4 space-y-2">
+            {block.items.map((ref, i) => (
+              <li key={i} className="text-sm leading-relaxed text-ink/80">
+                <span className="text-muted">[{i + 1}] </span>
+                <a
+                  href={ref.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange underline underline-offset-2 hover:text-ink"
+                >
+                  {ref.label}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      );
     case "paragraph":
     default:
       return <p className="my-5 text-base leading-8 text-ink/90 md:text-lg">{block.text}</p>;
