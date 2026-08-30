@@ -60,7 +60,7 @@ export default async function OrderConfirmationPage({
   const paymentStatus = session.payment_status;
   const productSlug = session.metadata?.productSlug;
   const product = productSlug ? getProductBySlug(productSlug) : undefined;
-  const customerEmail = session.customer_details?.email ?? session.customer_email ?? "—";
+  const customerEmail = session.customer_details?.email ?? session.customer_email ?? "-";
 
   const copy = statusCopy[paymentStatus] ?? {
     title: "حالة الطلب غير معروفة",
@@ -77,7 +77,7 @@ export default async function OrderConfirmationPage({
           <p className="mt-4 text-sm leading-relaxed text-muted">{copy.body}</p>
 
           <dl className="mt-8 flex flex-col gap-3 border-t border-line pt-6 text-right">
-            <Row label="المنتج" value={product?.name ?? "—"} />
+            <Row label="المنتج" value={product?.name ?? "-"} />
             <Row label="رقم الطلب" value={session.id} mono />
             <Row label="البريد المستخدم" value={customerEmail} />
             <Row
