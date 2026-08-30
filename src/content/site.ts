@@ -42,6 +42,14 @@ export const contact = {
   phoneDisplay: "+966 53 981 3233",
   phoneE164: "+966539813233",
   whatsappUrl: "https://wa.me/966539813233",
+  email: "mudiu2research@gmail.com",
+};
+
+export const legalEntity = {
+  nameAr: "مؤسسة مكتب مضي للبحوث والدراسات",
+  crNumber: "1010802818",
+  crDateHijri: "26/10/1443هـ",
+  country: "المملكة العربية السعودية",
 };
 
 export const siteMeta = {
