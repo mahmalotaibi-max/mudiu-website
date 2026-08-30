@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { getProductBySlug } from "@/content/products";
-import { createOrder } from "@/lib/orders";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -63,19 +62,6 @@ export async function POST(request: NextRequest) {
     },
     success_url: `${siteUrl}/order/confirmation?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl}/checkout/cancelled`,
-  });
-
-  await createOrder({
-    id: crypto.randomUUID(),
-    productSlug: product.slug,
-    productName: product.name,
-    amount: product.price,
-    currency: product.currency,
-    customerName: customerName.trim(),
-    customerEmail: customerEmail.trim(),
-    paymentStatus: "pending",
-    stripeCheckoutSessionId: session.id,
-    stripePaymentIntentId: null,
   });
 
   return NextResponse.json({ url: session.url });
