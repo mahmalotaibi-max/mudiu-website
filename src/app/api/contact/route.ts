@@ -28,9 +28,9 @@ export async function POST(request: NextRequest) {
       text: [
         `الاسم: ${name.trim()}`,
         `البريد الإلكتروني: ${email.trim()}`,
-        `رقم الجوال: ${phoneTrimmed || "—"}`,
+        `رقم الجوال: ${phoneTrimmed || "-"}`,
         `نوع المتواصل: ${clientTypeAr}`,
-        `نوع الطلب: ${requestTypeTrimmed || "—"}`,
+        `نوع الطلب: ${requestTypeTrimmed || "-"}`,
         "",
         "الرسالة:",
         message.trim(),
