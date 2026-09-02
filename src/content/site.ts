@@ -42,7 +42,7 @@ export const contact = {
   phoneDisplay: "+966 53 981 3233",
   phoneE164: "+966539813233",
   whatsappUrl: "https://wa.me/966539813233",
-  email: "mudiu2research@gmail.com",
+  email: "hello@mudiu.co",
 };
 
 export const legalEntity = {
