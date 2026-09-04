@@ -1,21 +1,22 @@
 export function ContactConnectMark() {
   return (
     <svg
-      viewBox="0 0 420 420"
+      viewBox="0 0 480 140"
+      preserveAspectRatio="none"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="pointer-events-none absolute -inset-x-6 -top-10 -z-10 h-[420px] w-[420px] opacity-[0.14]"
+      className="pointer-events-none absolute inset-x-0 -bottom-6 -z-10 h-20 w-full opacity-[0.14] md:h-28"
       aria-hidden
     >
       <defs>
-        <linearGradient id="connectGradient" x1="40" y1="360" x2="360" y2="60" gradientUnits="userSpaceOnUse">
+        <linearGradient id="connectGradient" x1="20" y1="110" x2="460" y2="30" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="var(--color-ink)" />
           <stop offset="100%" stopColor="var(--color-orange)" />
         </linearGradient>
       </defs>
 
       <path
-        d="M40,360 C120,320 160,280 200,220 C250,150 280,110 360,60"
+        d="M20,110 C120,90 160,50 240,60 C320,70 360,30 460,30"
         stroke="url(#connectGradient)"
         strokeWidth="2"
         strokeLinecap="round"
@@ -24,8 +25,8 @@ export function ContactConnectMark() {
         className="mudiu-connect-draw"
       />
 
-      <circle cx="40" cy="360" r="6" fill="var(--color-ink)" />
-      <circle cx="360" cy="60" r="9" fill="var(--color-orange)" />
+      <circle cx="20" cy="110" r="6" fill="var(--color-ink)" />
+      <circle cx="460" cy="30" r="9" fill="var(--color-orange)" />
 
       <style>{`
         .mudiu-connect-draw {
