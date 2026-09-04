@@ -67,6 +67,7 @@ export default function KnowledgePage() {
                   >
                     <ArticleCover
                       type={item.type}
+                      icon={item.icon}
                       className="aspect-video w-full transition-transform duration-300 group-hover:scale-[1.02]"
                     />
                     <span className="mt-5 text-xs font-medium text-orange">{item.type}</span>

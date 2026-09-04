@@ -1,8 +1,21 @@
-import { FileText, Lightbulb, Compass, Wrench, FlaskConical, LayoutTemplate } from "lucide-react";
+import {
+  FileText,
+  Lightbulb,
+  Compass,
+  Wrench,
+  FlaskConical,
+  LayoutTemplate,
+  Target,
+  GraduationCap,
+  TrendingUp,
+  Users,
+  ShieldCheck,
+  type LucideIcon,
+} from "lucide-react";
 import type { KnowledgeType } from "@/content/knowledge";
 import { cn } from "@/lib/utils";
 
-const typeIcon: Record<KnowledgeType, typeof FileText> = {
+const typeIcon: Record<KnowledgeType, LucideIcon> = {
   مقال: FileText,
   رؤية: Lightbulb,
   دليل: Compass,
@@ -20,16 +33,35 @@ const typeTone: Record<KnowledgeType, "orange" | "navy"> = {
   قالب: "navy",
 };
 
+// Optional per-article override so a cover can reflect the article's actual
+// subject instead of just its content type — pick whichever reads closest
+// to what the piece is about.
+export const articleCoverIcons = {
+  "test-idea": FlaskConical,
+  target: Target,
+  compass: Compass,
+  growth: TrendingUp,
+  learning: GraduationCap,
+  team: Users,
+  trust: ShieldCheck,
+  idea: Lightbulb,
+  tool: Wrench,
+} as const;
+
+export type ArticleCoverIcon = keyof typeof articleCoverIcons;
+
 export function ArticleCover({
   type,
+  icon,
   className,
   iconClassName,
 }: {
   type: KnowledgeType;
+  icon?: ArticleCoverIcon;
   className?: string;
   iconClassName?: string;
 }) {
-  const Icon = typeIcon[type];
+  const Icon = icon ? articleCoverIcons[icon] : typeIcon[type];
   const tone = typeTone[type];
 
   return (

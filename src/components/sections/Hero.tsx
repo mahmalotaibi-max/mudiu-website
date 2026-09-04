@@ -63,13 +63,7 @@ export function Hero() {
 
         <div className="relative animate-fade-in [animation-delay:200ms]">
           <HeroLiveMark />
-          <p className="mt-2 text-center text-sm text-muted">
-            <span className="font-semibold text-ink">{whyMudiu.title}</span>
-            <span className="mx-2" aria-hidden>
-              ·
-            </span>
-            {hero.eyebrow}
-          </p>
+          <p className="mt-2 text-center text-sm font-semibold text-ink">{whyMudiu.title}</p>
         </div>
       </Container>
     </section>

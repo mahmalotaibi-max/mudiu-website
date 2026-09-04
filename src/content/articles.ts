@@ -6,6 +6,7 @@
 // page and /knowledge/[slug] pick it up automatically.
 
 import type { KnowledgeType } from "@/content/knowledge";
+import type { ArticleCoverIcon } from "@/components/sections/ArticleCover";
 
 export type ArticleBlock =
   | { type: "paragraph"; text: string }
@@ -21,6 +22,8 @@ export type Article = {
   summary: string;
   date: string; // ISO date
   readMinutes: number;
+  /** Optional cover icon reflecting the article's actual subject — falls back to the type's default icon when omitted. */
+  icon?: ArticleCoverIcon;
   blocks: ArticleBlock[];
 };
 
@@ -28,6 +31,7 @@ export const articles: Article[] = [
   {
     slug: "test-your-idea-before-you-build",
     type: "رؤية",
+    icon: "test-idea",
     title: "قبل أن تبني مشروعك... جرّب فكرته أولًا",
     summary:
       "كل مشروع ناجح بدأ بفكرة، لكن ليست كل فكرة جيدة مشروعًا ناجحًا. كيف اختبرت Zappos وDropbox أهم افتراضاتهما بأقل تكلفة ممكنة، قبل أن تلتزما ببناء أي شيء.",
@@ -168,6 +172,7 @@ export const articles: Article[] = [
   {
     slug: "kpis-that-actually-move-performance",
     type: "رؤية",
+    icon: "target",
     title: "لماذا تفشل أغلب مؤشرات الأداء في تغيير أي شيء؟",
     summary:
       "أغلب لوحات المؤشرات في المؤسسات موجودة، لكنها لا تُستخدم لاتخاذ قرار واحد. إليك الفرق بين مؤشر يُقاس ومؤشر يُحرّك الأداء فعليًا.",
@@ -207,6 +212,7 @@ export const articles: Article[] = [
   {
     slug: "strategy-compass-not-map",
     type: "رؤية",
+    icon: "compass",
     title: "كيف تقود الاستراتيجية تموضع المؤسسة ونجاحها؟",
     summary:
       "الاستراتيجية الناجحة ليست خريطة ثابتة المسار، بل بوصلة تتحرك مع احتياج المؤسسة وهدفها وتموضعها. إليك ما تقوله الأدلة العلمية، وتجارب Netflix وFujifilm، عن قيادة التحول الاستراتيجي.",
@@ -343,6 +349,7 @@ export const articles: Article[] = [
   {
     slug: "from-training-to-capability",
     type: "مقال",
+    icon: "learning",
     title: "الفرق بين \"حضور دورة\" و\"اكتساب قدرة\"",
     summary:
       "التدريب وحده لا يبني قدرة. هذا ما تعلمناه من بناء برامج تطبيقية للأفراد والمؤسسات، وكيف نصمم البرامج لتترك أثرًا يبقى بعد انتهاء الجلسة.",
