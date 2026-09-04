@@ -63,25 +63,39 @@ export default function AboutPage() {
 
       <section className="py-20 md:py-28">
         <Container>
-          <div className="grid items-stretch overflow-hidden rounded-3xl border border-line bg-paper-alt lg:grid-cols-[0.85fr_1.15fr]">
-            <RevealOnScroll className="relative flex flex-col items-start justify-center gap-6 p-10 md:p-14">
+          <div className="group grid items-stretch overflow-hidden rounded-3xl border border-line transition-all duration-500 hover:border-orange/40 hover:shadow-[0_32px_64px_-32px_rgba(193,98,46,0.35)] lg:grid-cols-[0.85fr_1.15fr]">
+            <RevealOnScroll className="relative flex flex-col items-start justify-center gap-6 overflow-hidden p-10 md:p-14">
               <div
-                className="pointer-events-none absolute inset-0 opacity-[0.05]"
+                className="absolute inset-0 -z-20 transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-deep) 45%, var(--color-orange) 100%)",
+                }}
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute -top-16 -right-16 -z-10 h-56 w-56 rounded-full bg-orange/30 blur-3xl transition-transform duration-700 ease-out group-hover:translate-x-3 group-hover:-translate-y-3"
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute inset-0 -z-10 opacity-[0.08]"
                 style={{
                   backgroundImage:
-                    "radial-gradient(circle, var(--color-ink) 1px, transparent 1px)",
+                    "radial-gradient(circle, var(--color-paper) 1px, transparent 1px)",
                   backgroundSize: "22px 22px",
                 }}
                 aria-hidden
               />
-              <IconBadge icon={Compass} tone="navy" size="lg" className="relative" />
-              <p className="relative text-4xl font-semibold tracking-tight text-ink md:text-5xl">
+              <span className="relative inline-flex size-16 items-center justify-center rounded-3xl bg-paper text-orange shadow-lg transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110">
+                <Compass className="size-8" strokeWidth={1.75} aria-hidden />
+              </span>
+              <p className="relative text-4xl font-semibold tracking-tight text-paper md:text-5xl">
                 {philosophy.title}
               </p>
             </RevealOnScroll>
             <RevealOnScroll
               delay={100}
-              className="flex flex-col justify-center gap-5 p-10 md:p-14 md:pr-0"
+              className="flex flex-col justify-center gap-5 bg-paper p-10 md:p-14 md:pr-0"
             >
               <p className="text-lg leading-relaxed text-ink md:text-xl">{philosophy.body}</p>
               <p className="text-base leading-relaxed text-muted md:text-lg">{philosophy.lead}</p>
