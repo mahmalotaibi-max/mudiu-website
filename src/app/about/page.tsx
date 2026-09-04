@@ -69,7 +69,7 @@ export default function AboutPage() {
                 className="absolute inset-0 -z-20 transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                 style={{
                   background:
-                    "linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-deep) 45%, var(--color-orange) 100%)",
+                    "linear-gradient(180deg, var(--color-navy) 0%, var(--color-navy-deep) 60%, var(--color-orange) 100%)",
                 }}
                 aria-hidden
               />
