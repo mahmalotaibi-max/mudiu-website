@@ -5,6 +5,9 @@ import { ArrowLeft } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { ArticleCover } from "@/components/sections/ArticleCover";
+import { ArticleLikeButton } from "@/components/ArticleLikeButton";
+import { ArticleDownloadButton } from "@/components/ArticleDownloadButton";
 import { getAllArticles, getArticleBySlug, type ArticleBlock } from "@/content/articles";
 
 export function generateStaticParams() {
@@ -103,7 +106,7 @@ export default async function ArticlePage({
           <RevealOnScroll>
             <Link
               href="/knowledge"
-              className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink"
+              className="no-print inline-flex items-center gap-2 text-sm text-muted hover:text-ink"
             >
               <ArrowLeft className="size-4" aria-hidden />
               المعرفة
@@ -113,11 +116,18 @@ export default async function ArticlePage({
             <h1 className="mt-4 text-3xl font-semibold leading-[1.2] tracking-tight text-ink md:text-4xl">
               {article.title}
             </h1>
-            <div className="mt-5 flex items-center gap-3 text-sm text-muted">
+            <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-muted">
               <span>{formatDate(article.date)}</span>
               <span aria-hidden>·</span>
               <span>{article.readMinutes} دقائق قراءة</span>
             </div>
+
+            <div className="no-print mt-6 flex flex-wrap items-center gap-3">
+              <ArticleLikeButton slug={article.slug} />
+              <ArticleDownloadButton />
+            </div>
+
+            <ArticleCover type={article.type} className="mt-10 aspect-[21/9] w-full" />
           </RevealOnScroll>
         </Container>
       </section>
@@ -133,7 +143,7 @@ export default async function ArticlePage({
       </section>
 
       {more.length > 0 && (
-        <section className="border-t border-line py-16 md:py-20">
+        <section className="no-print border-t border-line py-16 md:py-20">
           <Container className="max-w-3xl">
             <h3 className="text-sm font-medium text-muted">اقرأ أيضًا</h3>
             <div className="mt-6 grid gap-6 sm:grid-cols-2">

@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
-import { HeroMark } from "@/components/sections/HeroMark";
-import { hero } from "@/content/home";
+import { HeroLiveMark } from "@/components/sections/HeroLiveMark";
+import { hero, whyMudiu } from "@/content/home";
 
 const audiences = [
   { label: "للأفراد", href: "/individuals" },
@@ -61,8 +61,15 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="animate-fade-in [animation-delay:200ms]">
-          <HeroMark />
+        <div className="relative animate-fade-in [animation-delay:200ms]">
+          <HeroLiveMark />
+          <p className="mt-2 text-center text-sm text-muted">
+            <span className="font-semibold text-ink">{whyMudiu.title}</span>
+            <span className="mx-2" aria-hidden>
+              ·
+            </span>
+            {hero.eyebrow}
+          </p>
         </div>
       </Container>
     </section>

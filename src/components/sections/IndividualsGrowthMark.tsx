@@ -55,6 +55,27 @@ export function IndividualsGrowthMark() {
 
         <circle cx="380" cy="130" r="16" fill="var(--color-orange)" opacity="0.16" />
         <circle cx="380" cy="130" r="8" fill="var(--color-orange)" />
+
+        <line x1="110" y1="392" x2="110" y2="364" stroke="var(--color-line)" strokeWidth="1" />
+        <text
+          x="110"
+          y="412"
+          textAnchor="middle"
+          className="fill-muted"
+          style={{ font: "500 12px var(--font-sans)" }}
+        >
+          التحدي
+        </text>
+
+        <text
+          x="380"
+          y="100"
+          textAnchor="middle"
+          className="fill-ink"
+          style={{ font: "600 13px var(--font-sans)" }}
+        >
+          الأثر
+        </text>
       </svg>
 
       <style>{`

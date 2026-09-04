@@ -1,4 +1,4 @@
-export function HeroMark() {
+export function HeroMark({ showLabels = true }: { showLabels?: boolean } = {}) {
   return (
     <div className="relative mx-auto aspect-square w-full max-w-lg">
       <div
@@ -48,26 +48,30 @@ export function HeroMark() {
         <circle r="5" fill="var(--color-orange)" className="mudiu-comet" />
         <circle r="10" fill="var(--color-orange)" opacity="0.25" className="mudiu-comet" />
 
-        <line x1="70" y1="410" x2="70" y2="382" stroke="var(--color-line)" strokeWidth="1" />
-        <text
-          x="70"
-          y="430"
-          textAnchor="middle"
-          className="fill-muted"
-          style={{ font: "500 12px var(--font-sans)" }}
-        >
-          التحدي
-        </text>
+        {showLabels && (
+          <>
+            <line x1="70" y1="410" x2="70" y2="382" stroke="var(--color-line)" strokeWidth="1" />
+            <text
+              x="70"
+              y="430"
+              textAnchor="middle"
+              className="fill-muted"
+              style={{ font: "500 12px var(--font-sans)" }}
+            >
+              التحدي
+            </text>
 
-        <text
-          x="410"
-          y="60"
-          textAnchor="middle"
-          className="fill-ink"
-          style={{ font: "600 13px var(--font-sans)" }}
-        >
-          الأثر
-        </text>
+            <text
+              x="410"
+              y="60"
+              textAnchor="middle"
+              className="fill-ink"
+              style={{ font: "600 13px var(--font-sans)" }}
+            >
+              الأثر
+            </text>
+          </>
+        )}
       </svg>
 
       <style>{`

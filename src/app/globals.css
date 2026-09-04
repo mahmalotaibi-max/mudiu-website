@@ -78,3 +78,16 @@ body {
 .reveal.is-visible {
   animation: var(--animate-fade-up);
 }
+
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+}

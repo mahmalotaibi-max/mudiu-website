@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { ArticleCover } from "@/components/sections/ArticleCover";
 import { knowledgeTypes } from "@/content/knowledge";
 import { getAllArticles } from "@/content/articles";
 
@@ -62,9 +63,13 @@ export default function KnowledgePage() {
                 <RevealOnScroll key={item.slug} delay={i * 80}>
                   <Link
                     href={`/knowledge/${item.slug}`}
-                    className="flex h-full flex-col rounded-2xl border border-line p-7 transition-colors hover:border-ink"
+                    className="group flex h-full flex-col rounded-2xl border border-line p-5 transition-colors hover:border-ink"
                   >
-                    <span className="text-xs font-medium text-orange">{item.type}</span>
+                    <ArticleCover
+                      type={item.type}
+                      className="aspect-video w-full transition-transform duration-300 group-hover:scale-[1.02]"
+                    />
+                    <span className="mt-5 text-xs font-medium text-orange">{item.type}</span>
                     <h3 className="mt-3 text-base font-semibold leading-snug text-ink">
                       {item.title}
                     </h3>
