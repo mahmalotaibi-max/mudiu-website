@@ -127,7 +127,11 @@ export default async function ArticlePage({
               <ArticleDownloadButton />
             </div>
 
-            <ArticleCover type={article.type} className="mt-10 aspect-[21/9] w-full" />
+            <ArticleCover
+              type={article.type}
+              icon={article.icon}
+              className="mt-10 aspect-[21/9] w-full"
+            />
           </RevealOnScroll>
         </Container>
       </section>
