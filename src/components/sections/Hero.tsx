@@ -1,9 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { HeroMark } from "@/components/sections/HeroMark";
-import { hero } from "@/content/home";
+import { hero, whyMudiu } from "@/content/home";
 
 const audiences = [
   { label: "للأفراد", href: "/individuals" },
@@ -61,8 +62,35 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="animate-fade-in [animation-delay:200ms]">
-          <HeroMark />
+        <div className="relative animate-fade-in [animation-delay:200ms]">
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl lg:aspect-[3/4]">
+            <Image
+              src="/images/hero-riyadh.jpg"
+              alt="طريق منحني يؤدي نحو أفق مدينة الرياض عند الشروق"
+              fill
+              priority
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="object-cover"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, transparent 45%, color-mix(in srgb, var(--color-ink) 60%, transparent) 100%), linear-gradient(0deg, color-mix(in srgb, var(--color-navy) 22%, transparent) 0%, transparent 45%)",
+              }}
+              aria-hidden
+            />
+          </div>
+
+          <div className="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-2xl border border-white/15 bg-paper/95 p-3 shadow-xl backdrop-blur-sm sm:inset-x-6 sm:bottom-6 sm:gap-4 sm:p-4">
+            <div className="w-20 shrink-0 sm:w-24">
+              <HeroMark showLabels={false} />
+            </div>
+            <div className="border-r border-line pr-3 sm:pr-4">
+              <p className="text-sm font-semibold text-ink sm:text-base">{whyMudiu.title}</p>
+              <p className="mt-1 text-xs text-muted sm:text-sm">{hero.eyebrow}</p>
+            </div>
+          </div>
         </div>
       </Container>
     </section>
