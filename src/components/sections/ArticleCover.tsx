@@ -10,6 +10,7 @@ import {
   TrendingUp,
   Users,
   ShieldCheck,
+  ScanSearch,
   type LucideIcon,
 } from "lucide-react";
 import type { KnowledgeType } from "@/content/knowledge";
@@ -46,6 +47,7 @@ export const articleCoverIcons = {
   trust: ShieldCheck,
   idea: Lightbulb,
   tool: Wrench,
+  diagnosis: ScanSearch,
 } as const;
 
 export type ArticleCoverIcon = keyof typeof articleCoverIcons;
