@@ -14,7 +14,7 @@ from moh_style import (
     page_break_before, suppress_toc, add_page_break, add_page_number, add_toc,
     set_table_rtl, shade_cell, cell_borders, cell_margins, cell_valign,
     set_col_widths, write_cell, style_table_default, style_scale_table,
-    add_picture_centered, gold_dot, hr_rule, spacer,
+    add_picture_centered, gold_dot, hr_rule, spacer, cant_split_table,
 )
 
 LOGO = "/home/user/mudiu-website/docwork/unpacked/word/media/image1.png"
@@ -356,6 +356,7 @@ def process_flow(doc, steps, sub=None, compact=False):
         cell_borders(cell, color=WHITE, sz=4)
         cell_valign(cell, 'center')
         cell_margins(cell, top=60, bottom=60, start=120, end=120)
+    cant_split_table(tbl)
     spacer(doc)
     return tbl
 
@@ -376,6 +377,7 @@ def process_flow_horizontal(doc, steps):
         cell_borders(cell, color=WHITE, sz=4)
         cell_valign(cell, 'center')
         cell_margins(cell, top=60, bottom=60, start=60, end=60)
+    cant_split_table(tbl)
     spacer(doc)
     return tbl
 
@@ -412,6 +414,7 @@ def concept_cards_grid(doc, items, cols=2, center_label=None):
         rtl_paragraph(p, align='center')
         add_text(p, f"↓   {center_label}", name=FONT_HEAD, size=10.5, bold=True,
                  color=GREEN)
+    cant_split_table(tbl)
     spacer(doc)
     return tbl
 
@@ -441,6 +444,7 @@ def classification_cards(doc, entries):
         cell_borders(cell, color=WHITE, sz=4)
         cell_valign(cell, 'center')
         cell_margins(cell, top=80, bottom=80, start=60, end=60)
+    cant_split_table(tbl)
     spacer(doc)
     return tbl
 
@@ -467,28 +471,29 @@ def output_cards(doc, items, cols=2):
             cell_valign(cell, 'center')
             cell_margins(cell, top=60, bottom=60, start=100, end=100)
             k += 1
+    cant_split_table(tbl)
     spacer(doc)
     return tbl
 
 
 def style_role_table(table, col_widths=None):
-    """Two-column role/RACI-style comparison: green header for col A,
-    brown/gold header for col B, banded bodies."""
+    """Two-column role comparison: one consistent green header band across
+    both columns (a split two-color header reads as inconsistent/jumbled),
+    with a subtle vertical divider and banded body rows."""
     set_table_rtl(table)
     table.alignment = 1
-    header_fills = [GREEN, BROWN]
-    body_fills = [GREEN_TINT, CREAM]
     for ri, row in enumerate(table.rows):
         for ci, cell in enumerate(row.cells):
             txt = cell.text
             is_header = (ri == 0)
-            fill = header_fills[ci % 2] if is_header else body_fills[ci % 2]
+            fill = GREEN if is_header else (GREEN_TINT if ri % 2 else WHITE)
             color = WHITE if is_header else "1f1f1f"
             write_cell(cell, txt, bold=is_header, color=color, fill=fill,
                        size=(10.5 if is_header else 10))
-            cell_borders(cell, color=(header_fills[ci % 2] if is_header else GRAY_LIGHT), sz=4)
+            cell_borders(cell, color=(GREEN if is_header else GRAY_LIGHT), sz=4)
     if col_widths:
         set_col_widths(table, col_widths)
+    cant_split_table(table)
 
 
 def add_log_rows(table, n=3):
@@ -516,3 +521,4 @@ def style_log_table(table, col_widths=None, extra_rows=3):
             cell_borders(cell, color=(GREEN if is_header else GRAY_LIGHT), sz=4)
     if col_widths:
         set_col_widths(table, col_widths)
+    cant_split_table(table)

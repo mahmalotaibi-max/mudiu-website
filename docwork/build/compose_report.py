@@ -105,6 +105,8 @@ def checklist_table(doc, rows):
         cell_borders(c_status, color=GRAY_LIGHT, sz=4)
         cell_borders(c_text, color=GRAY_LIGHT, sz=4)
     set_col_widths(tbl, [1.5, 14.0])
+    from moh_style import cant_split_table
+    cant_split_table(tbl)
     spacer(doc)
     return tbl
 

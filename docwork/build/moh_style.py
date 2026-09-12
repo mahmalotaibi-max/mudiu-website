@@ -356,6 +356,26 @@ def set_col_widths(table, widths_cm):
     tblW.set(qn('w:w'), str(Cm(sum(widths_cm)).twips))
 
 
+TRPR_ORDER = [
+    'w:cnfStyle', 'w:divId', 'w:gridBefore', 'w:gridAfter', 'w:wBefore',
+    'w:wAfter', 'w:cantSplit', 'w:trHeight', 'w:tblHeader',
+    'w:tblCellSpacing', 'w:jc', 'w:hidden', 'w:ins', 'w:del', 'w:trPrChange',
+]
+
+
+def row_cant_split(row):
+    """Forces a table row to move to the next page as a whole instead of
+    breaking mid-row — a split row leaves an orphaned, unlabeled colored
+    cell fragment on the next page that reads as a color glitch."""
+    trPr = row._tr.get_or_add_trPr()
+    _get_or_new(trPr, 'w:cantSplit', TRPR_ORDER)
+
+
+def cant_split_table(table):
+    for row in table.rows:
+        row_cant_split(row)
+
+
 def clear_cell_text(cell):
     cell.text = ""
 
@@ -393,6 +413,7 @@ def style_table_default(table, header_rows=1, col_widths=None, zebra=True,
             cell_borders(cell, color=(GREEN if is_header else GRAY_LIGHT), sz=4)
     if col_widths:
         set_col_widths(table, col_widths)
+    cant_split_table(table)
 
 
 SCALE_COLORS = {
@@ -433,6 +454,7 @@ def style_scale_table(table, col_widths=None):
             cell_borders(cell, color=GRAY_LIGHT, sz=4)
     if col_widths:
         set_col_widths(table, col_widths)
+    cant_split_table(table)
 
 
 def add_picture_centered(doc_or_cell, path, width_cm=None):
