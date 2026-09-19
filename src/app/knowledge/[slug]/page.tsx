@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronLeft, Quote } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
@@ -9,6 +9,7 @@ import { ArticleCover } from "@/components/sections/ArticleCover";
 import { ArticleLikeButton } from "@/components/ArticleLikeButton";
 import { ArticleDownloadButton } from "@/components/ArticleDownloadButton";
 import { getAllArticles, getArticleBySlug, type ArticleBlock } from "@/content/articles";
+import { cn } from "@/lib/utils";
 
 export function generateStaticParams() {
   return getAllArticles().map((a) => ({ slug: a.slug }));
@@ -55,9 +56,34 @@ function Block({ block }: { block: ArticleBlock }) {
       );
     case "quote":
       return (
-        <blockquote className="my-8 border-r-2 border-orange pr-6 text-lg leading-relaxed text-ink">
-          {block.text}
+        <blockquote className="my-8">
+          <Quote className="size-5 text-orange" strokeWidth={2} aria-hidden />
+          <p className="mt-3 text-lg font-medium leading-relaxed text-ink">{block.text}</p>
         </blockquote>
+      );
+    case "chain":
+      return (
+        <div className="my-8 flex flex-wrap items-center gap-x-2 gap-y-3 rounded-2xl border border-line bg-paper-alt p-5" dir="rtl">
+          {block.items.map((item, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <span
+                className={cn(
+                  "rounded-full px-4 py-2 text-sm font-medium",
+                  i === 0
+                    ? "bg-ink text-paper"
+                    : i === block.items.length - 1
+                      ? "bg-orange text-paper"
+                      : "border border-line bg-paper text-ink"
+                )}
+              >
+                {item}
+              </span>
+              {i < block.items.length - 1 && (
+                <ChevronLeft className="size-4 shrink-0 text-muted" aria-hidden />
+              )}
+            </div>
+          ))}
+        </div>
       );
     case "references":
       return (

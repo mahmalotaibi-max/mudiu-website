@@ -13,6 +13,7 @@ export type ArticleBlock =
   | { type: "heading"; text: string }
   | { type: "list"; items: string[] }
   | { type: "quote"; text: string }
+  | { type: "chain"; items: string[] }
   | { type: "references"; items: { label: string; url: string }[] };
 
 export type Article = {
@@ -583,8 +584,8 @@ export const articles: Article[] = [
         text: "في مُضيّ، نرى أن القيمة لا تظهر في عنصر واحد، بل في العلاقة بين العناصر:",
       },
       {
-        type: "quote",
-        text: "الهدف → المؤشر → الفجوة → التدخل → المخرج → المنتج أو الخدمة → المنفعة → الأثر",
+        type: "chain",
+        items: ["الهدف", "المؤشر", "الفجوة", "التدخل", "المخرج", "المنتج أو الخدمة", "المنفعة", "الأثر"],
       },
       {
         type: "paragraph",
