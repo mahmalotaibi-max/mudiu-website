@@ -106,7 +106,7 @@ export default async function ArticlePage({
           <RevealOnScroll>
             <Link
               href="/knowledge"
-              className="no-print inline-flex items-center gap-2 text-sm text-muted hover:text-ink"
+              className="no-print flex w-fit items-center gap-2 text-sm text-muted hover:text-ink"
             >
               <ArrowLeft className="size-4" aria-hidden />
               المعرفة
