@@ -68,7 +68,7 @@ export default function AboutPage() {
               <ConvergingPathMark className="mx-auto aspect-[800/350] w-full max-w-2xl" />
             </RevealOnScroll>
             <RevealOnScroll delay={100} className="flex flex-col gap-5 p-8 pt-0 md:p-12 md:pt-0">
-              <p className="text-4xl font-semibold tracking-tight text-ink md:text-5xl">
+              <p className="mb-2 text-4xl font-semibold tracking-tight text-ink md:mb-4 md:text-5xl">
                 {philosophy.title}
               </p>
               <p className="text-lg leading-relaxed text-ink md:text-xl">{philosophy.body}</p>
