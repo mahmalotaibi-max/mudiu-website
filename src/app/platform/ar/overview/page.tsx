@@ -4,18 +4,18 @@ import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
 import { RequireDiagnostic } from "@/components/platform/RequireDiagnostic";
 import { ScoreCard } from "@/components/platform/ScoreCard";
-import { sampleOrganization } from "@/lib/platform/sampleData";
+import { sampleOrganizationAr } from "@/lib/platform/sampleData.ar";
 import { computeFindings, computeScores } from "@/lib/platform/diagnostics";
 import type { Finding } from "@/lib/platform/types";
 
 export const metadata: Metadata = {
-  title: "Strategic Health | MUDIU Platform",
+  title: "الصحة الاستراتيجية | منصة MUDIU",
 };
 
 const severityLabel: Record<Finding["severity"], string> = {
-  high: "Needs attention",
-  medium: "Requires review",
-  low: "Worth reviewing",
+  high: "يتطلب انتباهًا",
+  medium: "يتطلب مراجعة",
+  low: "يستحق المراجعة",
 };
 
 const severityDot: Record<Finding["severity"], string> = {
@@ -24,57 +24,57 @@ const severityDot: Record<Finding["severity"], string> = {
   low: "bg-line",
 };
 
-export default function OverviewPage() {
-  const scores = computeScores(sampleOrganization);
-  const findings = computeFindings(sampleOrganization);
+export default function OverviewPageAr() {
+  const scores = computeScores(sampleOrganizationAr);
+  const findings = computeFindings(sampleOrganizationAr, "ar");
 
   return (
-    <RequireDiagnostic>
-      <PlatformShell active="overview" />
+    <RequireDiagnostic locale="ar">
+      <PlatformShell active="overview" locale="ar" />
       <Container className="max-w-5xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
-          Organizational Strategic Health
+          الصحة الاستراتيجية للمؤسسة
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
-          A diagnostic view of how well your organization&apos;s strategy connects to execution,
-          value, and impact — based on the data provided.
+          نظرة تشخيصية على مدى اتصال استراتيجية مؤسستك بالتنفيذ والقيمة والأثر - بناءً على
+          البيانات المقدَّمة.
         </p>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <ScoreCard
-            label="Strategic Alignment"
+            label="الارتباط الاستراتيجي"
             score={scores.strategicAlignment}
-            qualifier="Connected"
-            description="How well initiatives and activities connect to strategic priorities."
+            qualifier="مرتبط"
+            description="مدى ارتباط المبادرات والأنشطة بالأولويات الاستراتيجية."
           />
           <ScoreCard
-            label="Performance Readiness"
+            label="جاهزية الأداء"
             score={scores.performanceReadiness}
-            qualifier="Data-supported"
-            description="How complete and usable the performance/indicator structure is."
+            qualifier="مدعوم بالبيانات"
+            description="مدى اكتمال بنية المؤشرات وقابليتها للاستخدام."
           />
           <ScoreCard
-            label="Benefit Readiness"
+            label="جاهزية المنافع"
             score={scores.benefitReadiness}
-            qualifier="Data-supported"
-            description="How clearly expected benefits are defined and measurable."
+            qualifier="مدعوم بالبيانات"
+            description="مدى وضوح المنافع المتوقعة وقابليتها للقياس."
           />
           <ScoreCard
-            label="Impact Evidence"
+            label="أدلة الأثر"
             score={scores.impactReadiness}
-            qualifier="Evidenced"
-            description="How much impact has supporting evidence, rather than an unsupported claim."
+            qualifier="مُوثَّق"
+            description="مدى وجود دليل داعم للأثر، بدلًا من ادعاء غير مدعوم."
           />
         </div>
 
         <p className="mt-4 text-xs text-muted">
-          These are diagnostic indicators based on the data provided — they describe how
-          connected and evidenced your organization&apos;s information is, not a scientific
-          ranking or a success rate. A low number means missing data or links, not failure.
+          هذه مؤشرات تشخيصية مبنية على البيانات المقدَّمة - تصف مدى ترابط بيانات مؤسستك ووجود
+          الأدلة عليها، وليست تصنيفًا علميًا أو معدل نجاح. الرقم المنخفض يعني نقصًا في البيانات أو
+          الروابط، لا فشلًا.
         </p>
 
         <div className="mt-14">
-          <h2 className="text-xl font-semibold tracking-tight text-ink">Where Value Breaks</h2>
+          <h2 className="text-xl font-semibold tracking-tight text-ink">أين تنقطع القيمة</h2>
           <div className="mt-5 divide-y divide-line rounded-2xl border border-line">
             {findings.map((f) => (
               <div key={f.id} className="flex items-start gap-3 px-5 py-4">
@@ -87,23 +87,23 @@ export default function OverviewPage() {
             ))}
           </div>
           <p className="mt-4 text-xs text-muted">
-            These are not final judgments — they highlight where a link is missing, evidence is
-            incomplete, or something is worth a closer look.
+            هذه ليست أحكامًا نهائية - بل تُبرز أين يوجد رابط مفقود، أو دليل غير مكتمل، أو أمر
+            يستحق نظرة أقرب.
           </p>
         </div>
 
         <div className="mt-10 flex flex-wrap gap-4">
           <Link
-            href="/platform/strategy"
+            href="/platform/ar/strategy"
             className="inline-flex items-center rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-all duration-300 hover:-translate-y-0.5 hover:bg-navy"
           >
-            Explore Goal → Impact
+            استكشف الهدف ← الأثر
           </Link>
           <Link
-            href="/platform/insights"
+            href="/platform/ar/insights"
             className="inline-flex items-center rounded-full border border-line px-6 py-3 text-sm font-medium text-ink transition-colors hover:border-ink"
           >
-            Ask MUDIU
+            اسأل MUDIU
           </Link>
         </div>
       </Container>

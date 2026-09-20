@@ -8,6 +8,8 @@
 // leaves some links unset so the diagnostics engine has real gaps to find,
 // instead of a hand-picked list of findings.
 
+export type Locale = "en" | "ar";
+
 export type ImpactStatus = "expected" | "observed" | "verified";
 export type EvidenceStatus = "none" | "partial" | "verified";
 
@@ -127,6 +129,10 @@ export interface ChainNode {
   detail: string | null;
   missing: boolean;
   missingReason?: string;
+  /** Structured key/value pairs (e.g. Baseline / Current / Target) shown as a small table instead of one run-on sentence. */
+  metrics?: { label: string; value: string }[];
+  /** A short, plain-language evidence sentence, e.g. "Benefit is measurable, but evidence is incomplete." */
+  note?: string;
 }
 
 export interface Chain {
