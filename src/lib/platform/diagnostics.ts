@@ -12,6 +12,10 @@ function pct(numerator: number, denominator: number) {
   return Math.round((numerator / denominator) * 100);
 }
 
+function plural(count: number, noun: string, pluralNoun = `${noun}s`) {
+  return count === 1 ? noun : pluralNoun;
+}
+
 /**
  * Findings follow the rules in the product spec's "Dashboard Logic" section
  * verbatim — nothing here is a hardcoded example number, it's derived from
@@ -28,7 +32,7 @@ export function computeFindings(data: OrganizationDataset): Finding[] {
       severity: "high",
       entityIds: unaligned.map((i) => i.id),
       count: unaligned.length,
-      message: `${unaligned.length} initiatives are not clearly linked to a strategic goal`,
+      message: `${unaligned.length} ${plural(unaligned.length, "initiative")} ${unaligned.length === 1 ? "is" : "are"} not clearly linked to a strategic goal`,
     });
   }
 
@@ -42,7 +46,7 @@ export function computeFindings(data: OrganizationDataset): Finding[] {
       severity: "medium",
       entityIds: goalsWithoutIndicator.map((g) => g.id),
       count: goalsWithoutIndicator.length,
-      message: `${goalsWithoutIndicator.length} strategic goals lack a measurable outcome indicator`,
+      message: `${goalsWithoutIndicator.length} strategic ${plural(goalsWithoutIndicator.length, "goal")} ${goalsWithoutIndicator.length === 1 ? "lacks" : "lack"} a measurable outcome indicator`,
     });
   }
 
@@ -54,7 +58,7 @@ export function computeFindings(data: OrganizationDataset): Finding[] {
       severity: "medium",
       entityIds: indicatorsWithoutBaseline.map((i) => i.id),
       count: indicatorsWithoutBaseline.length,
-      message: `${indicatorsWithoutBaseline.length} indicators have no baseline value recorded`,
+      message: `${indicatorsWithoutBaseline.length} ${plural(indicatorsWithoutBaseline.length, "indicator")} ${indicatorsWithoutBaseline.length === 1 ? "has" : "have"} no baseline value recorded`,
     });
   }
 
@@ -68,7 +72,7 @@ export function computeFindings(data: OrganizationDataset): Finding[] {
       severity: "medium",
       entityIds: initiativesWithoutBenefit.map((i) => i.id),
       count: initiativesWithoutBenefit.length,
-      message: `${initiativesWithoutBenefit.length} initiatives have no defined benefit`,
+      message: `${initiativesWithoutBenefit.length} ${plural(initiativesWithoutBenefit.length, "initiative")} ${initiativesWithoutBenefit.length === 1 ? "has" : "have"} no defined benefit`,
     });
   }
 
@@ -80,7 +84,10 @@ export function computeFindings(data: OrganizationDataset): Finding[] {
       severity: "medium",
       entityIds: unmeasurableBenefits.map((b) => b.id),
       count: unmeasurableBenefits.length,
-      message: `${unmeasurableBenefits.length} benefits have no defined way to measure them`,
+      message:
+        unmeasurableBenefits.length === 1
+          ? "1 benefit has no defined way to measure it"
+          : `${unmeasurableBenefits.length} benefits have no defined way to measure them`,
     });
   }
 
@@ -95,7 +102,7 @@ export function computeFindings(data: OrganizationDataset): Finding[] {
       severity: "high",
       entityIds: benefitsWithoutEvidence.map((b) => b.id),
       count: benefitsWithoutEvidence.length,
-      message: `${benefitsWithoutEvidence.length} expected benefits have no impact evidence yet`,
+      message: `${benefitsWithoutEvidence.length} expected ${plural(benefitsWithoutEvidence.length, "benefit")} ${benefitsWithoutEvidence.length === 1 ? "has" : "have"} no impact evidence yet`,
     });
   }
 
@@ -113,7 +120,7 @@ export function computeFindings(data: OrganizationDataset): Finding[] {
       severity: "low",
       entityIds: overlapping,
       count: overlapping.length,
-      message: `${overlapping.length} initiatives show potential overlap in goal and scope`,
+      message: `${overlapping.length} ${plural(overlapping.length, "initiative")} ${overlapping.length === 1 ? "shows" : "show"} potential overlap in goal and scope`,
     });
   }
 
@@ -299,10 +306,16 @@ export function computeExecutiveSummary(data: OrganizationDataset): ExecutiveSum
 
   const findings = computeFindings(data);
   const top = findings[0];
+  const topRiskNoun =
+    top?.type === "measurement"
+      ? "goal"
+      : top?.type === "baseline"
+        ? "indicator"
+        : top?.type === "benefit-measurement" || top?.type === "impact-evidence"
+          ? "benefit"
+          : "initiative";
   const topRiskMessage = top
-    ? `The largest current gap is ${describeGap(top.type)}, affecting ${top.count} ${
-        top.type === "measurement" ? "goals" : top.type === "baseline" ? "indicators" : top.type === "benefit-measurement" || top.type === "impact-evidence" ? "benefits" : "initiatives"
-      }.`
+    ? `The largest current gap is ${describeGap(top.type)}, affecting ${top.count} ${plural(top.count, topRiskNoun)}.`
     : "No major gaps were found in the submitted data.";
 
   const actions = findings.slice(0, 3).map((f) => actionFor(f));
@@ -332,18 +345,18 @@ function describeGap(type: GapType) {
 function actionFor(f: Finding) {
   switch (f.type) {
     case "alignment":
-      return `Review ${f.count} initiatives with unclear strategic alignment.`;
+      return `Review ${f.count} ${plural(f.count, "initiative")} with unclear strategic alignment.`;
     case "measurement":
-      return `Define an outcome indicator for ${f.count} strategic goals.`;
+      return `Define an outcome indicator for ${f.count} strategic ${plural(f.count, "goal")}.`;
     case "baseline":
-      return `Establish a baseline for ${f.count} indicators.`;
+      return `Establish a baseline for ${f.count} ${plural(f.count, "indicator")}.`;
     case "benefit-definition":
-      return `Define measurable benefits for ${f.count} initiatives.`;
+      return `Define measurable benefits for ${f.count} ${plural(f.count, "initiative")}.`;
     case "benefit-measurement":
-      return `Agree on how to measure ${f.count} benefits.`;
+      return `Agree on how to measure ${f.count} ${plural(f.count, "benefit")}.`;
     case "impact-evidence":
-      return `Collect evidence for ${f.count} expected benefits.`;
+      return `Collect evidence for ${f.count} expected ${plural(f.count, "benefit")}.`;
     case "overlap":
-      return `Review ${f.count} initiatives for potential overlap.`;
+      return `Review ${f.count} ${plural(f.count, "initiative")} for potential overlap.`;
   }
 }
