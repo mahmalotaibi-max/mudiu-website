@@ -8,6 +8,8 @@
 // leaves some links unset so the diagnostics engine has real gaps to find,
 // instead of a hand-picked list of findings.
 
+export type Locale = "en" | "ar";
+
 export type ImpactStatus = "expected" | "observed" | "verified";
 export type EvidenceStatus = "none" | "partial" | "verified";
 

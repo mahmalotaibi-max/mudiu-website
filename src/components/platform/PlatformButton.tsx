@@ -1,17 +1,19 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/platform/types";
 
-// A left-to-right variant of the site's <Button>: same tokens and motion
-// language, but the arrow points right (forward, in LTR) instead of left,
-// since the platform subtree renders dir="ltr" while the rest of the site
-// is RTL and its <Button> arrow points left on purpose.
+// A locale-aware variant of the site's <Button>: same tokens and motion
+// language, but the "forward" arrow points right in the English (LTR)
+// platform and left in the Arabic (RTL) platform, matching each
+// direction's own reading flow instead of a single fixed icon.
 type PlatformButtonProps = {
   href: string;
   children: React.ReactNode;
   variant?: "primary" | "secondary";
   className?: string;
   onClick?: () => void;
+  locale?: Locale;
 };
 
 const variants = {
@@ -27,7 +29,9 @@ export function PlatformButton({
   variant = "primary",
   className,
   onClick,
+  locale = "en",
 }: PlatformButtonProps) {
+  const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   return (
     <Link
       href={href}
@@ -39,8 +43,11 @@ export function PlatformButton({
       )}
     >
       <span>{children}</span>
-      <ArrowRight
-        className="size-4 transition-transform duration-300 group-hover:translate-x-1"
+      <Arrow
+        className={cn(
+          "size-4 transition-transform duration-300",
+          locale === "ar" ? "group-hover:-translate-x-1" : "group-hover:translate-x-1"
+        )}
         aria-hidden
       />
     </Link>

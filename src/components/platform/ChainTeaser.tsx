@@ -1,19 +1,36 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/platform/types";
 
-const stages = [
-  "Strategic Goal",
-  "Indicator",
-  "Gap",
-  "Priority",
-  "Initiative",
-  "Output",
-  "Product / Service",
-  "Benefit",
-  "Impact",
-];
+const stagesByLocale: Record<Locale, string[]> = {
+  en: [
+    "Strategic Goal",
+    "Indicator",
+    "Gap",
+    "Priority",
+    "Initiative",
+    "Output",
+    "Product / Service",
+    "Benefit",
+    "Impact",
+  ],
+  ar: [
+    "الهدف الاستراتيجي",
+    "المؤشر",
+    "الفجوة",
+    "الأولوية",
+    "المبادرة",
+    "المخرج",
+    "المنتج / الخدمة",
+    "المنفعة",
+    "الأثر",
+  ],
+};
 
-export function ChainTeaser({ className }: { className?: string }) {
+export function ChainTeaser({ className, locale = "en" }: { className?: string; locale?: Locale }) {
+  const stages = stagesByLocale[locale];
+  const Chevron = locale === "ar" ? ChevronLeft : ChevronRight;
+
   return (
     <div
       className={cn(
@@ -36,7 +53,7 @@ export function ChainTeaser({ className }: { className?: string }) {
             {stage}
           </span>
           {i < stages.length - 1 && (
-            <ChevronRight className="size-3.5 shrink-0 text-muted md:size-4" aria-hidden />
+            <Chevron className="size-3.5 shrink-0 text-muted md:size-4" aria-hidden />
           )}
         </div>
       ))}

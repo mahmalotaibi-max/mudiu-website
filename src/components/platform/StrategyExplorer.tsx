@@ -4,19 +4,42 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, CircleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Chain, ChainNode } from "@/lib/platform/types";
+import type { Chain, ChainNode, Locale } from "@/lib/platform/types";
 
 const impactTone: Record<string, string> = {
   "Expected Impact": "bg-paper-alt text-muted",
   "Observed Impact": "bg-navy/10 text-navy",
   "Verified Impact": "bg-orange/10 text-orange",
+  "أثر متوقع": "bg-paper-alt text-muted",
+  "أثر مرصود": "bg-navy/10 text-navy",
+  "أثر مُثبَت": "bg-orange/10 text-orange",
 };
 
-export function StrategyExplorer({ chains }: { chains: Chain[] }) {
+const strings = {
+  en: {
+    chainComplete: "Chain complete",
+    linksNeedAttention: (n: number) => `${n} link${n > 1 ? "s" : ""} need attention`,
+    missingSuffix: (label: string) => `${label} — Missing`,
+    exploreWhatIsNeeded: "Explore What Is Needed",
+    insightsHref: "/platform/insights",
+    impactGeneric: "Impact",
+  },
+  ar: {
+    chainComplete: "السلسلة مكتملة",
+    linksNeedAttention: (n: number) => `${n} ${n === 1 ? "رابط يحتاج" : "روابط تحتاج"} انتباهًا`,
+    missingSuffix: (label: string) => `${label} — غير متوفر`,
+    exploreWhatIsNeeded: "استكشف ما هو مطلوب",
+    insightsHref: "/platform/ar/insights",
+    impactGeneric: "الأثر",
+  },
+};
+
+export function StrategyExplorer({ chains, locale = "en" }: { chains: Chain[]; locale?: Locale }) {
   const [selectedGoalId, setSelectedGoalId] = useState(chains[0]?.goalId ?? "");
   const chain = chains.find((c) => c.goalId === selectedGoalId) ?? chains[0];
   const [selectedIndex, setSelectedIndex] = useState(0);
   const selectedNode = chain?.nodes[selectedIndex] ?? null;
+  const t = strings[locale];
 
   function selectGoal(goalId: string) {
     setSelectedGoalId(goalId);
@@ -51,7 +74,7 @@ export function StrategyExplorer({ chains }: { chains: Chain[] }) {
                   c.goalId === chain.goalId ? "text-paper/70" : "text-muted"
                 )}
               >
-                {missingCount === 0 ? "Chain complete" : `${missingCount} link${missingCount > 1 ? "s" : ""} need attention`}
+                {missingCount === 0 ? t.chainComplete : t.linksNeedAttention(missingCount)}
               </span>
             </button>
           );
@@ -83,7 +106,7 @@ export function StrategyExplorer({ chains }: { chains: Chain[] }) {
                   {node.label}
                 </span>
                 <span className="mt-0.5 block text-sm font-medium text-ink">
-                  {node.missing ? `${node.label} — Missing` : node.title}
+                  {node.missing ? t.missingSuffix(node.label) : node.title}
                 </span>
               </span>
               {node.missing && <CircleAlert className="size-4 shrink-0 text-orange" aria-hidden />}
@@ -97,32 +120,35 @@ export function StrategyExplorer({ chains }: { chains: Chain[] }) {
         ))}
       </div>
 
-      <NodeDetail node={selectedNode} />
+      <NodeDetail node={selectedNode} locale={locale} />
     </div>
   );
 }
 
-function NodeDetail({ node }: { node: ChainNode | null }) {
+function NodeDetail({ node, locale = "en" }: { node: ChainNode | null; locale?: Locale }) {
   if (!node) return null;
   const badge = impactTone[node.label];
+  const t = strings[locale];
 
   return (
     <aside className="h-fit rounded-2xl border border-line p-6 lg:sticky lg:top-24">
       <div className="flex items-center gap-2">
-        <span className="text-xs font-medium text-muted">{node.missing ? node.label : node.key === "impact" ? "Impact" : node.label}</span>
+        <span className="text-xs font-medium text-muted">
+          {node.missing ? node.label : node.key === "impact" ? t.impactGeneric : node.label}
+        </span>
         {badge && !node.missing && (
           <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-medium", badge)}>{node.label}</span>
         )}
       </div>
       {node.missing ? (
         <>
-          <h3 className="mt-2 text-lg font-semibold text-ink">{node.label} — Missing</h3>
+          <h3 className="mt-2 text-lg font-semibold text-ink">{t.missingSuffix(node.label)}</h3>
           <p className="mt-3 text-sm leading-relaxed text-muted">{node.missingReason}</p>
           <Link
-            href="/platform/insights"
+            href={t.insightsHref}
             className="mt-5 inline-flex items-center rounded-full border border-line px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-ink hover:bg-paper-alt"
           >
-            Explore What Is Needed
+            {t.exploreWhatIsNeeded}
           </Link>
         </>
       ) : (

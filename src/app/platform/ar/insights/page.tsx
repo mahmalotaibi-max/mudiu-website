@@ -3,23 +3,23 @@ import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
 import { RequireDiagnostic } from "@/components/platform/RequireDiagnostic";
 import { AskMudiu } from "@/components/platform/AskMudiu";
-import { sampleOrganization } from "@/lib/platform/sampleData";
+import { sampleOrganizationAr } from "@/lib/platform/sampleData.ar";
 
 export const metadata: Metadata = {
-  title: "Ask MUDIU | MUDIU Platform",
+  title: "اسأل MUDIU | منصة MUDIU",
 };
 
-export default function InsightsPage() {
+export default function InsightsPageAr() {
   return (
-    <RequireDiagnostic>
-      <PlatformShell active="insights" />
+    <RequireDiagnostic locale="ar">
+      <PlatformShell active="insights" locale="ar" />
       <Container className="max-w-4xl py-12 md:py-16">
-        <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">Ask MUDIU</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">اسأل MUDIU</h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
-          Ask a question about this organization&apos;s diagnostic data in plain language.
+          اطرح سؤالًا حول بيانات تشخيص هذه المؤسسة بلغة بسيطة.
         </p>
         <div className="mt-10">
-          <AskMudiu dataset={sampleOrganization} locale="en" />
+          <AskMudiu dataset={sampleOrganizationAr} locale="ar" />
         </div>
       </Container>
     </RequireDiagnostic>

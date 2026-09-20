@@ -22,7 +22,7 @@ export const primaryNav: NavItem[] = [
   { label: "للأفراد", href: "/individuals" },
   { label: "للمؤسسات", href: "/institutions" },
   { label: "المعرفة", href: "/knowledge" },
-  { label: "المنصة", href: "/platform" },
+  { label: "المنصة", href: "/platform/ar" },
   { label: "تواصل معنا", href: "/contact" },
 ];
 
