@@ -6,6 +6,12 @@ import { ChevronDown, CircleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Chain, ChainNode } from "@/lib/platform/types";
 
+const impactTone: Record<string, string> = {
+  "Expected Impact": "bg-paper-alt text-muted",
+  "Observed Impact": "bg-navy/10 text-navy",
+  "Verified Impact": "bg-orange/10 text-orange",
+};
+
 export function StrategyExplorer({ chains }: { chains: Chain[] }) {
   const [selectedGoalId, setSelectedGoalId] = useState(chains[0]?.goalId ?? "");
   const chain = chains.find((c) => c.goalId === selectedGoalId) ?? chains[0];
@@ -68,7 +74,14 @@ export function StrategyExplorer({ chains }: { chains: Chain[] }) {
               )}
             >
               <span>
-                <span className="text-xs font-medium text-muted">{node.label}</span>
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-0.5 text-xs font-medium",
+                    impactTone[node.label] ?? "text-muted"
+                  )}
+                >
+                  {node.label}
+                </span>
                 <span className="mt-0.5 block text-sm font-medium text-ink">
                   {node.missing ? `${node.label} — Missing` : node.title}
                 </span>
@@ -91,10 +104,16 @@ export function StrategyExplorer({ chains }: { chains: Chain[] }) {
 
 function NodeDetail({ node }: { node: ChainNode | null }) {
   if (!node) return null;
+  const badge = impactTone[node.label];
 
   return (
     <aside className="h-fit rounded-2xl border border-line p-6 lg:sticky lg:top-24">
-      <span className="text-xs font-medium text-muted">{node.label}</span>
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-medium text-muted">{node.missing ? node.label : node.key === "impact" ? "Impact" : node.label}</span>
+        {badge && !node.missing && (
+          <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-medium", badge)}>{node.label}</span>
+        )}
+      </div>
       {node.missing ? (
         <>
           <h3 className="mt-2 text-lg font-semibold text-ink">{node.label} — Missing</h3>
@@ -110,6 +129,19 @@ function NodeDetail({ node }: { node: ChainNode | null }) {
         <>
           <h3 className="mt-2 text-lg font-semibold text-ink">{node.title}</h3>
           {node.detail && <p className="mt-3 text-sm leading-relaxed text-muted">{node.detail}</p>}
+          {node.metrics && (
+            <dl className="mt-4 space-y-2 border-t border-line pt-4">
+              {node.metrics.map((m) => (
+                <div key={m.label} className="flex items-center justify-between text-sm">
+                  <dt className="text-muted">{m.label}</dt>
+                  <dd className="font-medium text-ink">{m.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {node.note && (
+            <p className="mt-4 rounded-xl bg-paper-alt p-3 text-sm leading-relaxed text-ink">{node.note}</p>
+          )}
         </>
       )}
     </aside>

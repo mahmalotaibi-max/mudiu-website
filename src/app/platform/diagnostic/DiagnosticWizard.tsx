@@ -56,9 +56,8 @@ export function DiagnosticWizard() {
             Start with your existing data
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted">
-            You don&apos;t need to rebuild your strategy. Upload the files your organization
-            already uses and let MUDIU analyze how well your strategy, performance, initiatives,
-            and value are connected.
+            You don&apos;t need to rebuild your strategy inside MUDIU. Give it the data you
+            already have, and let it map how your organization connects from strategy to value.
           </p>
 
           <label

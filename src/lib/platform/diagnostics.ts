@@ -1,8 +1,10 @@
 import type {
+  Benefit,
   Chain,
   ChainNode,
   Finding,
   GapType,
+  Impact,
   OrganizationDataset,
   ReadinessScores,
 } from "@/lib/platform/types";
@@ -14,6 +16,10 @@ function pct(numerator: number, denominator: number) {
 
 function plural(count: number, noun: string, pluralNoun = `${noun}s`) {
   return count === 1 ? noun : pluralNoun;
+}
+
+function capitalize(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 /**
@@ -182,11 +188,13 @@ export function buildChain(data: OrganizationDataset, goalId: string): Chain {
           key: "indicator",
           label: "Indicator",
           title: indicator.name,
-          detail:
-            indicator.baseline !== null
-              ? `Baseline ${indicator.baseline} -> Current ${indicator.current} -> Target ${indicator.target} ${indicator.unit}`
-              : `No baseline recorded (current ${indicator.current} ${indicator.unit})`,
+          detail: null,
           missing: false,
+          metrics: [
+            { label: "Baseline", value: indicator.baseline !== null ? `${indicator.baseline} ${indicator.unit}` : "Not recorded" },
+            { label: "Current", value: indicator.current !== null ? `${indicator.current} ${indicator.unit}` : "Not recorded" },
+            { label: "Target", value: indicator.target !== null ? `${indicator.target} ${indicator.unit}` : "Not recorded" },
+          ],
         }
       : { key: "indicator", label: "Indicator", ...gapNode("No outcome indicator has been defined for this goal.") },
     (() => {
@@ -234,8 +242,9 @@ export function buildChain(data: OrganizationDataset, goalId: string): Chain {
           key: "benefit",
           label: "Expected Benefit",
           title: benefit.title,
-          detail: benefit.measurable ? `Owner: ${benefit.ownerRole}` : `Owner: ${benefit.ownerRole} - not yet measurable`,
+          detail: `Owner: ${benefit.ownerRole}`,
           missing: false,
+          note: benefitNote(benefit),
         }
       : { key: "benefit", label: "Expected Benefit", ...gapNode("No benefit has been defined for this product or service.") },
     impact
@@ -243,8 +252,9 @@ export function buildChain(data: OrganizationDataset, goalId: string): Chain {
           key: "impact",
           label: statusLabel(impact.status),
           title: impact.title,
-          detail: `Linked indicator: ${impact.indicatorName} - evidence ${impact.evidenceStatus}`,
+          detail: `Linked indicator: ${impact.indicatorName}`,
           missing: false,
+          note: impactNote(impact),
         }
       : { key: "impact", label: "Impact", ...gapNode("Impact evidence is not yet available.") },
   ];
@@ -263,16 +273,37 @@ function statusLabel(status: "expected" | "observed" | "verified") {
   return "Expected Impact";
 }
 
+function benefitNote(benefit: Benefit): string {
+  if (benefit.measurable && benefit.hasBaseline) return "Benefit is measurable and has a baseline to compare against.";
+  if (benefit.measurable) return "Benefit is measurable, but there is no baseline to compare it against yet.";
+  return "Benefit is defined, but there is no clear way to measure it yet.";
+}
+
+function impactNote(impact: Impact): string {
+  if (impact.evidenceStatus === "verified") return "This impact is backed by sufficient evidence - it is verified, not just claimed.";
+  if (impact.evidenceStatus === "partial") return `${statusLabel(impact.status).replace(" Impact", "")} impact, but evidence is still incomplete.`;
+  return `${statusLabel(impact.status).replace(" Impact", "")} impact is claimed, but there is no supporting evidence yet.`;
+}
+
 export function buildAllChains(data: OrganizationDataset): Chain[] {
   return data.goals.map((g) => buildChain(data, g.id));
 }
 
 export interface ExecutiveSummary {
-  onTrack: number;
-  needsAttention: number;
-  requiresReview: number;
-  topRiskMessage: string;
-  actions: string[];
+  /** "1. Where are we aligned?" */
+  alignedGoals: number;
+  needsAttentionGoals: number;
+  requiresReviewGoals: number;
+  totalGoals: number;
+  alignmentMessage: string;
+  /** "2. Where are the biggest gaps?" */
+  biggestGapsMessage: string;
+  /** "3. Which initiatives are creating measurable value?" */
+  measurableValueMessage: string;
+  /** "4. Where is evidence missing?" */
+  missingEvidenceMessage: string;
+  /** "5. What needs leadership attention?" */
+  attentionActions: string[];
 }
 
 function goalRiskLevel(chain: Chain, data: OrganizationDataset): "on-track" | "needs-attention" | "requires-review" {
@@ -294,33 +325,70 @@ function goalRiskLevel(chain: Chain, data: OrganizationDataset): "on-track" | "n
 
 export function computeExecutiveSummary(data: OrganizationDataset): ExecutiveSummary {
   const chains = buildAllChains(data);
-  let onTrack = 0;
-  let needsAttention = 0;
-  let requiresReview = 0;
+  let alignedGoals = 0;
+  let needsAttentionGoals = 0;
+  let requiresReviewGoals = 0;
   for (const chain of chains) {
     const level = goalRiskLevel(chain, data);
-    if (level === "on-track") onTrack += 1;
-    else if (level === "needs-attention") needsAttention += 1;
-    else requiresReview += 1;
+    if (level === "on-track") alignedGoals += 1;
+    else if (level === "needs-attention") needsAttentionGoals += 1;
+    else requiresReviewGoals += 1;
   }
 
+  const linkedGoalIds = [...new Set(data.initiatives.map((i) => i.goalId).filter((id): id is string => id !== null))];
+  const strongestGoalId = linkedGoalIds.sort(
+    (a, b) =>
+      data.initiatives.filter((i) => i.goalId === b).length -
+      data.initiatives.filter((i) => i.goalId === a).length
+  )[0];
+  const strongestGoal = data.goals.find((g) => g.id === strongestGoalId);
+  const alignmentMessage = strongestGoal
+    ? `${alignedGoals} of ${chains.length} goals have a fully connected chain from indicator to impact. "${strongestGoal.title}" is currently the most strongly supported by initiatives.`
+    : `${alignedGoals} of ${chains.length} goals have a fully connected chain from indicator to impact.`;
+
   const findings = computeFindings(data);
-  const top = findings[0];
-  const topRiskNoun =
-    top?.type === "measurement"
-      ? "goal"
-      : top?.type === "baseline"
-        ? "indicator"
-        : top?.type === "benefit-measurement" || top?.type === "impact-evidence"
-          ? "benefit"
-          : "initiative";
-  const topRiskMessage = top
-    ? `The largest current gap is ${describeGap(top.type)}, affecting ${top.count} ${plural(top.count, topRiskNoun)}.`
-    : "No major gaps were found in the submitted data.";
+  const top = findings.slice(0, 2);
+  const biggestGapsMessage =
+    top.length > 0
+      ? capitalize(top.map((f) => `${describeGap(f.type)} (${f.count})`).join(", and ")) + " are the largest gaps right now."
+      : "No major gaps were found in the submitted data.";
 
-  const actions = findings.slice(0, 3).map((f) => actionFor(f));
+  const measurableInitiatives = data.initiatives.filter((i) =>
+    data.benefits.some((b) => b.initiativeId === i.id && b.measurable)
+  );
+  const measurableValueMessage =
+    measurableInitiatives.length > 0
+      ? `${measurableInitiatives.length} ${plural(measurableInitiatives.length, "initiative")} ${measurableInitiatives.length === 1 ? "has" : "have"} a clearly measurable benefit, including ${measurableInitiatives
+          .slice(0, 2)
+          .map((i) => `"${i.title}"`)
+          .join(" and ")}.`
+      : "No initiative currently has a clearly measurable benefit defined.";
 
-  return { onTrack, needsAttention, requiresReview, topRiskMessage, actions };
+  const unevidenced = data.benefits.filter((b) => {
+    const impact = data.impacts.find((im) => im.benefitId === b.id);
+    return !impact || impact.evidenceStatus === "none";
+  });
+  const missingEvidenceMessage =
+    unevidenced.length > 0
+      ? `${unevidenced.length} expected ${plural(unevidenced.length, "benefit")} ${unevidenced.length === 1 ? "has" : "have"} no supporting evidence yet, including ${unevidenced
+          .slice(0, 2)
+          .map((b) => `"${b.title}"`)
+          .join(" and ")}.`
+      : "Every expected benefit currently has at least partial evidence.";
+
+  const attentionActions = findings.slice(0, 3).map((f) => actionFor(f));
+
+  return {
+    alignedGoals,
+    needsAttentionGoals,
+    requiresReviewGoals,
+    totalGoals: chains.length,
+    alignmentMessage,
+    biggestGapsMessage,
+    measurableValueMessage,
+    missingEvidenceMessage,
+    attentionActions,
+  };
 }
 
 function describeGap(type: GapType) {

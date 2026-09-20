@@ -127,6 +127,10 @@ export interface ChainNode {
   detail: string | null;
   missing: boolean;
   missingReason?: string;
+  /** Structured key/value pairs (e.g. Baseline / Current / Target) shown as a small table instead of one run-on sentence. */
+  metrics?: { label: string; value: string }[];
+  /** A short, plain-language evidence sentence, e.g. "Benefit is measurable, but evidence is incomplete." */
+  note?: string;
 }
 
 export interface Chain {

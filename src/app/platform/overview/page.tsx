@@ -33,44 +33,48 @@ export default function OverviewPage() {
       <PlatformShell active="overview" />
       <Container className="max-w-5xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
-          MUDIU Strategic Health
+          Organizational Strategic Health
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
           A diagnostic view of how well your organization&apos;s strategy connects to execution,
-          value, and impact.
+          value, and impact — based on the data provided.
         </p>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <ScoreCard
             label="Strategic Alignment"
             score={scores.strategicAlignment}
-            description="Share of initiatives clearly linked to a strategic goal."
+            qualifier="Connected"
+            description="How well initiatives and activities connect to strategic priorities."
           />
           <ScoreCard
             label="Performance Readiness"
             score={scores.performanceReadiness}
-            description="Share of goals with a fully defined indicator (baseline, current, target)."
+            qualifier="Data-supported"
+            description="How complete and usable the performance/indicator structure is."
           />
           <ScoreCard
             label="Benefit Readiness"
             score={scores.benefitReadiness}
-            description="Share of initiatives with a clearly measurable expected benefit."
+            qualifier="Data-supported"
+            description="How clearly expected benefits are defined and measurable."
           />
           <ScoreCard
-            label="Impact Readiness"
+            label="Impact Evidence"
             score={scores.impactReadiness}
-            description="Share of benefits backed by at least partial impact evidence."
+            qualifier="Evidenced"
+            description="How much impact has supporting evidence, rather than an unsupported claim."
           />
         </div>
 
         <p className="mt-4 text-xs text-muted">
-          Diagnostic scores based on the completeness and connectivity of the submitted
-          organizational data. These are prototype scores, not a scientific or universal
-          benchmark.
+          These are diagnostic indicators based on the data provided — they describe how
+          connected and evidenced your organization&apos;s information is, not a scientific
+          ranking or a success rate. A low number means missing data or links, not failure.
         </p>
 
         <div className="mt-14">
-          <h2 className="text-xl font-semibold tracking-tight text-ink">What MUDIU Found</h2>
+          <h2 className="text-xl font-semibold tracking-tight text-ink">Where Value Breaks</h2>
           <div className="mt-5 divide-y divide-line rounded-2xl border border-line">
             {findings.map((f) => (
               <div key={f.id} className="flex items-start gap-3 px-5 py-4">

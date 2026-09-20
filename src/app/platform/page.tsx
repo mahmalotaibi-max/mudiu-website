@@ -3,12 +3,13 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { PlatformButton } from "@/components/platform/PlatformButton";
+import { ExploreSampleButton } from "@/components/platform/ExploreSampleButton";
 import { ChainTeaser } from "@/components/platform/ChainTeaser";
 
 export const metadata: Metadata = {
   title: "MUDIU Platform",
   description:
-    "MUDIU helps organizations connect strategic goals to performance, initiatives, benefits, and measurable impact.",
+    "MUDIU maps the connections between strategy, performance, initiatives, services, benefits, and impact — so leaders can see where value is created and where it breaks.",
 };
 
 const principles = [
@@ -31,19 +32,15 @@ export default function PlatformHomePage() {
               Connect strategy to value.
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-              MUDIU helps organizations connect strategic goals to performance, initiatives,
-              benefits, and measurable impact.
+              MUDIU maps the connections between strategy, performance, initiatives, services,
+              benefits, and impact — so leaders can see where value is created and where it
+              breaks.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
               <PlatformButton href="/platform/diagnostic">
-                Start Your Organizational Diagnostic
+                Run Organizational Diagnostic
               </PlatformButton>
-              <a
-                href="#how-it-works"
-                className="text-sm font-medium text-muted transition-colors hover:text-ink"
-              >
-                Explore How It Works
-              </a>
+              <ExploreSampleButton />
             </div>
           </RevealOnScroll>
         </Container>
@@ -76,10 +73,11 @@ export default function PlatformHomePage() {
             ))}
           </div>
 
-          <RevealOnScroll delay={450} className="mt-14 text-center">
+          <RevealOnScroll delay={450} className="mt-14 flex flex-wrap items-center justify-center gap-4">
             <PlatformButton href="/platform/diagnostic">
-              Start Your Organizational Diagnostic
+              Run Organizational Diagnostic
             </PlatformButton>
+            <ExploreSampleButton />
           </RevealOnScroll>
         </Container>
       </section>
