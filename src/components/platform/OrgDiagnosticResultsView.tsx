@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { Container } from "@/components/ui/Container";
 import { PlatformButton } from "@/components/platform/PlatformButton";
 import { DimensionCard } from "@/components/platform/DimensionCard";
+import { JourneyMapCard } from "@/components/platform/JourneyMapCard";
 import { FindingCard } from "@/components/platform/FindingCard";
 import { SolutionsRecap } from "@/components/platform/SolutionsRecap";
 import { useOrgDiagnosis } from "@/components/platform/OrgDiagnosisProvider";
@@ -132,6 +133,10 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
       <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">{t.viewTitle}</h1>
       <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">{t.viewIntro(orgName)}</p>
       <p className="mt-1.5 max-w-2xl text-xs leading-relaxed text-muted/80">{t.disclaimer}</p>
+
+      <div className="mt-8">
+        <JourneyMapCard locale={locale} />
+      </div>
 
       <div className="mt-10">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted">{t.overviewEyebrow}</p>
