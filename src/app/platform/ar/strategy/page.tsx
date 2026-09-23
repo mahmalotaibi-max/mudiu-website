@@ -2,16 +2,12 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
 import { SampleOrgExplorer } from "@/components/platform/SampleOrgExplorer";
-import { sampleOrganizationAr } from "@/lib/platform/sampleData.ar";
-import { buildAllChains } from "@/lib/platform/diagnostics";
 
 export const metadata: Metadata = {
   title: "من الهدف إلى الأثر | منصة MUDIU",
 };
 
 export default function StrategyPageAr() {
-  const healthChains = buildAllChains(sampleOrganizationAr, "ar");
-
   return (
     <>
       <PlatformShell active="strategy" locale="ar" />
@@ -34,7 +30,7 @@ export default function StrategyPageAr() {
         </div>
 
         <div className="mt-10">
-          <SampleOrgExplorer healthChains={healthChains} />
+          <SampleOrgExplorer />
         </div>
       </Container>
     </>

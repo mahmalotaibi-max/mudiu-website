@@ -2,19 +2,16 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import type { Chain } from "@/lib/platform/types";
 import { RiwaaShowcase } from "@/components/platform/RiwaaShowcase";
-import { StrategyExplorer } from "@/components/platform/StrategyExplorer";
 
-type OrgKey = "riwaa" | "health" | "digital";
+type OrgKey = "riwaa" | "digital";
 
 const orgs: { key: OrgKey; label: string; enabled: boolean }[] = [
   { key: "riwaa", label: "رِواء للأغذية", enabled: true },
-  { key: "health", label: "مؤسسة صحية تجريبية", enabled: true },
   { key: "digital", label: "شركة خدمات رقمية", enabled: false },
 ];
 
-export function SampleOrgExplorer({ healthChains }: { healthChains: Chain[] }) {
+export function SampleOrgExplorer() {
   const [org, setOrg] = useState<OrgKey>("riwaa");
 
   return (
@@ -44,10 +41,7 @@ export function SampleOrgExplorer({ healthChains }: { healthChains: Chain[] }) {
         </div>
       </div>
 
-      <div className="mt-8">
-        {org === "riwaa" && <RiwaaShowcase />}
-        {org === "health" && <StrategyExplorer chains={healthChains} locale="ar" />}
-      </div>
+      <div className="mt-8">{org === "riwaa" && <RiwaaShowcase />}</div>
     </div>
   );
 }
