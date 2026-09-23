@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Info } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
 import { SampleOrgExplorer } from "@/components/platform/SampleOrgExplorer";
@@ -19,6 +20,17 @@ export default function StrategyPageAr() {
           اختر هدفًا استراتيجيًا لتتبع مساره - من النية، مرورًا بالتنفيذ، وصولًا إلى المنفعة
           والأثر الذي وُضع من أجله. انقر على أي خطوة لعرض تفاصيلها.
         </p>
+
+        <div className="mt-6 flex items-start gap-3 rounded-2xl border border-line bg-paper-alt p-5 md:p-6">
+          <Info className="mt-0.5 size-4 shrink-0 text-orange" aria-hidden />
+          <div>
+            <p className="text-sm font-semibold text-ink">مثال توضيحي</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted">
+              هذه الحالة تعرض كيف يمكن لـ MUDIU ربط التحدي بالهدف والمؤشر والمبادرة والمنفعة
+              والأثر، وليست نتيجة تشخيص مؤسستك.
+            </p>
+          </div>
+        </div>
 
         <div className="mt-6 rounded-2xl border border-line bg-paper-alt p-5 md:p-6">
           <p className="text-sm font-semibold text-ink md:text-base">

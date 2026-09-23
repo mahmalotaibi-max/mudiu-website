@@ -60,8 +60,12 @@ export type Priority = "high" | "medium" | "low";
 export interface MockSolution {
   id: string;
   title: Record<Locale, string>;
-  summary: Record<Locale, string>;
+  /** "Good fit when..." - a short, generic description of the kind of finding this solution answers. */
+  whenToUse: Record<Locale, string>;
+  /** "What it helps with" - exactly 3 points. */
   includes: Record<Locale, string[]>;
+  /** "Expected outcome" - one plain, non-inflated sentence. */
+  expectedOutcome: Record<Locale, string>;
 }
 
 export interface Finding {

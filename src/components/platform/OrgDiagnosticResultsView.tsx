@@ -22,6 +22,8 @@ const strings = {
     diagnosticHref: "/platform/ar/diagnostic",
     viewTitle: "Your MUDIU Organizational View",
     viewBody: (org: string) => `${org} - based on the information provided by the organization. This is not a benchmark or a maturity score.`,
+    transitionLead: "You now know where the gaps are. Next is deciding what's worth working on.",
+    transitionSub: "Recommended solutions for you",
     attentionTitle: "What needs attention?",
     attentionBody: "A short list, on purpose - the items most worth your attention right now, not everything MUDIU noticed.",
     noFindings: "No area needs attention based on what was answered - a strong, well-connected profile.",
@@ -37,6 +39,8 @@ const strings = {
     diagnosticHref: "/platform/ar/diagnostic",
     viewTitle: "نظرة MUDIU على مؤسستك",
     viewBody: (org: string) => `${org} - استنادًا إلى المعلومات التي قدّمتها المؤسسة. هذه ليست معيارًا عالميًا (Benchmark) ولا مقياس نضج.`,
+    transitionLead: "عرفت أين توجد الفجوات. الآن حان وقت تحديد ما يستحق العمل عليه.",
+    transitionSub: "الحلول المقترحة لك",
     attentionTitle: "ما الذي يحتاج انتباه؟",
     attentionBody: "قائمة قصيرة عن قصد - أهم ما يستحق انتباهك الآن، لا كل ما لاحظته MUDIU.",
     noFindings: "لا يوجد مجال يحتاج انتباهًا بناءً على الإجابات - وضع قوي ومترابط.",
@@ -116,7 +120,12 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
         })}
       </div>
 
-      <div className="mt-14">
+      <div className="mt-10 rounded-2xl border border-line bg-paper-alt p-6">
+        <p className="text-base font-semibold text-ink">{t.transitionLead}</p>
+        <p className="mt-1 text-sm font-medium text-muted">{t.transitionSub}</p>
+      </div>
+
+      <div className="mt-8">
         <h2 className="text-xl font-semibold tracking-tight text-ink">{t.attentionTitle}</h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{t.attentionBody}</p>
 
@@ -125,7 +134,14 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
         ) : (
           <div className="mt-6 space-y-3">
             {findings.map((finding, i) => (
-              <FindingCard key={finding.id} index={i} finding={finding} solution={solutionById(finding.solutionId)} locale={locale} />
+              <FindingCard
+                key={finding.id}
+                index={i}
+                finding={finding}
+                solution={solutionById(finding.solutionId)}
+                organizationName={profile.organizationName}
+                locale={locale}
+              />
             ))}
           </div>
         )}

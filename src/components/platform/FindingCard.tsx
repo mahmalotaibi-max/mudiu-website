@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Finding, Priority } from "@/lib/platform/orgDiagnosisTypes";
@@ -16,8 +17,11 @@ const strings = {
     potentialDriver: "Potential driver",
     missingData: "Missing data",
     recommendedSolution: "Recommended solution",
-    includes: "Includes",
+    whenToUse: "Good fit when",
+    helpsWith: "What it helps with",
+    expectedOutcome: "Expected outcome",
     exploreSolution: "Explore solution",
+    requestSolution: "Request this solution",
     priorityLabel: { high: "High", medium: "Medium", low: "Low" } as Record<Priority, string>,
   },
   ar: {
@@ -28,8 +32,11 @@ const strings = {
     potentialDriver: "ما قد تكون مرتبطة به",
     missingData: "بيانات ناقصة",
     recommendedSolution: "الحل المقترح",
-    includes: "يشمل",
+    whenToUse: "مناسب عندما",
+    helpsWith: "ما الذي يساعد عليه؟",
+    expectedOutcome: "المخرج المتوقع",
     exploreSolution: "استكشف الحل",
+    requestSolution: "اطلب هذا الحل",
     priorityLabel: { high: "عالية", medium: "متوسطة", low: "منخفضة" } as Record<Priority, string>,
   },
 };
@@ -44,16 +51,20 @@ export function FindingCard({
   index,
   finding,
   solution,
+  organizationName,
   locale = "en",
 }: {
   index: number;
   finding: Finding;
   solution: MockSolution | undefined;
+  organizationName?: string;
   locale?: Locale;
 }) {
   const [open, setOpen] = useState(false);
   const [solutionOpen, setSolutionOpen] = useState(false);
   const t = strings[locale];
+
+  const requestHref = solution ? buildRequestHref({ organizationName, solution, finding, locale }) : undefined;
 
   return (
     <div className="rounded-2xl border border-line">
@@ -136,8 +147,11 @@ export function FindingCard({
                 <div>
                   <p className="text-xs font-semibold text-muted">{t.recommendedSolution}</p>
                   <p className="mt-1 text-sm font-semibold text-ink">{solution.title[locale]}</p>
-                  <p className="mt-1 text-sm leading-relaxed text-muted">{solution.summary[locale]}</p>
-                  <p className="mt-3 text-xs font-semibold text-muted">{t.includes}</p>
+
+                  <p className="mt-3 text-xs font-semibold text-muted">{t.whenToUse}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-ink">{solution.whenToUse[locale]}</p>
+
+                  <p className="mt-3 text-xs font-semibold text-muted">{t.helpsWith}</p>
                   <ul className="mt-1.5 list-inside list-disc space-y-1">
                     {solution.includes[locale].map((item) => (
                       <li key={item} className="text-sm text-ink">
@@ -145,6 +159,16 @@ export function FindingCard({
                       </li>
                     ))}
                   </ul>
+
+                  <p className="mt-3 text-xs font-semibold text-muted">{t.expectedOutcome}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-ink">{solution.expectedOutcome[locale]}</p>
+
+                  <Link
+                    href={requestHref!}
+                    className="mt-4 inline-flex items-center rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-navy"
+                  >
+                    {t.requestSolution}
+                  </Link>
                 </div>
               )}
             </div>
@@ -153,4 +177,25 @@ export function FindingCard({
       )}
     </div>
   );
+}
+
+function buildRequestHref({
+  organizationName,
+  solution,
+  finding,
+  locale,
+}: {
+  organizationName?: string;
+  solution: MockSolution;
+  finding: Finding;
+  locale: Locale;
+}) {
+  const params = new URLSearchParams();
+  params.set("source", "diagnostic");
+  if (organizationName && organizationName.trim().length > 0) {
+    params.set("organization", organizationName.trim());
+  }
+  params.set("solution", solution.title[locale]);
+  params.set("problem", finding.whatWeFound[locale]);
+  return `/contact?${params.toString()}#booking`;
 }
