@@ -3,20 +3,19 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { PlatformButton } from "@/components/platform/PlatformButton";
-import { ExploreSampleButton } from "@/components/platform/ExploreSampleButton";
 import { ChainTeaser } from "@/components/platform/ChainTeaser";
 
 export const metadata: Metadata = {
   title: "منصة MUDIU",
   description:
-    "تربط MUDIU بين الأهداف الاستراتيجية والأداء والمبادرات والمنافع والأثر - ليرى القادة أين تتحقق القيمة وأين تنقطع.",
+    "MUDIU تشخّص وضع مؤسستك، تكشف ما يعيق تقدمها، وتقترح ما تحتاج العمل عليه بعد ذلك.",
 };
 
-const principles = [
-  { title: "افهم", body: "اطّلع على كيفية ترابط أهدافك وأدائك وتنفيذك فعليًا اليوم." },
-  { title: "اربط", body: "اربط كل مبادرة بالهدف الذي تخدمه والقيمة التي يُفترض أن تحققها." },
-  { title: "قِس", body: "اعرف أي المنافع محددة وقابلة للقياس ومدعومة بأدلة." },
-  { title: "طوّر", body: "اكتشف بالضبط أين تنقطع السلسلة، قبل أن تلتزم بمزيد من الموارد." },
+const journey = [
+  { title: "شخّص", body: "أجب على أسئلة قصيرة عن مؤسستك - بلا حاجة لرفع بيانات." },
+  { title: "افهم", body: "اعرف أين مؤسستك قوية، وأين تحتاج انتباهًا." },
+  { title: "طوّر", body: "لكل ملاحظة حل مقترح، لا مجرد رقم بلا تفسير." },
+  { title: "تابع وحقّق القيمة", body: "ابنِ على التشخيص بمرور الوقت، بدلًا من تكراره من الصفر." },
 ];
 
 export default function PlatformHomePageAr() {
@@ -27,19 +26,18 @@ export default function PlatformHomePageAr() {
           <RevealOnScroll>
             <Eyebrow className="justify-center">منصة MUDIU</Eyebrow>
             <h1 className="mt-6 text-3xl font-semibold leading-[1.15] tracking-tight text-ink md:text-5xl">
-              افهم أعمالك.
+              اعرف أين أنت.
               <br />
-              اربط استراتيجيتك بالقيمة.
+              اكتشف ما يعيقك.
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-              تربط MUDIU بين الاستراتيجية والأداء والمبادرات والخدمات والمنافع والأثر - ليرى
-              القادة أين تُصنع القيمة، وأين تنقطع.
+              تشخيص مؤسسي مجاني يوضح لك أين تقف مؤسستك اليوم، وما الذي يعيق تقدمها، وما الذي
+              يستحق العمل عليه بعد ذلك.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
               <PlatformButton href="/platform/ar/diagnostic" locale="ar">
-                شغّل التشخيص التنظيمي
+                ابدأ التشخيص المجاني
               </PlatformButton>
-              <ExploreSampleButton locale="ar" />
             </div>
           </RevealOnScroll>
         </Container>
@@ -48,23 +46,19 @@ export default function PlatformHomePageAr() {
       <section id="how-it-works" className="border-t border-line py-16 md:py-24">
         <Container className="max-w-4xl">
           <RevealOnScroll>
-            <Eyebrow>كيف تعمل المنصة</Eyebrow>
+            <Eyebrow>كيف تعمل MUDIU</Eyebrow>
             <h2 className="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-3xl">
-              سلسلة واحدة، من النية إلى الدليل
+              رحلة واحدة: من التشخيص إلى القيمة
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-              لا تطلب MUDIU منك تعلّم منهجية جديدة. فهي تقرأ البيانات التي تملكها مؤسستك أصلًا،
-              وتُظهر لك أين تتصل هذه السلسلة - وأين تنقطع بصمت.
+              MUDIU ليست لوحة مؤشرات ولا أداة إدارة مشاريع - هي رحلة تبدأ بتشخيص قصير، وتنتهي
+              بمعرفة واضحة بما تحتاج مؤسستك العمل عليه.
             </p>
           </RevealOnScroll>
 
-          <RevealOnScroll delay={100} className="mt-10 overflow-x-auto">
-            <ChainTeaser locale="ar" />
-          </RevealOnScroll>
-
           <div className="mt-14 grid gap-8 sm:grid-cols-2">
-            {principles.map((p, i) => (
-              <RevealOnScroll key={p.title} delay={150 + i * 80}>
+            {journey.map((p, i) => (
+              <RevealOnScroll key={p.title} delay={100 + i * 80}>
                 <h3 className="text-lg font-semibold text-ink">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{p.body}</p>
               </RevealOnScroll>
@@ -73,9 +67,27 @@ export default function PlatformHomePageAr() {
 
           <RevealOnScroll delay={450} className="mt-14 flex flex-wrap items-center justify-center gap-4">
             <PlatformButton href="/platform/ar/diagnostic" locale="ar">
-              شغّل التشخيص التنظيمي
+              ابدأ التشخيص المجاني
             </PlatformButton>
-            <ExploreSampleButton locale="ar" />
+          </RevealOnScroll>
+        </Container>
+      </section>
+
+      <section className="border-t border-line py-16 md:py-24">
+        <Container className="max-w-4xl">
+          <RevealOnScroll>
+            <Eyebrow>بعد التشخيص</Eyebrow>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-3xl">
+              كيف تتصل استراتيجيتك بالتنفيذ والأثر
+            </h2>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
+              بعد التشخيص، تساعدك MUDIU على تتبع سلسلة واحدة - من الهدف إلى الأثر - لترى أين
+              تتصل، وأين تنقطع بصمت.
+            </p>
+          </RevealOnScroll>
+
+          <RevealOnScroll delay={100} className="mt-10 overflow-x-auto">
+            <ChainTeaser locale="ar" />
           </RevealOnScroll>
         </Container>
       </section>

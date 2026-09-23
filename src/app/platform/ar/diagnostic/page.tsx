@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { DiagnosticWizard } from "@/app/platform/diagnostic/DiagnosticWizard";
+import { OrgDiagnosisQuestionnaire } from "@/components/platform/OrgDiagnosisQuestionnaire";
 
 export const metadata: Metadata = {
-  title: "التشخيص التنظيمي | منصة MUDIU",
+  title: "ابدأ التشخيص المجاني | منصة MUDIU",
 };
 
 export default function DiagnosticPageAr() {
-  return <DiagnosticWizard locale="ar" />;
+  return <OrgDiagnosisQuestionnaire locale="ar" />;
 }
