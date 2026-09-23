@@ -104,7 +104,7 @@ export function FindingCard({
   const priorityPill = (
     <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-medium text-muted">
       <span className={cn("size-1.5 rounded-full", priorityDot[finding.priority])} aria-hidden />
-      {t.priorityLabel[finding.priority]}
+      {t.priority}: {t.priorityLabel[finding.priority]}
     </span>
   );
 
