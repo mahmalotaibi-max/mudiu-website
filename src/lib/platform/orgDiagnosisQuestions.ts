@@ -36,51 +36,171 @@ export const dimensionQuestion: Record<DimensionKey, Record<"en" | "ar", string>
   },
 };
 
+// Final question set (Phase 1 revision). Each question survived a review of
+// what distinct, observable organizational capability it actually tests -
+// the count (7 when every Signal is clean, up to 16 when every dimension
+// needs its Evidence set) is an outcome of that review, not a target.
 export const questions: DiagnosticQuestion[] = [
-  // A. Direction
-  { id: "dir-1", dimension: "direction", text: { en: "Does the organization have clear goals?", ar: "هل لدى المؤسسة أهداف واضحة؟" } },
-  { id: "dir-2", dimension: "direction", text: { en: "Are those goals linked to clear priorities?", ar: "هل الأهداف مرتبطة بأولويات واضحة؟" } },
-  { id: "dir-3", dimension: "direction", text: { en: "Do decision-makers agree on what needs to be achieved?", ar: "هل يعرف أصحاب القرار ما الذي يجب تحقيقه؟" } },
-
-  // B. Performance
-  { id: "perf-1", dimension: "performance", text: { en: "Do the goals have indicators?", ar: "هل توجد مؤشرات لقياس الأهداف؟" } },
-  { id: "perf-2", dimension: "performance", text: { en: "Is there a recorded baseline for these indicators?", ar: "هل توجد قيمة أساس (Baseline) لهذه المؤشرات؟" } },
-  { id: "perf-3", dimension: "performance", text: { en: "Are there clear numeric targets?", ar: "هل توجد أهداف رقمية واضحة (Targets)؟" } },
-  { id: "perf-4", dimension: "performance", text: { en: "Are the trends tracked regularly?", ar: "هل تتم متابعة اتجاه المؤشرات بشكل دوري؟" } },
-
-  // C. Growth
-  { id: "gro-1", dimension: "growth", text: { en: "Are there clear growth targets?", ar: "هل توجد أهداف واضحة للنمو؟" } },
-  { id: "gro-2", dimension: "growth", text: { en: "Is customer growth measured?", ar: "هل يتم قياس نمو العملاء؟" } },
-  { id: "gro-3", dimension: "growth", text: { en: "Is revenue measured regularly?", ar: "هل يتم قياس الإيرادات بشكل منتظم؟" } },
-  { id: "gro-4", dimension: "growth", text: { en: "Does the organization know its main growth drivers?", ar: "هل تعرف المؤسسة أهم محركات النمو لديها؟" } },
-
-  // D. Operations
-  { id: "ops-1", dimension: "operations", text: { en: "Are the organization's core processes known and clear?", ar: "هل العمليات الأساسية معروفة وواضحة؟" } },
-  { id: "ops-2", dimension: "operations", text: { en: "Are critical processes documented?", ar: "هل العمليات الحرجة موثقة؟" } },
-  { id: "ops-3", dimension: "operations", text: { en: "Are responsibilities clear across teams?", ar: "هل المسؤوليات واضحة بين الفرق؟" } },
+  // Direction - clarity of goals and whether they're shared, not just written.
   {
-    id: "ops-4",
+    id: "dir-sig-existence",
+    dimension: "direction",
+    level: "signal",
+    type: "existence",
+    text: { en: "Has the organization formally documented its strategic goals?", ar: "هل وثّقت المؤسسة أهدافها الاستراتيجية بشكل رسمي؟" },
+  },
+  {
+    id: "dir-sig-clarity",
+    dimension: "direction",
+    level: "signal",
+    type: "clarity",
+    text: {
+      en: "If we asked three employees from different departments to name the organization's top three goals, would their answers be close?",
+      ar: "إذا سألنا ثلاثة موظفين من إدارات مختلفة عن أهم ثلاثة أهداف للمؤسسة، هل ستكون إجاباتهم متقاربة؟",
+    },
+  },
+  {
+    id: "dir-evi-ownership",
+    dimension: "direction",
+    level: "evidence",
+    type: "ownership",
+    text: {
+      en: "Can these goals be clearly linked to the initiatives or projects currently running?",
+      ar: "هل يمكن ربط هذه الأهداف بوضوح بالمبادرات أو المشاريع التي تُنفَّذ حاليًا؟",
+    },
+  },
+
+  // Performance - whether indicators are actually used in decisions, not just present.
+  {
+    id: "perf-sig-existence",
+    dimension: "performance",
+    level: "signal",
+    type: "existence",
+    text: { en: "Are there specific indicators for tracking progress toward the main goals?", ar: "هل توجد مؤشرات محددة لقياس التقدم نحو الأهداف الرئيسية؟" },
+  },
+  {
+    id: "perf-evi-measurement",
+    dimension: "performance",
+    level: "evidence",
+    type: "measurement",
+    text: {
+      en: "Are there performance indicators that management actually uses when reviewing performance or making decisions?",
+      ar: "هل توجد مؤشرات أداء تستخدمها الإدارة فعليًا عند مراجعة الأداء أو اتخاذ القرارات؟",
+    },
+  },
+  {
+    id: "perf-evi-existence",
+    dimension: "performance",
+    level: "evidence",
+    type: "existence",
+    text: {
+      en: "Do these indicators have a recorded baseline and clear numeric targets?",
+      ar: "هل توجد قيمة أساس (Baseline) وأهداف رقمية واضحة (Targets) لهذه المؤشرات؟",
+    },
+  },
+
+  // Growth - visibility into the commercial growth engine specifically.
+  {
+    id: "gro-sig-measurement",
+    dimension: "growth",
+    level: "signal",
+    type: "measurement",
+    text: { en: "Is customer and revenue growth measured against a stated target?", ar: "هل يتم قياس نمو العملاء والإيرادات مقابل هدف محدد؟" },
+  },
+  {
+    id: "gro-evi-ownership",
+    dimension: "growth",
+    level: "evidence",
+    type: "ownership",
+    text: {
+      en: "Does the organization know which channels or customer segments are actually driving this growth (or its weakness)?",
+      ar: "هل تعرف المؤسسة أي القنوات أو شرائح العملاء تساهم فعليًا في هذا النمو (أو ضعفه)؟",
+    },
+  },
+
+  // Operations - whether execution quality survives a change of person.
+  {
+    id: "ops-sig-existence",
     dimension: "operations",
-    text: { en: "Do the same operational problems keep recurring?", ar: "هل تتكرر مشاكل تشغيلية معينة باستمرار؟" },
-    reverse: true,
+    level: "signal",
+    type: "existence",
+    text: {
+      en: "Are the critical processes (the ones most affecting customers or quality) documented in a clear procedure?",
+      ar: "هل العمليات الحرجة (الأكثر تأثيرًا على العميل أو الجودة) موثقة في إجراء واضح؟",
+    },
   },
-
-  // E. Knowledge
   {
-    id: "know-1",
-    dimension: "knowledge",
-    text: { en: "Does critical knowledge depend on specific individuals?", ar: "هل تعتمد المعرفة الحرجة على أفراد معينين؟" },
-    reverse: true,
+    id: "ops-evi-accessibility",
+    dimension: "operations",
+    level: "evidence",
+    type: "accessibility",
+    text: {
+      en: "Could a new employee carry out one of these processes using the documented procedure, without repeatedly going back to one specific person?",
+      ar: "هل يستطيع موظف جديد تنفيذ إحدى هذه العمليات بالاعتماد على الإجراء الموثق، دون العودة المستمرة لشخص بعينه؟",
+    },
   },
-  { id: "know-2", dimension: "knowledge", text: { en: "Are documents and procedures available to whoever needs them?", ar: "هل الوثائق والإجراءات متاحة لمن يحتاجها؟" } },
-  { id: "know-3", dimension: "knowledge", text: { en: "Is there one approved, unified version of the procedures?", ar: "هل توجد نسخة معتمدة وموحدة للإجراءات؟" } },
+  {
+    id: "ops-evi-improvement",
+    dimension: "operations",
+    level: "evidence",
+    type: "improvement",
+    reverse: true,
+    text: { en: "Do certain operational problems keep recurring?", ar: "هل تتكرر مشاكل تشغيلية معينة باستمرار؟" },
+  },
+  {
+    id: "ops-evi-ownership",
+    dimension: "operations",
+    level: "evidence",
+    type: "ownership",
+    text: {
+      en: "When a problem occurs in one of these processes, is it immediately clear who is responsible for handling it?",
+      ar: "عند حدوث مشكلة في إحدى هذه العمليات، هل من الواضح فورًا من هو المسؤول عن معالجتها؟",
+    },
+  },
 
-  // F. Value
-  { id: "val-1", dimension: "value", text: { en: "Does the organization know what value it should be producing?", ar: "هل تعرف المؤسسة ما القيمة التي يجب أن تحققها؟" } },
-  { id: "val-2", dimension: "value", text: { en: "Are the results of initiatives measured after they run?", ar: "هل تقيس المؤسسة نتائج المبادرات بعد تنفيذها؟" } },
-  { id: "val-3", dimension: "value", text: { en: "Can the organization connect its initiatives to their actual results?", ar: "هل تستطيع المؤسسة الربط بين مبادراتها ونتائجها الفعلية؟" } },
+  // Knowledge - concentration risk if a key individual is unavailable, nothing else.
+  {
+    id: "know-sig-existence",
+    dimension: "knowledge",
+    level: "signal",
+    type: "existence",
+    reverse: true,
+    text: {
+      en: "Does critical knowledge (making a certain decision, handling a key client, etc.) depend on specific individuals?",
+      ar: "هل تعتمد المعرفة الحرجة (اتخاذ قرار معيّن، التعامل مع عميل رئيسي، إلخ) على أفراد معينين تحديدًا؟",
+    },
+  },
+  {
+    id: "know-evi-accessibility",
+    dimension: "knowledge",
+    level: "evidence",
+    type: "accessibility",
+    text: {
+      en: "Can someone other than that individual access what they'd need to carry out the same task?",
+      ar: "هل يستطيع شخص آخر غير هذا الفرد الوصول إلى ما يحتاجه لتنفيذ المهمة نفسها؟",
+    },
+  },
+
+  // Value - ex-post verification that a specific initiative produced its intended benefit.
+  {
+    id: "val-sig-measurement",
+    dimension: "value",
+    level: "signal",
+    type: "measurement",
+    text: { en: "Does the organization measure the results of its main initiatives after they run?", ar: "هل تقيس المؤسسة نتائج المبادرات الرئيسية بعد تنفيذها؟" },
+  },
+  {
+    id: "val-evi-measurement",
+    dimension: "value",
+    level: "evidence",
+    type: "measurement",
+    text: {
+      en: "Take the last major initiative that ran - can its actual impact on a specific indicator be clearly identified?",
+      ar: "خذ آخر مبادرة كبيرة نُفِّذت - هل يمكن تحديد أثرها الفعلي على مؤشر محدد بوضوح؟",
+    },
+  },
 ];
 
-export function questionsFor(dimension: DimensionKey) {
-  return questions.filter((q) => q.dimension === dimension);
+export function questionsFor(dimension: DimensionKey, level?: DiagnosticQuestion["level"]) {
+  return questions.filter((q) => q.dimension === dimension && (level === undefined || q.level === level));
 }

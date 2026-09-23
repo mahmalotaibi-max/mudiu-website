@@ -44,6 +44,9 @@ function basePath(locale: Locale) {
 
 const executiveLabel: Record<Locale, string> = { en: "Executive View", ar: "العرض التنفيذي" };
 const soonLabel: Record<Locale, string> = { en: "soon", ar: "قريبًا" };
+// Names the section explicitly as a demo, not a personal dashboard - these
+// tabs always show the same fictional Riwaa data regardless of who visits.
+const demoEyebrow: Record<Locale, string> = { en: "Riwaa Example Demo", ar: "مثال Riwaa التوضيحي" };
 
 export function PlatformShell({
   active,
@@ -64,6 +67,9 @@ export function PlatformShell({
 
   return (
     <div className="border-b border-line bg-paper-alt/60">
+      <p className="mx-auto max-w-6xl px-6 pt-2.5 text-[11px] font-medium text-muted md:px-10">
+        {demoEyebrow[locale]}
+      </p>
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 overflow-x-auto px-6 py-3 md:px-10">
         <nav className="flex items-center gap-1">
           {navItemsByLocale[locale].map((item) => {

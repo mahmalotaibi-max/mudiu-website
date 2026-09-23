@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
-import { RequireDiagnostic } from "@/components/platform/RequireDiagnostic";
 import { AskMudiu } from "@/components/platform/AskMudiu";
 import { sampleOrganization } from "@/lib/platform/sampleData";
 
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function InsightsPage() {
   return (
-    <RequireDiagnostic>
+    <>
       <PlatformShell active="insights" />
       <Container className="max-w-4xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">Ask MUDIU</h1>
@@ -22,6 +21,6 @@ export default function InsightsPage() {
           <AskMudiu dataset={sampleOrganization} locale="en" />
         </div>
       </Container>
-    </RequireDiagnostic>
+    </>
   );
 }

@@ -13,9 +13,16 @@ const requestTypes = [
   "استفسار عام",
 ];
 
-export function ContactForm() {
+interface Prefill {
+  requestType: string;
+  message: string;
+}
+
+export function ContactForm({ prefill }: { prefill?: Prefill }) {
   const [status, setStatus] = useState<Status>("idle");
-  const [clientType, setClientType] = useState<"individual" | "institution">("individual");
+  const [clientType, setClientType] = useState<"individual" | "institution">(
+    prefill ? "institution" : "individual"
+  );
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -97,7 +104,7 @@ export function ContactForm() {
         <select
           id="requestType"
           name="requestType"
-          defaultValue={requestTypes[0]}
+          defaultValue={prefill?.requestType ?? requestTypes[0]}
           className="w-full rounded-xl border border-line bg-paper px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ink"
         >
           {requestTypes.map((type) => (
@@ -117,6 +124,7 @@ export function ContactForm() {
           name="message"
           rows={5}
           required
+          defaultValue={prefill?.message}
           className="w-full resize-none rounded-xl border border-line bg-paper px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-ink"
         />
       </div>

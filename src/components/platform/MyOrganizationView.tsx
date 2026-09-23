@@ -7,7 +7,7 @@ import { useOrgDiagnosis } from "@/components/platform/OrgDiagnosisProvider";
 import { computeDimensionResults, computeFindings } from "@/lib/platform/orgDiagnosis";
 import { dimensionKeys } from "@/lib/platform/orgDiagnosisTypes";
 import { dimensionLabels } from "@/lib/platform/orgDiagnosisQuestions";
-import type { DimensionStatus } from "@/lib/platform/orgDiagnosisTypes";
+import type { DimensionStatus, FindingTrackingStatus } from "@/lib/platform/orgDiagnosisTypes";
 import type { Locale } from "@/lib/platform/types";
 import { cn } from "@/lib/utils";
 
@@ -19,28 +19,17 @@ const strings = {
     diagnosticHref: "/platform/ar/diagnostic",
     eyebrow: "My Organization",
     lastRun: (date: string) => `Last diagnostic: ${date}`,
-    openFindings: (n: number) => `${n} open ${n === 1 ? "finding" : "findings"}`,
-    roadmapTitle: "What this workspace will hold as it grows",
-    roadmapBody:
-      "This is a working prototype, not a live database yet - your answers are saved only in this browser. The sections below are the architecture this profile is designed to grow into.",
-    resultsCta: "Back to results",
+    findingsTitle: "Findings",
+    findingsBody: "The signals from your last diagnostic, and where each one stands.",
+    noFindings: "No findings are tracked yet - nothing surfaced, or the diagnostic hasn't been completed.",
+    resultsCta: "Open in results",
     resultsHref: "/platform/ar/diagnostic/results",
-    roadmapItems: [
-      "Organization Profile",
-      "Goals",
-      "KPIs",
-      "Diagnostic Results",
-      "Findings",
-      "Priorities",
-      "Improvement Plans",
-      "Initiatives",
-      "Products & Services",
-      "Processes",
-      "Procedures",
-      "Benefits",
-      "Impact",
-      "Progress History",
-    ],
+    statusLabel: {
+      new: "New signal",
+      "pending-verification": "Pending verification",
+      verified: "Verified",
+      "help-requested": "Help requested",
+    } as Record<FindingTrackingStatus, string>,
   },
   ar: {
     gateTitle: "لا توجد مؤسسة بعد",
@@ -49,40 +38,35 @@ const strings = {
     diagnosticHref: "/platform/ar/diagnostic",
     eyebrow: "مؤسستي",
     lastRun: (date: string) => `آخر تشخيص: ${date}`,
-    openFindings: (n: number) => `${n} ${n === 1 ? "ملاحظة مفتوحة" : "ملاحظات مفتوحة"}`,
-    roadmapTitle: "ما الذي ستحفظه هذه المساحة مع نموها",
-    roadmapBody:
-      "هذا نموذج أولي يعمل فعليًا، وليس قاعدة بيانات حية بعد - إجاباتك محفوظة في هذا المتصفح فقط. الأقسام أدناه هي البنية التي صُمم هذا الملف ليتوسع إليها لاحقًا.",
-    resultsCta: "العودة إلى النتيجة",
+    findingsTitle: "الملاحظات (Findings)",
+    findingsBody: "الإشارات التي ظهرت في آخر تشخيص، وحالة كل واحدة منها.",
+    noFindings: "لا توجد ملاحظات متتبَّعة بعد - إما لم تظهر أي إشارة، أو لم يُكمَل التشخيص بعد.",
+    resultsCta: "فتح في صفحة النتيجة",
     resultsHref: "/platform/ar/diagnostic/results",
-    roadmapItems: [
-      "ملف المؤسسة",
-      "الأهداف",
-      "المؤشرات",
-      "نتائج التشخيص",
-      "الملاحظات (Findings)",
-      "الأولويات",
-      "خطط التحسين",
-      "المبادرات",
-      "المنتجات والخدمات",
-      "العمليات",
-      "الإجراءات",
-      "المنافع",
-      "الأثر",
-      "سجل التقدم عبر الوقت",
-    ],
+    statusLabel: {
+      new: "إشارة جديدة",
+      "pending-verification": "بانتظار التحقق",
+      verified: "تم التحقق",
+      "help-requested": "طلب مساعدة",
+    } as Record<FindingTrackingStatus, string>,
   },
 };
 
 const dotClass: Record<DimensionStatus, string> = {
-  strong: "bg-ink",
-  "needs-attention": "bg-navy",
-  critical: "bg-orange",
+  "no-signal": "bg-ink",
+  signal: "bg-orange",
   "insufficient-data": "bg-line",
 };
 
+const trackingDotClass: Record<FindingTrackingStatus, string> = {
+  new: "bg-line",
+  "pending-verification": "bg-navy",
+  verified: "bg-ink",
+  "help-requested": "bg-orange",
+};
+
 export function MyOrganizationView({ locale = "en" }: { locale?: Locale }) {
-  const { profile } = useOrgDiagnosis();
+  const { profile, findingStatus } = useOrgDiagnosis();
   const t = strings[locale];
 
   const dimensionResults = useMemo(() => (profile ? computeDimensionResults(profile) : null), [profile]);
@@ -115,9 +99,7 @@ export function MyOrganizationView({ locale = "en" }: { locale?: Locale }) {
     <Container className="max-w-4xl py-12 md:py-16">
       <p className="text-xs font-medium text-muted">{t.eyebrow}</p>
       <h1 className="mt-2 text-2xl font-semibold tracking-tight text-ink md:text-3xl">{orgName}</h1>
-      <p className="mt-3 text-sm text-muted">
-        {t.lastRun(date)} · {t.openFindings(findings.length)}
-      </p>
+      <p className="mt-3 text-sm text-muted">{t.lastRun(date)}</p>
 
       <div className="mt-8 flex flex-wrap gap-2">
         {dimensionKeys.map((dimension) => (
@@ -131,22 +113,33 @@ export function MyOrganizationView({ locale = "en" }: { locale?: Locale }) {
         ))}
       </div>
 
-      <div className="mt-6">
-        <PlatformButton href={t.resultsHref} locale={locale} variant="secondary">
-          {t.resultsCta}
-        </PlatformButton>
-      </div>
-
       <div className="mt-14 border-t border-line pt-10">
-        <h2 className="text-xl font-semibold tracking-tight text-ink">{t.roadmapTitle}</h2>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{t.roadmapBody}</p>
+        <h2 className="text-xl font-semibold tracking-tight text-ink">{t.findingsTitle}</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{t.findingsBody}</p>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {t.roadmapItems.map((item) => (
-            <div key={item} className="rounded-xl border border-dashed border-line px-4 py-3 text-sm text-muted">
-              {item}
-            </div>
-          ))}
+        {findings.length === 0 ? (
+          <p className="mt-6 rounded-2xl border border-line p-6 text-sm text-muted">{t.noFindings}</p>
+        ) : (
+          <div className="mt-6 divide-y divide-line rounded-2xl border border-line">
+            {findings.map((finding) => {
+              const status = findingStatus[finding.id] ?? "new";
+              return (
+                <div key={finding.id} className="flex items-center justify-between gap-4 px-5 py-4">
+                  <p className="text-sm text-ink">{finding.whatWeFound[locale]}</p>
+                  <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-line px-3 py-1 text-xs font-medium text-muted">
+                    <span className={cn("size-1.5 rounded-full", trackingDotClass[status])} aria-hidden />
+                    {t.statusLabel[status]}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <div className="mt-6">
+          <PlatformButton href={t.resultsHref} locale={locale} variant="secondary">
+            {t.resultsCta}
+          </PlatformButton>
         </div>
       </div>
     </Container>

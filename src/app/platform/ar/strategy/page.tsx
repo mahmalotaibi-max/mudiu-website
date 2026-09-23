@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
+import { DemoBanner } from "@/components/platform/DemoBanner";
 import { SampleOrgExplorer } from "@/components/platform/SampleOrgExplorer";
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export default function StrategyPageAr() {
   return (
     <>
       <PlatformShell active="strategy" locale="ar" />
+      <DemoBanner locale="ar" />
       <Container className="max-w-6xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
           من الهدف إلى الأثر

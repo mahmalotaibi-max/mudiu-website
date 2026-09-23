@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
-import { RequireDiagnostic } from "@/components/platform/RequireDiagnostic";
+import { DemoBanner } from "@/components/platform/DemoBanner";
 import { ScoreCard } from "@/components/platform/ScoreCard";
 import { sampleOrganizationAr } from "@/lib/platform/sampleData.ar";
 import { computeFindings, computeScores } from "@/lib/platform/diagnostics";
@@ -29,15 +29,16 @@ export default function OverviewPageAr() {
   const findings = computeFindings(sampleOrganizationAr, "ar");
 
   return (
-    <RequireDiagnostic locale="ar">
+    <>
       <PlatformShell active="overview" locale="ar" />
+      <DemoBanner locale="ar" />
       <Container className="max-w-5xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
           الصحة الاستراتيجية للمؤسسة
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
-          نظرة تشخيصية على مدى اتصال استراتيجية مؤسستك بالتنفيذ والقيمة والأثر - بناءً على
-          البيانات المقدَّمة.
+          نظرة تشخيصية على مدى اتصال استراتيجية رِواء للأغذية (مثال توضيحي افتراضي) بالتنفيذ
+          والقيمة والأثر.
         </p>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -68,9 +69,9 @@ export default function OverviewPageAr() {
         </div>
 
         <p className="mt-4 text-xs text-muted">
-          هذه مؤشرات تشخيصية مبنية على البيانات المقدَّمة - تصف مدى ترابط بيانات مؤسستك ووجود
-          الأدلة عليها، وليست تصنيفًا علميًا أو معدل نجاح. الرقم المنخفض يعني نقصًا في البيانات أو
-          الروابط، لا فشلًا.
+          هذه مؤشرات تشخيصية توضيحية مبنية على بيانات رِواء للأغذية الافتراضية - تصف مدى ترابط
+          بياناتها ووجود الأدلة عليها، وليست تصنيفًا علميًا أو معدل نجاح. الرقم المنخفض يعني نقصًا
+          في البيانات أو الروابط، لا فشلًا.
         </p>
 
         <div className="mt-14">
@@ -107,6 +108,6 @@ export default function OverviewPageAr() {
           </Link>
         </div>
       </Container>
-    </RequireDiagnostic>
+    </>
   );
 }

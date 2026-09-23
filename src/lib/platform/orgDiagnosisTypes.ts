@@ -34,9 +34,28 @@ export const dimensionKeys: DimensionKey[] = [
  * data exists yet, and so answers stay easy to aggregate into a dimension status. */
 export type AnswerValue = "yes" | "partial" | "no";
 
+/** Signal: a small, always-asked entry check per dimension. Evidence: only asked
+ * when Signal indicates something worth a closer look, scoped to that dimension. */
+export type QuestionLevel = "signal" | "evidence";
+
+/** What kind of organizational practice a question actually tests - not every
+ * question needs to test every level (existence -> clarity -> use -> behavior ->
+ * improvement); each question picks the level that reveals the most for its
+ * specific capability instead of running the full ladder everywhere. */
+export type QuestionType =
+  | "existence"
+  | "clarity"
+  | "accessibility"
+  | "consistency"
+  | "measurement"
+  | "ownership"
+  | "improvement";
+
 export interface DiagnosticQuestion {
   id: string;
   dimension: DimensionKey;
+  level: QuestionLevel;
+  type: QuestionType;
   text: Record<Locale, string>;
   /** True for a question where "yes" is the *bad* answer (e.g. "do the same
    * operational problems keep recurring?") so scoring can invert it instead
@@ -44,12 +63,17 @@ export interface DiagnosticQuestion {
   reverse?: boolean;
 }
 
-export type DimensionStatus = "strong" | "needs-attention" | "critical" | "insufficient-data";
+// A clean Signal (e.g. every Signal question answered "yes") only means
+// nothing surfaced that calls for a closer look - it is never treated as
+// proof the dimension is "strong" or mature. "signal" means Signal (and,
+// where collected, Evidence) indicate something worth checking; it is a
+// gate for attention, not a verdict on organizational maturity.
+export type DimensionStatus = "no-signal" | "signal" | "insufficient-data";
 
 export interface DimensionResult {
   dimension: DimensionKey;
   status: DimensionStatus;
-  /** 0-1 average of this dimension's answered questions (reverse-adjusted); null when insufficient-data. */
+  /** 0-1 average of this dimension's answered Signal questions (reverse-adjusted); null when insufficient-data. */
   score: number | null;
   answeredCount: number;
   totalCount: number;
@@ -57,26 +81,47 @@ export interface DimensionResult {
 
 export type Priority = "high" | "medium" | "low";
 
+/** How much corroborating Evidence backs a Finding - never a maturity score
+ * or a "how bad is it" measure, only a statement of how sure MUDIU is that
+ * this Finding reflects reality: low = Signal alone, medium = Evidence
+ * collected but incomplete, high = Evidence collected and complete. */
+export type Confidence = "low" | "medium" | "high";
+
 export interface MockSolution {
   id: string;
   title: Record<Locale, string>;
-  summary: Record<Locale, string>;
+  /** "Good fit when..." - a short, generic description of the kind of finding this solution answers. */
+  whenToUse: Record<Locale, string>;
+  /** "What it helps with" - exactly 3 points. */
   includes: Record<Locale, string[]>;
+  /** "Expected outcome" - one plain, non-inflated sentence. */
+  expectedOutcome: Record<Locale, string>;
 }
 
 export interface Finding {
   id: string;
   dimension: DimensionKey;
-  title: Record<Locale, string>;
+  /** Always phrased as a hedged signal, never a verdict - e.g. "A signal
+   * worth checking appeared in..." never "The organization lacks...". */
   whatWeFound: Record<Locale, string>;
   evidence: Record<Locale, string[]>;
   affectedArea: Record<Locale, string>;
   priority: Priority;
+  confidence: Confidence;
   whyItMatters: Record<Locale, string>;
-  potentialDriver?: Record<Locale, string>;
+  /** "What to validate" - a distinct, always-hedged next question, separate
+   * from whyItMatters (which explains consequence, not what to check). */
+  whatToValidate: Record<Locale, string>;
+  /** Prompt for the optional Verification field shown on the results page. */
+  verificationPrompt: Record<Locale, string>;
   missingData?: Record<Locale, string[]>;
   solutionId: string;
 }
+
+/** Local-only tracking state for My Organization - never a backend record.
+ * Monotonic: a finding only moves forward (new -> pending-verification ->
+ * verified -> help-requested), never backward. */
+export type FindingTrackingStatus = "new" | "pending-verification" | "verified" | "help-requested";
 
 /** Optional, org-specific numeric evidence that supplements (never replaces)
  * the answer-driven evidence - this is how the Riwaa demo can show real

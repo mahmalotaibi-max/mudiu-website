@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
-import { RequireDiagnostic } from "@/components/platform/RequireDiagnostic";
 import { ScoreCard } from "@/components/platform/ScoreCard";
 import { sampleOrganization } from "@/lib/platform/sampleData";
 import { computeFindings, computeScores } from "@/lib/platform/diagnostics";
@@ -29,7 +28,7 @@ export default function OverviewPage() {
   const findings = computeFindings(sampleOrganization);
 
   return (
-    <RequireDiagnostic>
+    <>
       <PlatformShell active="overview" />
       <Container className="max-w-5xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
@@ -107,6 +106,6 @@ export default function OverviewPage() {
           </Link>
         </div>
       </Container>
-    </RequireDiagnostic>
+    </>
   );
 }

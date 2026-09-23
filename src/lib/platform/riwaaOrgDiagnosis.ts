@@ -1,47 +1,42 @@
 import type { OrgDiagnosticProfile } from "@/lib/platform/orgDiagnosisTypes";
 
-// Sample organization for the "Explore Sample Organization" shortcut (spec
-// item 15): a mid-size Saudi food company selling through stores and
-// e-commerce, deliberately answered so that Operations, Knowledge, and
-// Value come back critical, Performance and Growth need attention, and
-// Direction is comparatively strong - a realistic, uneven profile rather
-// than a uniformly bad or uniformly good one.
+// Sample organization for the "Explore Sample Organization" shortcut: a
+// mid-size Saudi food company, deliberately answered so that Direction shows
+// no signal, while Performance/Growth/Operations/Knowledge/Value each show a
+// signal worth checking - with Evidence left intentionally incomplete for
+// Performance and Value, so the demo also shows what "medium" and "low"
+// Confidence look like, not just "high".
 export const riwaaOrgDiagnosticProfile: OrgDiagnosticProfile = {
   organizationName: "رِواء للأغذية",
   sector: "business",
   growthMetrics: { currentGrowthPct: 8, targetGrowthPct: 15 },
   answers: {
-    // Direction - reasonably strong
-    "dir-1": "yes",
-    "dir-2": "partial",
-    "dir-3": "yes",
+    // Direction - clean signal, no deep dive triggered
+    "dir-sig-existence": "yes",
+    "dir-sig-clarity": "yes",
 
-    // Performance - a real but partial measurement gap
-    "perf-1": "no",
-    "perf-2": "yes",
-    "perf-3": "yes",
-    "perf-4": "partial",
+    // Performance - signal triggered; only one of two Evidence questions
+    // answered, so this finding lands at "medium" confidence.
+    "perf-sig-existence": "no",
+    "perf-evi-measurement": "no",
 
-    // Growth - tracked, but underperforming and the driver is unknown
-    "gro-1": "yes",
-    "gro-2": "yes",
-    "gro-3": "partial",
-    "gro-4": "no",
+    // Growth - signal triggered (tracked, but under target); Evidence fully
+    // answered -> "high" confidence.
+    "gro-sig-measurement": "partial",
+    "gro-evi-ownership": "no",
 
-    // Operations - critical: undocumented, recurring problems
-    "ops-1": "partial",
-    "ops-2": "no",
-    "ops-3": "partial",
-    "ops-4": "yes",
+    // Operations - signal triggered; all Evidence answered -> "high" confidence.
+    "ops-sig-existence": "no",
+    "ops-evi-accessibility": "no",
+    "ops-evi-improvement": "yes",
+    "ops-evi-ownership": "partial",
 
-    // Knowledge - critical: tied to specific people
-    "know-1": "yes",
-    "know-2": "partial",
-    "know-3": "no",
+    // Knowledge - signal triggered; Evidence answered -> "high" confidence.
+    "know-sig-existence": "yes",
+    "know-evi-accessibility": "no",
 
-    // Value - critical: initiatives aren't connected to results
-    "val-1": "partial",
-    "val-2": "partial",
-    "val-3": "no",
+    // Value - signal triggered; Evidence left unanswered on purpose, so this
+    // finding lands at "low" confidence.
+    "val-sig-measurement": "partial",
   },
 };
