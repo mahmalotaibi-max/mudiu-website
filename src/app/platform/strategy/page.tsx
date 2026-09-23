@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
-import { RequireDiagnostic } from "@/components/platform/RequireDiagnostic";
 import { StrategyExplorer } from "@/components/platform/StrategyExplorer";
 import { sampleOrganization } from "@/lib/platform/sampleData";
 import { buildAllChains } from "@/lib/platform/diagnostics";
@@ -14,7 +13,7 @@ export default function StrategyPage() {
   const chains = buildAllChains(sampleOrganization);
 
   return (
-    <RequireDiagnostic>
+    <>
       <PlatformShell active="strategy" />
       <Container className="max-w-6xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
@@ -29,6 +28,6 @@ export default function StrategyPage() {
           <StrategyExplorer chains={chains} />
         </div>
       </Container>
-    </RequireDiagnostic>
+    </>
   );
 }

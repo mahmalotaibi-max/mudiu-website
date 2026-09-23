@@ -15,9 +15,15 @@ export const metadata: Metadata = {
 export default async function ContactPage({
   searchParams,
 }: {
-  searchParams: Promise<{ source?: string; organization?: string; solution?: string; problem?: string }>;
+  searchParams: Promise<{
+    source?: string;
+    organization?: string;
+    solution?: string;
+    problem?: string;
+    verification?: string;
+  }>;
 }) {
-  const { source, organization, solution, problem } = await searchParams;
+  const { source, organization, solution, problem, verification } = await searchParams;
   const fromDiagnostic = source === "diagnostic" && Boolean(solution);
 
   const messageLines: string[] = [];
@@ -26,6 +32,7 @@ export default async function ContactPage({
     if (organization) messageLines.push(`المؤسسة: ${organization}`);
     if (problem) messageLines.push(`المشكلة المكتشفة: ${problem}`);
     if (solution) messageLines.push(`الحل المطلوب: ${solution}`);
+    if (verification) messageLines.push(`معلومات إضافية من المستخدم: ${verification}`);
   }
 
   return (

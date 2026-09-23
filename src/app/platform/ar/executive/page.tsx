@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
-import { RequireDiagnostic } from "@/components/platform/RequireDiagnostic";
+import { DemoBanner } from "@/components/platform/DemoBanner";
 import { sampleOrganizationAr } from "@/lib/platform/sampleData.ar";
 import { computeExecutiveSummary } from "@/lib/platform/diagnostics";
 
@@ -14,8 +14,9 @@ export default function ExecutivePageAr() {
   const summary = computeExecutiveSummary(sampleOrganizationAr, "ar");
 
   return (
-    <RequireDiagnostic locale="ar">
+    <>
       <PlatformShell active="executive" locale="ar" />
+      <DemoBanner locale="ar" />
       <Container className="max-w-3xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
           العرض التنفيذي الاستراتيجي
@@ -78,6 +79,6 @@ export default function ExecutivePageAr() {
           عرض التشخيص الكامل
         </Link>
       </Container>
-    </RequireDiagnostic>
+    </>
   );
 }

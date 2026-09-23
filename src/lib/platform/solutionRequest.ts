@@ -6,11 +6,15 @@ export function buildRequestHref({
   solution,
   finding,
   locale,
+  verificationNote,
 }: {
   organizationName?: string;
   solution: MockSolution;
   finding: Finding;
   locale: Locale;
+  /** The optional free-text Verification note, if the visitor filled one in.
+   * Never scored, never affects Confidence - only carried along as context. */
+  verificationNote?: string;
 }) {
   const params = new URLSearchParams();
   params.set("source", "diagnostic");
@@ -19,5 +23,8 @@ export function buildRequestHref({
   }
   params.set("solution", solution.title[locale]);
   params.set("problem", finding.whatWeFound[locale]);
+  if (verificationNote && verificationNote.trim().length > 0) {
+    params.set("verification", verificationNote.trim());
+  }
   return `/contact?${params.toString()}#booking`;
 }

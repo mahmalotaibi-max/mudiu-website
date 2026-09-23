@@ -2,16 +2,14 @@ import { cn } from "@/lib/utils";
 import type { DimensionStatus } from "@/lib/platform/orgDiagnosisTypes";
 
 const toneClass: Record<DimensionStatus, string> = {
-  strong: "text-ink",
-  "needs-attention": "text-navy",
-  critical: "text-orange",
+  "no-signal": "text-ink",
+  signal: "text-orange",
   "insufficient-data": "text-muted",
 };
 
 const dotClass: Record<DimensionStatus, string> = {
-  strong: "bg-ink",
-  "needs-attention": "bg-navy",
-  critical: "bg-orange",
+  "no-signal": "bg-ink",
+  signal: "bg-orange",
   "insufficient-data": "bg-line",
 };
 

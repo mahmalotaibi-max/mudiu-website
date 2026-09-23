@@ -7,19 +7,20 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/lib/platform/types";
-import type { AnswerValue } from "@/lib/platform/orgDiagnosisTypes";
+import type { AnswerValue, DimensionKey, QuestionLevel } from "@/lib/platform/orgDiagnosisTypes";
 import { dimensionKeys } from "@/lib/platform/orgDiagnosisTypes";
 import { dimensionLabels, dimensionQuestion, questionsFor } from "@/lib/platform/orgDiagnosisQuestions";
+import { computeDimensionResults } from "@/lib/platform/orgDiagnosis";
 import { useOrgDiagnosis } from "@/components/platform/OrgDiagnosisProvider";
-import { usePlatform } from "@/components/platform/PlatformProvider";
 import { riwaaOrgDiagnosticProfile } from "@/lib/platform/riwaaOrgDiagnosis";
 
 const strings = {
   en: {
     step: (i: number, n: number) => `Step ${i} of ${n}`,
+    deepDiveStep: (i: number, n: number, dimension: string) => `A signal appeared in ${dimension} worth a closer look - Step ${i} of ${n}`,
     introTitle: "Start Free Diagnostic",
     introBody:
-      "A short, free diagnostic - no data upload needed. Answer a few simple questions about your organization, and MUDIU will show you where things stand and what to work on next.",
+      "A short, free diagnostic - no data upload needed. Answer a few simple questions about your organization, and MUDIU will show you where signals worth checking appear, and what to work on next.",
     orgNameLabel: "Your organization's name (optional)",
     orgNamePlaceholder: "e.g. Riwaa Foods",
     sampleTitle: "Try it with a sample organization",
@@ -36,9 +37,10 @@ const strings = {
   },
   ar: {
     step: (i: number, n: number) => `الخطوة ${i} من ${n}`,
+    deepDiveStep: (i: number, n: number, dimension: string) => `ظهرت إشارة في ${dimension} تستحق فهمًا أعمق - الخطوة ${i} من ${n}`,
     introTitle: "ابدأ التشخيص المجاني",
     introBody:
-      "تشخيص قصير ومجاني - بلا حاجة لرفع بيانات. أجب على بضعة أسئلة بسيطة عن مؤسستك، وستُظهر لك MUDIU أين تقف مؤسستك، وما الذي يستحق العمل عليه بعد ذلك.",
+      "تشخيص قصير ومجاني - بلا حاجة لرفع بيانات. أجب على بضعة أسئلة بسيطة عن مؤسستك، وستُظهر لك MUDIU أين تظهر إشارات تستحق التحقق، وما الذي يستحق العمل عليه بعد ذلك.",
     orgNameLabel: "اسم مؤسستك (اختياري)",
     orgNamePlaceholder: "مثال: رِواء للأغذية",
     sampleTitle: "جرّبها بمؤسسة تجريبية",
@@ -57,51 +59,74 @@ const strings = {
 
 const answerOptions: AnswerValue[] = ["yes", "partial", "no"];
 
-type Step = "intro" | DimensionStepKey | "running";
-type DimensionStepKey = (typeof dimensionKeys)[number];
+interface DimensionStep {
+  dimension: DimensionKey;
+  level: QuestionLevel;
+}
+type Step = "intro" | DimensionStep | "running";
 
 export function OrgDiagnosisQuestionnaire({ locale = "en" }: { locale?: Locale }) {
   const t = strings[locale];
   const router = useRouter();
   const { complete, completeWithProfile } = useOrgDiagnosis();
-  // Completing the short diagnostic also unlocks the deeper, sample-data
-  // Strategy/Overview/Insights/Executive pages (the older Goal->Impact
-  // engine) - the two engines stay independent, but finishing this one is a
-  // reasonable, one-way trigger to open the other's exploration pages too.
-  const { runDiagnostic } = usePlatform();
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
 
-  const [step, setStep] = useState<Step>("intro");
+  // A stack, not an index: which dimensions get a follow-up Evidence step
+  // depends on how each Signal step is answered, so "back" replays whatever
+  // path was actually taken instead of a fixed sequence.
+  const [history, setHistory] = useState<Step[]>(["intro"]);
   const [orgName, setOrgName] = useState("");
   const [answers, setAnswers] = useState<Partial<Record<string, AnswerValue>>>({});
 
-  const stepIndex = step === "intro" ? 0 : step === "running" ? dimensionKeys.length + 1 : dimensionKeys.indexOf(step) + 1;
-  const totalSteps = dimensionKeys.length + 1;
+  const step = history[history.length - 1];
 
-  function goToDimension(i: number) {
-    if (i < 0) {
-      setStep("intro");
-    } else if (i >= dimensionKeys.length) {
+  function pushStep(next: Step) {
+    setHistory((h) => [...h, next]);
+  }
+
+  function goBack() {
+    setHistory((h) => (h.length > 1 ? h.slice(0, -1) : h));
+  }
+
+  function startDiagnostic() {
+    pushStep({ dimension: dimensionKeys[0], level: "signal" });
+  }
+
+  function goToNextDimensionOrFinish(dimensionIndex: number) {
+    if (dimensionIndex + 1 >= dimensionKeys.length) {
       finish();
     } else {
-      setStep(dimensionKeys[i]);
+      pushStep({ dimension: dimensionKeys[dimensionIndex + 1], level: "signal" });
     }
   }
 
+  function advanceFromSignal(dimension: DimensionKey) {
+    const dimensionIndex = dimensionKeys.indexOf(dimension);
+    const results = computeDimensionResults({ organizationName: orgName, sector: "business", answers });
+    const hasEvidenceQuestions = questionsFor(dimension, "evidence").length > 0;
+    if (results[dimension].status === "signal" && hasEvidenceQuestions) {
+      pushStep({ dimension, level: "evidence" });
+    } else {
+      goToNextDimensionOrFinish(dimensionIndex);
+    }
+  }
+
+  function advanceFromEvidence(dimension: DimensionKey) {
+    goToNextDimensionOrFinish(dimensionKeys.indexOf(dimension));
+  }
+
   function finish() {
-    setStep("running");
+    pushStep("running");
     setTimeout(() => {
       complete(orgName.trim(), answers);
-      runDiagnostic();
       router.push(t.resultsHref);
     }, 900);
   }
 
   function useSample() {
-    setStep("running");
+    pushStep("running");
     setTimeout(() => {
       completeWithProfile(riwaaOrgDiagnosticProfile);
-      runDiagnostic();
       router.push(t.resultsHref);
     }, 900);
   }
@@ -127,7 +152,7 @@ export function OrgDiagnosisQuestionnaire({ locale = "en" }: { locale?: Locale }
 
           <button
             type="button"
-            onClick={() => goToDimension(0)}
+            onClick={startDiagnostic}
             className="group mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-medium text-paper transition-all duration-300 outline-offset-4 hover:-translate-y-0.5 hover:bg-navy hover:shadow-[0_16px_32px_-16px_rgba(30,47,82,0.5)] focus-visible:outline-orange"
           >
             <span>{t.start}</span>
@@ -159,16 +184,27 @@ export function OrgDiagnosisQuestionnaire({ locale = "en" }: { locale?: Locale }
         </div>
       )}
 
-      {dimensionKeys.includes(step as DimensionStepKey) && (
+      {step !== "intro" && step !== "running" && (
         <DimensionStep
-          dimension={step as DimensionStepKey}
+          dimension={step.dimension}
+          level={step.level}
           locale={locale}
           answers={answers}
           onAnswer={(id, value) => setAnswers((prev) => ({ ...prev, [id]: value }))}
-          onBack={() => goToDimension(stepIndex - 2)}
-          onNext={() => goToDimension(stepIndex)}
-          isLast={dimensionKeys.indexOf(step as DimensionStepKey) === dimensionKeys.length - 1}
-          stepLabel={t.step(stepIndex, totalSteps)}
+          onBack={goBack}
+          onNext={() =>
+            step.level === "signal" ? advanceFromSignal(step.dimension) : advanceFromEvidence(step.dimension)
+          }
+          isLastDimension={dimensionKeys.indexOf(step.dimension) === dimensionKeys.length - 1}
+          stepLabel={
+            step.level === "signal"
+              ? t.step(dimensionKeys.indexOf(step.dimension) + 1, dimensionKeys.length)
+              : t.deepDiveStep(
+                  dimensionKeys.indexOf(step.dimension) + 1,
+                  dimensionKeys.length,
+                  dimensionLabels[step.dimension][locale]
+                )
+          }
           t={t}
         />
       )}
@@ -185,28 +221,39 @@ export function OrgDiagnosisQuestionnaire({ locale = "en" }: { locale?: Locale }
 
 function DimensionStep({
   dimension,
+  level,
   locale,
   answers,
   onAnswer,
   onBack,
   onNext,
-  isLast,
+  isLastDimension,
   stepLabel,
   t,
 }: {
-  dimension: DimensionStepKey;
+  dimension: DimensionKey;
+  level: QuestionLevel;
   locale: Locale;
   answers: Partial<Record<string, AnswerValue>>;
   onAnswer: (id: string, value: AnswerValue) => void;
   onBack: () => void;
   onNext: () => void;
-  isLast: boolean;
+  isLastDimension: boolean;
   stepLabel: string;
   t: (typeof strings)["en"];
 }) {
-  const qs = questionsFor(dimension);
+  const qs = questionsFor(dimension, level);
   const allAnswered = qs.every((q) => answers[q.id]);
   const answerLabel: Record<AnswerValue, string> = { yes: t.yes, partial: t.partial, no: t.no };
+
+  // Whether clicking "next" will finish the diagnostic or reveal a deep-dive
+  // step depends on how the Signal questions were just answered, so this is
+  // recomputed live to label the button correctly ("Next" vs "See my results").
+  const willNeedEvidence =
+    level === "signal" &&
+    computeDimensionResults({ organizationName: "", sector: "business", answers })[dimension].status === "signal" &&
+    questionsFor(dimension, "evidence").length > 0;
+  const isFinalStep = isLastDimension && (level === "evidence" || !willNeedEvidence);
 
   return (
     <div>
@@ -255,7 +302,7 @@ function DimensionStep({
               : "cursor-not-allowed bg-paper-alt text-muted"
           )}
         >
-          {isLast ? t.finish : t.next}
+          {isFinalStep ? t.finish : t.next}
         </button>
         <button type="button" onClick={onBack} className="text-sm text-muted hover:text-ink">
           {t.back}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
-import { RequireDiagnostic } from "@/components/platform/RequireDiagnostic";
+import { DemoBanner } from "@/components/platform/DemoBanner";
 import { ScoreCard } from "@/components/platform/ScoreCard";
 import { sampleOrganizationAr } from "@/lib/platform/sampleData.ar";
 import { computeFindings, computeScores } from "@/lib/platform/diagnostics";
@@ -29,8 +29,9 @@ export default function OverviewPageAr() {
   const findings = computeFindings(sampleOrganizationAr, "ar");
 
   return (
-    <RequireDiagnostic locale="ar">
+    <>
       <PlatformShell active="overview" locale="ar" />
+      <DemoBanner locale="ar" />
       <Container className="max-w-5xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
           الصحة الاستراتيجية للمؤسسة
@@ -107,6 +108,6 @@ export default function OverviewPageAr() {
           </Link>
         </div>
       </Container>
-    </RequireDiagnostic>
+    </>
   );
 }

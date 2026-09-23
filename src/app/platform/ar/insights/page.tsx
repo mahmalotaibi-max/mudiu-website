@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { PlatformShell } from "@/components/platform/PlatformShell";
-import { RequireDiagnostic } from "@/components/platform/RequireDiagnostic";
+import { DemoBanner } from "@/components/platform/DemoBanner";
 import { AskMudiu } from "@/components/platform/AskMudiu";
 import { sampleOrganizationAr } from "@/lib/platform/sampleData.ar";
 
@@ -11,8 +11,9 @@ export const metadata: Metadata = {
 
 export default function InsightsPageAr() {
   return (
-    <RequireDiagnostic locale="ar">
+    <>
       <PlatformShell active="insights" locale="ar" />
+      <DemoBanner locale="ar" />
       <Container className="max-w-4xl py-12 md:py-16">
         <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">اسأل MUDIU</h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">
@@ -22,6 +23,6 @@ export default function InsightsPageAr() {
           <AskMudiu dataset={sampleOrganizationAr} locale="ar" />
         </div>
       </Container>
-    </RequireDiagnostic>
+    </>
   );
 }

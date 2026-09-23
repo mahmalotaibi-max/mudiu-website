@@ -34,8 +34,8 @@ const strings = {
     ambiguousTitle: "No single priority is clear yet",
     ambiguousBody: "There are areas worth verifying, but the current information isn't enough to rank them with confidence.",
     otherAreasTitle: "Other areas worth attention",
-    strongTitle: "Nothing stood out as needing attention",
-    strongBody: "Based on what was answered, the picture across dimensions looks solid and connected.",
+    strongTitle: "No signal requiring a closer look appeared",
+    strongBody: "Based on the initial answers, nothing across the dimensions currently calls for a deeper review.",
     insufficientTitle: "Not enough information yet",
     insufficientBody: "Several dimensions don't have enough answers yet to know whether they need attention. Complete more of the diagnostic for a fuller picture.",
     nextStepTitle: "From diagnosis to next step",
@@ -62,8 +62,8 @@ const strings = {
     ambiguousTitle: "لم تتضح أولوية واحدة بعد",
     ambiguousBody: "توجد مجالات تستحق التحقق، لكن المعلومات الحالية لا تكفي لترتيبها بثقة.",
     otherAreasTitle: "مجالات أخرى تستحق الانتباه",
-    strongTitle: "لا يوجد ما يستدعي الانتباه حاليًا",
-    strongBody: "بناءً على ما تمت الإجابة عليه، تبدو الصورة عبر الأبعاد قوية ومترابطة.",
+    strongTitle: "لم تظهر أي إشارة تستدعي التعمق الآن",
+    strongBody: "بناءً على الإجابات الأولية، لم يتضح ما يستدعي فحصًا أعمق في أي من الأبعاد حاليًا.",
     insufficientTitle: "المعلومات غير كافية بعد",
     insufficientBody: "عدة أبعاد لا تملك إجابات كافية لمعرفة ما إذا كانت تحتاج انتباهًا. أكمل جزءًا أكبر من التشخيص للحصول على صورة أوضح.",
     nextStepTitle: "من التشخيص إلى الخطوة التالية",
@@ -76,24 +76,19 @@ const strings = {
 };
 
 const statusLabel: Record<DimensionStatus, Record<Locale, string>> = {
-  strong: { en: "Strong", ar: "قوي" },
-  "needs-attention": { en: "Needs Attention", ar: "يحتاج انتباهًا" },
-  critical: { en: "Critical", ar: "حرج" },
+  "no-signal": { en: "No signal to review", ar: "لا توجد إشارة تستدعي التعمق" },
+  signal: { en: "Signal worth checking", ar: "ظهرت إشارة تستحق التحقق" },
   "insufficient-data": { en: "Insufficient Data", ar: "بيانات غير كافية" },
 };
 
 const statusDescription: Record<DimensionStatus, Record<Locale, string>> = {
-  strong: {
-    en: "The answers given here point to a solid, connected picture.",
-    ar: "الإجابات في هذا الجزء تشير إلى صورة قوية ومترابطة.",
+  "no-signal": {
+    en: "The initial answers here didn't surface anything calling for a closer look yet.",
+    ar: "الإجابات الأولية في هذا الجزء لم تُظهر ما يستدعي فحصًا أعمق الآن.",
   },
-  "needs-attention": {
-    en: "There are real gaps here worth a closer look.",
-    ar: "توجد فجوات حقيقية هنا تستحق نظرة أقرب.",
-  },
-  critical: {
-    en: "This is one of the areas most worth addressing next.",
-    ar: "هذا من أكثر المجالات التي تستحق المعالجة القادمة.",
+  signal: {
+    en: "A signal appeared here that's worth a closer look.",
+    ar: "ظهرت إشارة في هذا الجزء تستحق فحصًا أعمق.",
   },
   "insufficient-data": {
     en: "Not enough was answered here to assess this area yet.",
@@ -204,7 +199,6 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
                   organizationName={profile.organizationName}
                   locale={locale}
                   variant="priority"
-                  dimensionStatusLabel={statusLabel[dimensionResults[selection.top.dimension].status][locale]}
                 />
 
                 {selection.rest.length > 0 && (
