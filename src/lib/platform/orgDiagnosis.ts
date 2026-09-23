@@ -124,8 +124,8 @@ const findingTemplates: FindingTemplate[] = [
       ar: "بدون اتجاه مشترك، كل قرار آخر - ماذا تقيس، أو تُولوّي، أو تبني - يفقد نقطة ارتكازه.",
     },
     potentialDriver: {
-      en: "Goals may exist informally but were never written down or agreed on together.",
-      ar: "قد توجد أهداف بشكل غير رسمي لكنها لم تُكتب أو يُتفق عليها معًا.",
+      en: "Worth checking whether goals already exist informally but were never written down or agreed on together.",
+      ar: "يستحق التحقق مما إذا كانت الأهداف موجودة بشكل غير رسمي، لكنها لم تُكتب أو يُتفق عليها معًا بعد.",
     },
     solutionId: "strategic-direction-setup",
   },
@@ -140,6 +140,10 @@ const findingTemplates: FindingTemplate[] = [
     whyItMatters: {
       en: "Without a baseline and a target, the organization cannot tell whether it is actually making progress.",
       ar: "بدون خط أساس وهدف رقمي، لا تستطيع المؤسسة معرفة ما إذا كانت تتقدم فعليًا أم لا.",
+    },
+    potentialDriver: {
+      en: "Worth checking whether this is because some goals are newer than others, or because they are genuinely hard to measure with current tools.",
+      ar: "يستحق التحقق مما إذا كان السبب أن بعض الأهداف أحدث من غيرها، أو لصعوبة قياسها بالأدوات الحالية فعليًا.",
     },
     solutionId: "kpi-performance-setup",
   },
@@ -156,8 +160,8 @@ const findingTemplates: FindingTemplate[] = [
       ar: "بدون رؤية واضحة لمحركات النمو، لا تستطيع المؤسسة معرفة أي الجهود تُجدي فعلًا.",
     },
     potentialDriver: {
-      en: "Low conversion rate.",
-      ar: "انخفاض معدل التحويل.",
+      en: "Worth checking how much the conversion rate or the channels bringing customers in are affecting this number.",
+      ar: "يستحق التحقق من مدى تأثير معدل التحويل أو قنوات اكتساب العملاء على هذا الرقم.",
     },
     solutionId: "growth-improvement",
     extraEvidence: (profile, locale) => {
@@ -180,6 +184,10 @@ const findingTemplates: FindingTemplate[] = [
       en: "Undocumented processes tend to break the same way repeatedly, and depend on whoever happens to remember them.",
       ar: "العمليات غير الموثقة تتعطل بنفس الطريقة بشكل متكرر، وتعتمد على مَن يتذكرها فقط.",
     },
+    potentialDriver: {
+      en: "Worth checking whether this is due to limited time, or because no one is clearly responsible for writing these down.",
+      ar: "يستحق التحقق مما إذا كان السبب ضيق الوقت، أو عدم وجود مسؤول واضح عن توثيقها.",
+    },
     solutionId: "process-improvement",
   },
   {
@@ -194,6 +202,10 @@ const findingTemplates: FindingTemplate[] = [
       en: "If a key person leaves or is unavailable, that knowledge - and the ability to run the process - can leave with them.",
       ar: "إذا غاب شخص رئيسي أو ترك المؤسسة، قد تغيب معه هذه المعرفة والقدرة على تشغيل العملية.",
     },
+    potentialDriver: {
+      en: "Worth checking how many people actually hold this knowledge, and how easy they are to reach when needed.",
+      ar: "يستحق التحقق من عدد الأشخاص الذين يملكون هذه المعرفة فعليًا، ومدى سهولة الوصول إليهم عند الحاجة.",
+    },
     solutionId: "knowledge-sop-documentation",
   },
   {
@@ -207,6 +219,10 @@ const findingTemplates: FindingTemplate[] = [
     whyItMatters: {
       en: "Effort spent on initiatives that are never checked against results is effort spent without proof of return.",
       ar: "الجهد المبذول في مبادرات لا تُقارَن نتائجها لاحقًا هو جهد بلا دليل على عائده.",
+    },
+    potentialDriver: {
+      en: "Worth checking whether initiative results are already collected somewhere, or scattered across different teams.",
+      ar: "يستحق التحقق مما إذا كانت نتائج المبادرات تُجمع أصلًا في مكان واحد، أو تبقى متفرقة بين الفرق.",
     },
     solutionId: "value-realization-review",
   },

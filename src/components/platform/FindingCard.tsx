@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { buildRequestHref } from "@/lib/platform/solutionRequest";
 import type { Finding, Priority } from "@/lib/platform/orgDiagnosisTypes";
 import type { MockSolution } from "@/lib/platform/orgDiagnosisTypes";
 import type { Locale } from "@/lib/platform/types";
@@ -14,29 +15,37 @@ const strings = {
     affectedArea: "Affected area",
     priority: "Priority",
     whyItMatters: "Why it matters",
-    potentialDriver: "Potential driver",
+    whatWeNoticed: "What we noticed",
+    whyPriority: "Why this surfaced first",
+    verify: "What's worth verifying",
     missingData: "Missing data",
     recommendedSolution: "Recommended solution",
     whenToUse: "Good fit when",
     helpsWith: "What it helps with",
     expectedOutcome: "Expected outcome",
+    explore: "Explore what we found",
     exploreSolution: "Explore solution",
     requestSolution: "Request this solution",
+    priorityBadge: "Priority to verify",
     priorityLabel: { high: "High", medium: "Medium", low: "Low" } as Record<Priority, string>,
   },
   ar: {
     evidence: "الدليل",
-    affectedArea: "المجال المتأثر",
+    affectedArea: "المجال",
     priority: "الأولوية",
     whyItMatters: "لماذا تستحق الانتباه",
-    potentialDriver: "ما قد تكون مرتبطة به",
+    whatWeNoticed: "ما الذي لاحظناه؟",
+    whyPriority: "لماذا ظهر كأولوية؟",
+    verify: "ما الذي نحتاج إلى التحقق منه؟",
     missingData: "بيانات ناقصة",
     recommendedSolution: "الحل المقترح",
     whenToUse: "مناسب عندما",
     helpsWith: "ما الذي يساعد عليه؟",
     expectedOutcome: "المخرج المتوقع",
+    explore: "استكشف ما اكتشفناه",
     exploreSolution: "استكشف الحل",
     requestSolution: "اطلب هذا الحل",
+    priorityBadge: "الأولوية للتحقق",
     priorityLabel: { high: "عالية", medium: "متوسطة", low: "منخفضة" } as Record<Priority, string>,
   },
 };
@@ -48,47 +57,92 @@ const priorityDot: Record<Priority, string> = {
 };
 
 export function FindingCard({
-  index,
   finding,
   solution,
   organizationName,
   locale = "en",
+  variant = "secondary",
+  dimensionStatusLabel,
 }: {
-  index: number;
   finding: Finding;
   solution: MockSolution | undefined;
   organizationName?: string;
   locale?: Locale;
+  variant?: "priority" | "secondary";
+  dimensionStatusLabel?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [solutionOpen, setSolutionOpen] = useState(false);
   const t = strings[locale];
+  const isPriority = variant === "priority";
 
   const requestHref = solution ? buildRequestHref({ organizationName, solution, finding, locale }) : undefined;
 
+  const priorityPill = (
+    <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-medium text-muted">
+      <span className={cn("size-1.5 rounded-full", priorityDot[finding.priority])} aria-hidden />
+      {t.priorityLabel[finding.priority]}
+    </span>
+  );
+
   return (
-    <div className="rounded-2xl border border-line">
+    <div
+      className={cn(
+        "rounded-2xl border",
+        isPriority ? "border-ink/15 bg-paper-alt/60 p-6 md:p-7" : "border-line px-5 py-4",
+      )}
+    >
+      {isPriority ? (
+        <div>
+          <span className="inline-flex items-center rounded-full bg-orange/10 px-3 py-1 text-xs font-semibold text-orange">
+            {t.priorityBadge}
+          </span>
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+            <h3 className="text-lg font-semibold text-ink md:text-xl">
+              {finding.affectedArea[locale]}
+              {dimensionStatusLabel ? <span className="text-muted"> — {dimensionStatusLabel}</span> : null}
+            </h3>
+            {priorityPill}
+          </div>
+
+          <div className="mt-4">
+            <p className="text-xs font-semibold text-muted">{t.whatWeNoticed}</p>
+            <p className="mt-1 text-sm leading-relaxed text-ink">{finding.whatWeFound[locale]}</p>
+          </div>
+
+          <div className="mt-4">
+            <p className="text-xs font-semibold text-muted">{t.whyPriority}</p>
+            <p className="mt-1 text-sm leading-relaxed text-ink">{finding.whyItMatters[locale]}</p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold text-muted">{t.affectedArea}</p>
+            <p className="mt-1 text-sm font-semibold text-ink">{finding.affectedArea[locale]}</p>
+            <p className="mt-1.5 text-sm text-muted">{finding.whatWeFound[locale]}</p>
+          </div>
+          {priorityPill}
+        </div>
+      )}
+
+      {!isPriority && (
+        <p className="mt-2 text-xs text-muted">{finding.whyItMatters[locale]}</p>
+      )}
+
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-start justify-between gap-4 px-5 py-4 text-start"
+        className={cn(
+          "mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink underline decoration-line underline-offset-4 transition-colors hover:text-navy",
+        )}
       >
-        <div>
-          <p className="text-xs font-semibold text-muted">{String(index + 1).padStart(2, "0")}</p>
-          <p className="mt-1 text-base font-semibold text-ink">{finding.title[locale]}</p>
-          <p className="mt-1 text-sm text-muted">{finding.whatWeFound[locale]}</p>
-        </div>
-        <div className="flex shrink-0 items-center gap-3">
-          <span className="flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-muted">
-            <span className={cn("size-1.5 rounded-full", priorityDot[finding.priority])} aria-hidden />
-            {t.priorityLabel[finding.priority]}
-          </span>
-          {open ? <ChevronUp className="size-4 text-muted" aria-hidden /> : <ChevronDown className="size-4 text-muted" aria-hidden />}
-        </div>
+        {t.explore}
+        {open ? <ChevronUp className="size-3.5" aria-hidden /> : <ChevronDown className="size-3.5" aria-hidden />}
       </button>
 
       {open && (
-        <div className="space-y-4 border-t border-line px-5 py-5">
+        <div className="mt-4 space-y-4 border-t border-line pt-4">
           {finding.evidence[locale].length > 0 && (
             <div>
               <p className="text-xs font-semibold text-muted">{t.evidence}</p>
@@ -102,23 +156,12 @@ export function FindingCard({
             </div>
           )}
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          {finding.potentialDriver && (
             <div>
-              <p className="text-xs font-semibold text-muted">{t.affectedArea}</p>
-              <p className="mt-1 text-sm text-ink">{finding.affectedArea[locale]}</p>
+              <p className="text-xs font-semibold text-muted">{t.verify}</p>
+              <p className="mt-1 text-sm text-ink">{finding.potentialDriver[locale]}</p>
             </div>
-            {finding.potentialDriver && (
-              <div>
-                <p className="text-xs font-semibold text-muted">{t.potentialDriver}</p>
-                <p className="mt-1 text-sm text-ink">{finding.potentialDriver[locale]}</p>
-              </div>
-            )}
-          </div>
-
-          <div>
-            <p className="text-xs font-semibold text-muted">{t.whyItMatters}</p>
-            <p className="mt-1 text-sm leading-relaxed text-ink">{finding.whyItMatters[locale]}</p>
-          </div>
+          )}
 
           {finding.missingData && finding.missingData[locale].length > 0 && (
             <div>
@@ -177,25 +220,4 @@ export function FindingCard({
       )}
     </div>
   );
-}
-
-function buildRequestHref({
-  organizationName,
-  solution,
-  finding,
-  locale,
-}: {
-  organizationName?: string;
-  solution: MockSolution;
-  finding: Finding;
-  locale: Locale;
-}) {
-  const params = new URLSearchParams();
-  params.set("source", "diagnostic");
-  if (organizationName && organizationName.trim().length > 0) {
-    params.set("organization", organizationName.trim());
-  }
-  params.set("solution", solution.title[locale]);
-  params.set("problem", finding.whatWeFound[locale]);
-  return `/contact?${params.toString()}#booking`;
 }

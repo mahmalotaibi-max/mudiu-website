@@ -6,8 +6,10 @@ import { Container } from "@/components/ui/Container";
 import { PlatformButton } from "@/components/platform/PlatformButton";
 import { DimensionCard } from "@/components/platform/DimensionCard";
 import { FindingCard } from "@/components/platform/FindingCard";
+import { SolutionsRecap } from "@/components/platform/SolutionsRecap";
 import { useOrgDiagnosis } from "@/components/platform/OrgDiagnosisProvider";
 import { computeDimensionResults, computeFindings } from "@/lib/platform/orgDiagnosis";
+import { selectPriorityFinding } from "@/lib/platform/orgDiagnosisPriority";
 import { solutionById } from "@/lib/platform/orgDiagnosisSolutions";
 import { dimensionKeys } from "@/lib/platform/orgDiagnosisTypes";
 import { dimensionLabels } from "@/lib/platform/orgDiagnosisQuestions";
@@ -21,12 +23,23 @@ const strings = {
     gateCta: "Start Free Diagnostic",
     diagnosticHref: "/platform/ar/diagnostic",
     viewTitle: "Your MUDIU Organizational View",
-    viewBody: (org: string) => `${org} - based on the information provided by the organization. This is not a benchmark or a maturity score.`,
-    transitionLead: "You now know where the gaps are. Next is deciding what's worth working on.",
-    transitionSub: "Recommended solutions for you",
-    attentionTitle: "What needs attention?",
-    attentionBody: "A short list, on purpose - the items most worth your attention right now, not everything MUDIU noticed.",
-    noFindings: "No area needs attention based on what was answered - a strong, well-connected profile.",
+    viewIntro: (org: string) => `Based on ${org}'s answers.`,
+    disclaimer: "These results are built from the information you provided about your organization, not a benchmark against the market.",
+    overviewEyebrow: "Quick overview of the six dimensions",
+    overviewNote: "This is an early snapshot, not a final verdict - the detail behind it is below.",
+    transitionLead: "Now, what's worth starting with?",
+    transitionSub: "The diagnostic surfaced a number of areas worth attention. Here's how we've ranked them for you.",
+    priorityTitle: "What's worth your attention first",
+    priorityBody: "Based on your answers, some areas show up as priorities to verify and act on before others.",
+    ambiguousTitle: "No single priority is clear yet",
+    ambiguousBody: "There are areas worth verifying, but the current information isn't enough to rank them with confidence.",
+    otherAreasTitle: "Other areas worth attention",
+    strongTitle: "Nothing stood out as needing attention",
+    strongBody: "Based on what was answered, the picture across dimensions looks solid and connected.",
+    insufficientTitle: "Not enough information yet",
+    insufficientBody: "Several dimensions don't have enough answers yet to know whether they need attention. Complete more of the diagnostic for a fuller picture.",
+    nextStepTitle: "From diagnosis to next step",
+    nextStepBody: "The diagnostic shows where the organization is worth looking first. The next step is turning that observation into an actionable move.",
     ctaTitle: "Continue to your organization",
     ctaBody: "Create your MUDIU workspace to keep this diagnostic, track improvement, and build on it over time.",
     ctaButton: "Create Account / Continue",
@@ -38,12 +51,23 @@ const strings = {
     gateCta: "ابدأ التشخيص المجاني",
     diagnosticHref: "/platform/ar/diagnostic",
     viewTitle: "نظرة MUDIU على مؤسستك",
-    viewBody: (org: string) => `${org} - استنادًا إلى المعلومات التي قدّمتها المؤسسة. هذه ليست معيارًا عالميًا (Benchmark) ولا مقياس نضج.`,
-    transitionLead: "عرفت أين توجد الفجوات. الآن حان وقت تحديد ما يستحق العمل عليه.",
-    transitionSub: "الحلول المقترحة لك",
-    attentionTitle: "ما الذي يحتاج انتباه؟",
-    attentionBody: "قائمة قصيرة عن قصد - أهم ما يستحق انتباهك الآن، لا كل ما لاحظته MUDIU.",
-    noFindings: "لا يوجد مجال يحتاج انتباهًا بناءً على الإجابات - وضع قوي ومترابط.",
+    viewIntro: (org: string) => `استنادًا إلى إجابات ${org}.`,
+    disclaimer: "النتائج مبنية على المعلومات التي قدمتها عن مؤسستك، وليست مقارنة معيارية بالسوق.",
+    overviewEyebrow: "نظرة سريعة على الأبعاد الستة",
+    overviewNote: "هذه لمحة أولية، وليست حكمًا نهائيًا - التفاصيل الفعلية أدناه.",
+    transitionLead: "الآن، ما الذي يستحق أن تبدأ به؟",
+    transitionSub: "حدد التشخيص عددًا من المجالات التي تستحق الانتباه. نرتبها لك لتعرف أين تبدأ.",
+    priorityTitle: "ما يستحق انتباهك أولًا",
+    priorityBody: "بناءً على إجاباتك، تظهر بعض المجالات كأولوية للتحقق والعمل قبل غيرها.",
+    ambiguousTitle: "لم تتضح أولوية واحدة بعد",
+    ambiguousBody: "توجد مجالات تستحق التحقق، لكن المعلومات الحالية لا تكفي لترتيبها بثقة.",
+    otherAreasTitle: "مجالات أخرى تستحق الانتباه",
+    strongTitle: "لا يوجد ما يستدعي الانتباه حاليًا",
+    strongBody: "بناءً على ما تمت الإجابة عليه، تبدو الصورة عبر الأبعاد قوية ومترابطة.",
+    insufficientTitle: "المعلومات غير كافية بعد",
+    insufficientBody: "عدة أبعاد لا تملك إجابات كافية لمعرفة ما إذا كانت تحتاج انتباهًا. أكمل جزءًا أكبر من التشخيص للحصول على صورة أوضح.",
+    nextStepTitle: "من التشخيص إلى الخطوة التالية",
+    nextStepBody: "التشخيص يوضح أين تستحق المؤسسة أن تنظر أولًا. أما الخطوة التالية فهي تحويل هذه الملاحظة إلى إجراء قابل للتنفيذ.",
     ctaTitle: "تابع إلى مؤسستك",
     ctaBody: "أنشئ مساحة عمل MUDIU الخاصة بك لحفظ هذا التشخيص، ومتابعة التحسن، والبناء عليه لاحقًا.",
     ctaButton: "أنشئ حسابك / تابع",
@@ -83,6 +107,7 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
 
   const dimensionResults = useMemo(() => (profile ? computeDimensionResults(profile) : null), [profile]);
   const findings = useMemo(() => (profile ? computeFindings(profile) : []), [profile]);
+  const selection = useMemo(() => selectPriorityFinding(findings), [findings]);
 
   if (!profile || !dimensionResults) {
     return (
@@ -99,25 +124,37 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
   }
 
   const orgName = profile.organizationName || (locale === "ar" ? "مؤسستك" : "Your organization");
+  const hasInsufficientData = dimensionKeys.some((d) => dimensionResults[d].status === "insufficient-data");
+  const solutionItems = findings
+    .map((finding) => {
+      const solution = solutionById(finding.solutionId);
+      return solution ? { finding, solution } : null;
+    })
+    .filter((item): item is { finding: (typeof findings)[number]; solution: NonNullable<ReturnType<typeof solutionById>> } => item !== null);
 
   return (
     <Container className="max-w-5xl py-12 md:py-16">
       <h1 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">{t.viewTitle}</h1>
-      <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">{t.viewBody(orgName)}</p>
+      <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted">{t.viewIntro(orgName)}</p>
+      <p className="mt-1.5 max-w-2xl text-xs leading-relaxed text-muted/80">{t.disclaimer}</p>
 
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {dimensionKeys.map((dimension) => {
-          const result = dimensionResults[dimension];
-          return (
-            <DimensionCard
-              key={dimension}
-              label={dimensionLabels[dimension][locale]}
-              status={result.status}
-              statusLabel={statusLabel[result.status][locale]}
-              description={statusDescription[result.status][locale]}
-            />
-          );
-        })}
+      <div className="mt-10">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted">{t.overviewEyebrow}</p>
+        <p className="mt-1 text-xs text-muted">{t.overviewNote}</p>
+        <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {dimensionKeys.map((dimension) => {
+            const result = dimensionResults[dimension];
+            return (
+              <DimensionCard
+                key={dimension}
+                label={dimensionLabels[dimension][locale]}
+                status={result.status}
+                statusLabel={statusLabel[result.status][locale]}
+                description={statusDescription[result.status][locale]}
+              />
+            );
+          })}
+        </div>
       </div>
 
       <div className="mt-10 rounded-2xl border border-line bg-paper-alt p-6">
@@ -126,26 +163,82 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
       </div>
 
       <div className="mt-8">
-        <h2 className="text-xl font-semibold tracking-tight text-ink">{t.attentionTitle}</h2>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{t.attentionBody}</p>
-
         {findings.length === 0 ? (
-          <p className="mt-6 rounded-2xl border border-line p-6 text-sm text-muted">{t.noFindings}</p>
-        ) : (
-          <div className="mt-6 space-y-3">
-            {findings.map((finding, i) => (
-              <FindingCard
-                key={finding.id}
-                index={i}
-                finding={finding}
-                solution={solutionById(finding.solutionId)}
-                organizationName={profile.organizationName}
-                locale={locale}
-              />
-            ))}
+          <div className="rounded-2xl border border-line p-6">
+            <h2 className="text-xl font-semibold tracking-tight text-ink">
+              {hasInsufficientData ? t.insufficientTitle : t.strongTitle}
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+              {hasInsufficientData ? t.insufficientBody : t.strongBody}
+            </p>
           </div>
+        ) : (
+          <>
+            <h2 className="text-xl font-semibold tracking-tight text-ink">{t.priorityTitle}</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{t.priorityBody}</p>
+
+            {selection.ambiguous || !selection.top ? (
+              <div className="mt-6 space-y-6">
+                <div className="rounded-2xl border border-line bg-paper-alt p-6">
+                  <p className="text-base font-semibold text-ink">{t.ambiguousTitle}</p>
+                  <p className="mt-1 text-sm text-muted">{t.ambiguousBody}</p>
+                </div>
+                <div className="space-y-3">
+                  {selection.rest.map((finding) => (
+                    <FindingCard
+                      key={finding.id}
+                      finding={finding}
+                      solution={solutionById(finding.solutionId)}
+                      organizationName={profile.organizationName}
+                      locale={locale}
+                      variant="secondary"
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="mt-6 space-y-8">
+                <FindingCard
+                  finding={selection.top}
+                  solution={solutionById(selection.top.solutionId)}
+                  organizationName={profile.organizationName}
+                  locale={locale}
+                  variant="priority"
+                  dimensionStatusLabel={statusLabel[dimensionResults[selection.top.dimension].status][locale]}
+                />
+
+                {selection.rest.length > 0 && (
+                  <div>
+                    <h3 className="text-base font-semibold text-ink">{t.otherAreasTitle}</h3>
+                    <div className="mt-4 space-y-3">
+                      {selection.rest.map((finding) => (
+                        <FindingCard
+                          key={finding.id}
+                          finding={finding}
+                          solution={solutionById(finding.solutionId)}
+                          organizationName={profile.organizationName}
+                          locale={locale}
+                          variant="secondary"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
+
+      {findings.length > 0 && (
+        <div className="mt-14">
+          <div className="rounded-2xl border border-line bg-paper-alt p-6">
+            <p className="text-base font-semibold text-ink">{t.nextStepTitle}</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted">{t.nextStepBody}</p>
+          </div>
+          <SolutionsRecap items={solutionItems} organizationName={profile.organizationName} locale={locale} />
+        </div>
+      )}
 
       <div className="mt-14 rounded-2xl border border-line bg-paper-alt p-6 md:p-8">
         <h2 className="text-lg font-semibold tracking-tight text-ink">{t.ctaTitle}</h2>
