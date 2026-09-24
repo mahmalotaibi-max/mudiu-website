@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PlatformButton } from "@/components/platform/PlatformButton";
 import { useOrgDiagnosis } from "@/components/platform/OrgDiagnosisProvider";
 import type { Confidence, Finding, Priority } from "@/lib/platform/orgDiagnosisTypes";
 import type { Locale } from "@/lib/platform/types";
@@ -28,12 +29,14 @@ const strings = {
     priorityBadge: "Priority to verify",
     priorityLabel: { high: "High", medium: "Medium", low: "Low" } as Record<Priority, string>,
     confidenceLabel: { low: "Low", medium: "Medium", high: "High" } as Record<Confidence, string>,
-    validationQuestion: "Does this signal reflect your organization's reality?",
+    validationTitle: "Checking reality",
+    validationQuestion: "Does this signal actually reflect your organization's reality?",
     validationHelper: "Your answer helps us understand how accurate this signal is - it doesn't change the diagnostic result.",
     validationYes: "Yes, it reflects our reality",
     validationNo: "No, it doesn't reflect our reality",
     validationNotePlaceholder: "Optional detail",
-    adoptionQuestion: "Do you see this as worth working on?",
+    adoptionTitle: "The action decision",
+    adoptionQuestion: "Now that it's checked, do you see this as worth working on?",
     adoptionYes: "Yes, worth working on",
     adoptionNotNow: "Not now",
     adoptionNeedsValidation: "I need more validation",
@@ -44,6 +47,9 @@ const strings = {
     objectiveQuestion: "What would success look like?",
     objectiveHelper: "Describe the situation you want to reach, not the problem itself.",
     objectivePlaceholder: "e.g. Monthly decisions are based on recorded indicators, not impressions.",
+    closureTitle: "You've defined what to change and what success looks like.",
+    closureBody: "You can come back to this decision anytime in My Organization.",
+    closureCta: "View in My Organization",
   },
   ar: {
     evidence: "الدليل",
@@ -57,12 +63,14 @@ const strings = {
     priorityBadge: "الأولوية للتحقق",
     priorityLabel: { high: "عالية", medium: "متوسطة", low: "منخفضة" } as Record<Priority, string>,
     confidenceLabel: { low: "منخفضة", medium: "متوسطة", high: "عالية" } as Record<Confidence, string>,
-    validationQuestion: "هل تعكس هذه الإشارة واقع مؤسستك؟",
+    validationTitle: "التحقق من الواقع",
+    validationQuestion: "هل تعكس هذه الإشارة واقع مؤسستك فعلًا؟",
     validationHelper: "إجابتك تساعدنا على فهم دقة هذه الإشارة، ولا تغيّر نتيجة التشخيص.",
     validationYes: "نعم، تعكس واقعنا",
     validationNo: "لا، لا تعكس واقعنا",
     validationNotePlaceholder: "تفصيل اختياري",
-    adoptionQuestion: "هل ترى أن هذا الأمر يستحق العمل عليه؟",
+    adoptionTitle: "قرار العمل",
+    adoptionQuestion: "بعد التحقق من الإشارة، هل ترى أن هذا الأمر يستحق العمل عليه؟",
     adoptionYes: "نعم، يستحق العمل عليه",
     adoptionNotNow: "ليس الآن",
     adoptionNeedsValidation: "أحتاج إلى مزيد من التحقق",
@@ -73,6 +81,9 @@ const strings = {
     objectiveQuestion: "كيف سيبدو النجاح؟",
     objectiveHelper: "صف الوضع الذي تريد الوصول إليه، لا المشكلة نفسها.",
     objectivePlaceholder: "مثال: قرارات الإدارة الشهرية تستند إلى مؤشرات مسجَّلة، لا إلى الانطباع.",
+    closureTitle: "تم تحديد ما تريد تغييره وكيف سيبدو النجاح.",
+    closureBody: "يمكنك الرجوع إلى هذا القرار لاحقًا ضمن مؤسستي.",
+    closureCta: "عرض في مؤسستي",
   },
 };
 
@@ -257,7 +268,8 @@ export function FindingCard({
 
           {/* Validation - "does this reflect reality?", never a score, never affects Confidence/Priority. */}
           <div className="rounded-xl bg-paper-alt p-4">
-            <p className="text-sm font-medium text-ink">{t.validationQuestion}</p>
+            <p className="text-xs font-semibold text-muted">{t.validationTitle}</p>
+            <p className="mt-1 text-sm font-medium text-ink">{t.validationQuestion}</p>
             <p className="mt-1 text-xs text-muted">{t.validationHelper}</p>
             <div className="mt-2.5 flex flex-wrap gap-2">
               <ChoiceButton selected={progress?.validation === "validated"} onClick={() => handleValidate(true)}>
@@ -279,7 +291,8 @@ export function FindingCard({
             {/* Adoption - only meaningful once the signal is validated. A "no" here is a valid, neutral stop, not a failure. */}
             {progress?.validation === "validated" && (
               <div className="mt-4 border-t border-line pt-4">
-                <p className="text-sm font-medium text-ink">{t.adoptionQuestion}</p>
+                <p className="text-xs font-semibold text-muted">{t.adoptionTitle}</p>
+                <p className="mt-1 text-sm font-medium text-ink">{t.adoptionQuestion}</p>
                 <div className="mt-2.5 flex flex-wrap gap-2">
                   <ChoiceButton selected={progress?.adoption === "adopted"} onClick={() => handleAdopt("adopted")}>
                     {t.adoptionYes}
@@ -331,6 +344,25 @@ export function FindingCard({
                   placeholder={t.objectivePlaceholder}
                   className="mt-2 w-full rounded-xl border border-line bg-paper px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-ink"
                 />
+              </div>
+            )}
+
+            {/* Closure - only once Objective is actually captured, confirming the decision is saved and findable, nothing more. */}
+            {progress?.objective && (
+              <div className="mt-4 border-t border-line pt-4">
+                <p className="flex items-center gap-1.5 text-sm font-medium text-ink">
+                  <Check className="size-4 text-orange" aria-hidden />
+                  {t.closureTitle}
+                </p>
+                <p className="mt-1 text-xs text-muted">{t.closureBody}</p>
+                <PlatformButton
+                  href="/platform/ar/my-organization"
+                  locale={locale}
+                  variant="secondary"
+                  className="mt-3 !px-4 !py-1.5 !text-xs"
+                >
+                  {t.closureCta}
+                </PlatformButton>
               </div>
             )}
           </div>
