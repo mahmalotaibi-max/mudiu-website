@@ -120,11 +120,12 @@ export interface Finding {
 
 /** Local-only tracking record for one Finding - never a backend record, never
  * a score. Validation ("does this signal reflect reality?") and Adoption
- * ("do we choose to act on it?") are deliberately separate questions/fields,
- * not one collapsed step - see the Phase 2 UX spec. Independent optional
- * fields (rather than one linear status) because the two decisions can
- * change independently and either can be revisited without losing the
- * other's answer. */
+ * ("does the organization choose to act on it?") are two separate outcomes,
+ * not one collapsed step - see the Phase 2 UX spec. Adoption only becomes
+ * meaningful once Validation is "validated"; a "not-validated" signal simply
+ * stops there and never reaches an Adoption decision. Independent optional
+ * fields (rather than one linear status) because Validation and Adoption can
+ * be revisited without losing the other's answer. */
 export interface FindingProgress {
   /** Set once the visitor has expanded "explore what we found" at least once. */
   opened?: boolean;
@@ -132,8 +133,12 @@ export interface FindingProgress {
   validation?: "validated" | "not-validated";
   /** Optional detail volunteered alongside the Validation answer - never scored. */
   validationNote?: string;
-  /** "Is this worth acting on now?" - only meaningful once validation is "validated". */
-  adoption?: "adopted" | "not-adopted";
+  /** "Do you see this as worth working on?" - only meaningful once validation is
+   * "validated". "needs-validation" is a distinct Adoption outcome, not a
+   * Validation failure: the signal already checked out, the visitor just
+   * doesn't feel they have enough to decide yet - it must never reset
+   * `validation` back to "not-validated". */
+  adoption?: "adopted" | "deferred" | "needs-validation";
   /** "What do you want to change?" - captured only when adoption is "adopted". */
   changeStatement?: string;
   /** "What would success look like?" - captured only once adoption is "adopted". */
@@ -145,13 +150,17 @@ export interface FindingProgress {
 
 /** The furthest point reached, derived from FindingProgress for display only
  * (e.g. in My Organization) - never stored directly, so no stage transition
- * logic can get out of sync with the fields that actually hold the answers. */
+ * logic can get out of sync with the fields that actually hold the answers.
+ * "not-validated" is a Validation outcome (the journey stops there) and is
+ * deliberately kept distinct from the three Adoption outcomes
+ * (deferred/needs-validation/adopted), which only exist once validated. */
 export type FindingDisplayStage =
   | "new"
   | "pending-verification"
   | "validated"
   | "not-validated"
-  | "not-adopted"
+  | "deferred"
+  | "needs-validation"
   | "adopted"
   | "objective-set";
 
@@ -159,7 +168,8 @@ export function deriveFindingStage(progress: FindingProgress | undefined): Findi
   if (!progress) return "new";
   if (progress.objective) return "objective-set";
   if (progress.adoption === "adopted") return "adopted";
-  if (progress.adoption === "not-adopted") return "not-adopted";
+  if (progress.adoption === "deferred") return "deferred";
+  if (progress.adoption === "needs-validation") return "needs-validation";
   if (progress.validation === "validated") return "validated";
   if (progress.validation === "not-validated") return "not-validated";
   if (progress.opened) return "pending-verification";
@@ -176,7 +186,8 @@ function journeyIndexForStage(stage: FindingDisplayStage): number {
       return 3;
     case "adopted":
       return 2;
-    case "not-adopted":
+    case "deferred":
+    case "needs-validation":
     case "validated":
     case "not-validated":
     case "pending-verification":
