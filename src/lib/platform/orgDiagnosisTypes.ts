@@ -166,6 +166,43 @@ export function deriveFindingStage(progress: FindingProgress | undefined): Findi
   return "new";
 }
 
+/** Maps a Finding's stage to a position on JourneyMapCard's 5 waypoints
+ * (Diagnosis, Understanding, Improvement, Tracking, Impact). Capped at
+ * "Tracking" (index 3) - Phase 2 stops at Objective, so reaching it is never
+ * treated as having reached Impact (index 4), which stays Future Architecture. */
+function journeyIndexForStage(stage: FindingDisplayStage): number {
+  switch (stage) {
+    case "objective-set":
+      return 3;
+    case "adopted":
+      return 2;
+    case "not-adopted":
+    case "validated":
+    case "not-validated":
+    case "pending-verification":
+      return 1;
+    case "new":
+      return 0;
+  }
+}
+
+/** How far JourneyMapCard's marker should sit - the furthest real action a
+ * visitor has taken on any of their findings (opened it, validated it,
+ * adopted it, set an objective), never a judgment on the diagnostic answers
+ * or the organization itself. Takes the max across findings so progress on
+ * one finding is never hidden by another that's still untouched. */
+export function deriveJourneyStageIndex(
+  findingIds: string[],
+  findingProgress: Record<string, FindingProgress>
+): number {
+  let maxIndex = 0;
+  for (const id of findingIds) {
+    const index = journeyIndexForStage(deriveFindingStage(findingProgress[id]));
+    if (index > maxIndex) maxIndex = index;
+  }
+  return maxIndex;
+}
+
 /** Optional, org-specific numeric evidence that supplements (never replaces)
  * the answer-driven evidence - this is how the Riwaa demo can show real
  * numbers (8% vs a 15% target) while a real visitor's diagnostic, which has
