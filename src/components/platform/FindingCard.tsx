@@ -34,9 +34,12 @@ const strings = {
     validationYes: "Yes, it reflects our reality",
     validationNo: "No, it doesn't reflect our reality",
     validationNotePlaceholder: "Optional detail",
-    adoptionQuestion: "Is this worth acting on now?",
-    adoptionYes: "Yes, worth acting on now",
+    adoptionQuestion: "Do you see this as worth working on?",
+    adoptionYes: "Yes, worth working on",
     adoptionNotNow: "Not now",
+    adoptionNeedsValidation: "I need more validation",
+    deferredNote: "This has been deferred. You can come back to it anytime.",
+    needsValidationNote: "Revisit what's worth validating above, then come back to decide once you have enough.",
     changeQuestion: "What do you want to change?",
     changePlaceholder: "e.g. Performance indicators actually used in monthly review meetings",
     objectiveQuestion: "What would success look like?",
@@ -66,9 +69,12 @@ const strings = {
     validationYes: "نعم، تعكس واقعنا",
     validationNo: "لا، لا تعكس واقعنا",
     validationNotePlaceholder: "تفصيل اختياري",
-    adoptionQuestion: "هل يستحق هذا الأمر العمل عليه الآن؟",
-    adoptionYes: "نعم، يستحق العمل عليه الآن",
+    adoptionQuestion: "هل ترى أن هذا الأمر يستحق العمل عليه؟",
+    adoptionYes: "نعم، يستحق العمل عليه",
     adoptionNotNow: "ليس الآن",
+    adoptionNeedsValidation: "أحتاج إلى مزيد من التحقق",
+    deferredNote: "تم تأجيل هذا الأمر. يمكنك العودة إليه لاحقًا.",
+    needsValidationNote: "راجع ما يستحق التحقق منه أعلاه، ثم عُد لاتخاذ القرار متى توفرت لديك معلومات كافية.",
     changeQuestion: "ما الذي تريد تغييره؟",
     changePlaceholder: "مثال: أن تُستخدم مؤشرات الأداء فعليًا في اجتماعات المراجعة الشهرية",
     objectiveQuestion: "كيف سيبدو النجاح؟",
@@ -152,8 +158,8 @@ export function FindingCard({
     }
   }
 
-  function handleAdopt(adopted: boolean) {
-    setAdoption(finding.id, adopted ? "adopted" : "not-adopted", adopted ? changeStatement.trim() || undefined : undefined);
+  function handleAdopt(outcome: "adopted" | "deferred" | "needs-validation") {
+    setAdoption(finding.id, outcome, outcome === "adopted" ? changeStatement.trim() || undefined : undefined);
   }
 
   function handleChangeStatementBlur() {
@@ -296,13 +302,26 @@ export function FindingCard({
               <div className="mt-4 border-t border-line pt-4">
                 <p className="text-sm font-medium text-ink">{t.adoptionQuestion}</p>
                 <div className="mt-2.5 flex flex-wrap gap-2">
-                  <ChoiceButton selected={progress?.adoption === "adopted"} onClick={() => handleAdopt(true)}>
+                  <ChoiceButton selected={progress?.adoption === "adopted"} onClick={() => handleAdopt("adopted")}>
                     {t.adoptionYes}
                   </ChoiceButton>
-                  <ChoiceButton selected={progress?.adoption === "not-adopted"} onClick={() => handleAdopt(false)}>
+                  <ChoiceButton selected={progress?.adoption === "deferred"} onClick={() => handleAdopt("deferred")}>
                     {t.adoptionNotNow}
                   </ChoiceButton>
+                  <ChoiceButton
+                    selected={progress?.adoption === "needs-validation"}
+                    onClick={() => handleAdopt("needs-validation")}
+                  >
+                    {t.adoptionNeedsValidation}
+                  </ChoiceButton>
                 </div>
+
+                {progress?.adoption === "deferred" && (
+                  <p className="mt-2.5 text-xs text-muted">{t.deferredNote}</p>
+                )}
+                {progress?.adoption === "needs-validation" && (
+                  <p className="mt-2.5 text-xs text-muted">{t.needsValidationNote}</p>
+                )}
 
                 {progress?.adoption === "adopted" && (
                   <div className="mt-3">

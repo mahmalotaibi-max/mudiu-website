@@ -96,8 +96,10 @@ interface OrgDiagnosisContextValue {
   openFinding: (findingId: string) => void;
   /** "Does this signal reflect reality?" - never affects Confidence or Priority. */
   setValidation: (findingId: string, outcome: "validated" | "not-validated", note?: string) => void;
-  /** "Is this worth acting on now?" - only meaningful once Validation is "validated". */
-  setAdoption: (findingId: string, outcome: "adopted" | "not-adopted", changeStatement?: string) => void;
+  /** "Do you see this as worth working on?" - only meaningful once Validation
+   * is "validated". "needs-validation" is a distinct decision outcome, not a
+   * Validation failure - it never touches the `validation` field. */
+  setAdoption: (findingId: string, outcome: "adopted" | "deferred" | "needs-validation", changeStatement?: string) => void;
   /** "What would success look like?" - only meaningful once Adoption is "adopted". */
   setObjective: (findingId: string, objective: string) => void;
   /** The existing solution-request shortcut - independent of Validation/Adoption/Objective. */
@@ -148,10 +150,15 @@ export function OrgDiagnosisProvider({ children }: { children: React.ReactNode }
   }, []);
 
   const setAdoption = useCallback(
-    (findingId: string, outcome: "adopted" | "not-adopted", changeStatement?: string) => {
+    (findingId: string, outcome: "adopted" | "deferred" | "needs-validation", changeStatement?: string) => {
+      // changeStatement/objective are only meaningful once adopted - clear them
+      // on any other outcome so a finding can't show a stale "objective-set"
+      // stage after the visitor changes their mind away from "adopted".
       writeFindingProgress(
         findingId,
-        outcome === "adopted" ? { adoption: outcome, changeStatement } : { adoption: outcome }
+        outcome === "adopted"
+          ? { adoption: outcome, changeStatement }
+          : { adoption: outcome, changeStatement: undefined, objective: undefined }
       );
     },
     []
