@@ -5,9 +5,9 @@ import { Container } from "@/components/ui/Container";
 import { PlatformButton } from "@/components/platform/PlatformButton";
 import { useOrgDiagnosis } from "@/components/platform/OrgDiagnosisProvider";
 import { computeDimensionResults, computeFindings } from "@/lib/platform/orgDiagnosis";
-import { dimensionKeys } from "@/lib/platform/orgDiagnosisTypes";
+import { deriveFindingStage, dimensionKeys } from "@/lib/platform/orgDiagnosisTypes";
 import { dimensionLabels } from "@/lib/platform/orgDiagnosisQuestions";
-import type { DimensionStatus, FindingTrackingStatus } from "@/lib/platform/orgDiagnosisTypes";
+import type { DimensionStatus, FindingDisplayStage } from "@/lib/platform/orgDiagnosisTypes";
 import type { Locale } from "@/lib/platform/types";
 import { cn } from "@/lib/utils";
 
@@ -24,12 +24,18 @@ const strings = {
     noFindings: "No findings are tracked yet - nothing surfaced, or the diagnostic hasn't been completed.",
     resultsCta: "Open in results",
     resultsHref: "/platform/ar/diagnostic/results",
+    helpRequestedTag: "Help requested",
+    changeLabel: "Change: ",
+    objectiveLabel: "Objective: ",
     statusLabel: {
       new: "New signal",
       "pending-verification": "Pending verification",
-      verified: "Verified",
-      "help-requested": "Help requested",
-    } as Record<FindingTrackingStatus, string>,
+      validated: "Validated",
+      "not-validated": "Didn't hold up",
+      "not-adopted": "Not acting on it now",
+      adopted: "Adopted for action",
+      "objective-set": "Objective set",
+    } as Record<FindingDisplayStage, string>,
   },
   ar: {
     gateTitle: "لا توجد مؤسسة بعد",
@@ -43,12 +49,18 @@ const strings = {
     noFindings: "لا توجد ملاحظات متتبَّعة بعد - إما لم تظهر أي إشارة، أو لم يُكمَل التشخيص بعد.",
     resultsCta: "فتح في صفحة النتيجة",
     resultsHref: "/platform/ar/diagnostic/results",
+    helpRequestedTag: "طلب مساعدة",
+    changeLabel: "التغيير المطلوب: ",
+    objectiveLabel: "الهدف: ",
     statusLabel: {
       new: "إشارة جديدة",
       "pending-verification": "بانتظار التحقق",
-      verified: "تم التحقق",
-      "help-requested": "طلب مساعدة",
-    } as Record<FindingTrackingStatus, string>,
+      validated: "تم التحقق",
+      "not-validated": "لم تثبت الإشارة",
+      "not-adopted": "لن يُعمل عليه الآن",
+      adopted: "معتمد للعمل",
+      "objective-set": "تم تحديد الهدف",
+    } as Record<FindingDisplayStage, string>,
   },
 };
 
@@ -58,15 +70,18 @@ const dotClass: Record<DimensionStatus, string> = {
   "insufficient-data": "bg-line",
 };
 
-const trackingDotClass: Record<FindingTrackingStatus, string> = {
+const trackingDotClass: Record<FindingDisplayStage, string> = {
   new: "bg-line",
   "pending-verification": "bg-navy",
-  verified: "bg-ink",
-  "help-requested": "bg-orange",
+  validated: "bg-ink",
+  "not-validated": "bg-line",
+  "not-adopted": "bg-line",
+  adopted: "bg-orange",
+  "objective-set": "bg-orange",
 };
 
 export function MyOrganizationView({ locale = "en" }: { locale?: Locale }) {
-  const { profile, findingStatus } = useOrgDiagnosis();
+  const { profile, findingProgress } = useOrgDiagnosis();
   const t = strings[locale];
 
   const dimensionResults = useMemo(() => (profile ? computeDimensionResults(profile) : null), [profile]);
@@ -122,14 +137,36 @@ export function MyOrganizationView({ locale = "en" }: { locale?: Locale }) {
         ) : (
           <div className="mt-6 divide-y divide-line rounded-2xl border border-line">
             {findings.map((finding) => {
-              const status = findingStatus[finding.id] ?? "new";
+              const progress = findingProgress[finding.id];
+              const stage = deriveFindingStage(progress);
               return (
-                <div key={finding.id} className="flex items-center justify-between gap-4 px-5 py-4">
-                  <p className="text-sm text-ink">{finding.whatWeFound[locale]}</p>
-                  <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-line px-3 py-1 text-xs font-medium text-muted">
-                    <span className={cn("size-1.5 rounded-full", trackingDotClass[status])} aria-hidden />
-                    {t.statusLabel[status]}
-                  </span>
+                <div key={finding.id} className="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <p className="text-sm text-ink">{finding.whatWeFound[locale]}</p>
+                    {progress?.changeStatement && (
+                      <p className="mt-1 text-xs text-muted">
+                        {t.changeLabel}
+                        {progress.changeStatement}
+                      </p>
+                    )}
+                    {progress?.objective && (
+                      <p className="mt-1 text-xs text-muted">
+                        {t.objectiveLabel}
+                        {progress.objective}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+                    <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-line px-3 py-1 text-xs font-medium text-muted">
+                      <span className={cn("size-1.5 rounded-full", trackingDotClass[stage])} aria-hidden />
+                      {t.statusLabel[stage]}
+                    </span>
+                    {progress?.helpRequested && (
+                      <span className="whitespace-nowrap rounded-full border border-line px-3 py-1 text-xs font-medium text-muted">
+                        {t.helpRequestedTag}
+                      </span>
+                    )}
+                  </div>
                 </div>
               );
             })}

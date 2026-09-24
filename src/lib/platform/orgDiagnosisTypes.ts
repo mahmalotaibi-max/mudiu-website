@@ -118,10 +118,53 @@ export interface Finding {
   solutionId: string;
 }
 
-/** Local-only tracking state for My Organization - never a backend record.
- * Monotonic: a finding only moves forward (new -> pending-verification ->
- * verified -> help-requested), never backward. */
-export type FindingTrackingStatus = "new" | "pending-verification" | "verified" | "help-requested";
+/** Local-only tracking record for one Finding - never a backend record, never
+ * a score. Validation ("does this signal reflect reality?") and Adoption
+ * ("do we choose to act on it?") are deliberately separate questions/fields,
+ * not one collapsed step - see the Phase 2 UX spec. Independent optional
+ * fields (rather than one linear status) because the two decisions can
+ * change independently and either can be revisited without losing the
+ * other's answer. */
+export interface FindingProgress {
+  /** Set once the visitor has expanded "explore what we found" at least once. */
+  opened?: boolean;
+  /** "Does this signal reflect your organization's reality?" */
+  validation?: "validated" | "not-validated";
+  /** Optional detail volunteered alongside the Validation answer - never scored. */
+  validationNote?: string;
+  /** "Is this worth acting on now?" - only meaningful once validation is "validated". */
+  adoption?: "adopted" | "not-adopted";
+  /** "What do you want to change?" - captured only when adoption is "adopted". */
+  changeStatement?: string;
+  /** "What would success look like?" - captured only once adoption is "adopted". */
+  objective?: string;
+  /** Independent of everything above: the existing "request this solution"
+   * shortcut stays reachable and meaningful at any stage, unchanged. */
+  helpRequested?: boolean;
+}
+
+/** The furthest point reached, derived from FindingProgress for display only
+ * (e.g. in My Organization) - never stored directly, so no stage transition
+ * logic can get out of sync with the fields that actually hold the answers. */
+export type FindingDisplayStage =
+  | "new"
+  | "pending-verification"
+  | "validated"
+  | "not-validated"
+  | "not-adopted"
+  | "adopted"
+  | "objective-set";
+
+export function deriveFindingStage(progress: FindingProgress | undefined): FindingDisplayStage {
+  if (!progress) return "new";
+  if (progress.objective) return "objective-set";
+  if (progress.adoption === "adopted") return "adopted";
+  if (progress.adoption === "not-adopted") return "not-adopted";
+  if (progress.validation === "validated") return "validated";
+  if (progress.validation === "not-validated") return "not-validated";
+  if (progress.opened) return "pending-verification";
+  return "new";
+}
 
 /** Optional, org-specific numeric evidence that supplements (never replaces)
  * the answer-driven evidence - this is how the Riwaa demo can show real
