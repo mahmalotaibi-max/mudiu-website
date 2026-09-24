@@ -12,7 +12,7 @@ import { useOrgDiagnosis } from "@/components/platform/OrgDiagnosisProvider";
 import { computeDimensionResults, computeFindings } from "@/lib/platform/orgDiagnosis";
 import { selectPriorityFinding } from "@/lib/platform/orgDiagnosisPriority";
 import { solutionById } from "@/lib/platform/orgDiagnosisSolutions";
-import { dimensionKeys } from "@/lib/platform/orgDiagnosisTypes";
+import { deriveJourneyStageIndex, dimensionKeys } from "@/lib/platform/orgDiagnosisTypes";
 import { dimensionLabels } from "@/lib/platform/orgDiagnosisQuestions";
 import type { DimensionStatus } from "@/lib/platform/orgDiagnosisTypes";
 import type { Locale } from "@/lib/platform/types";
@@ -98,12 +98,16 @@ const statusDescription: Record<DimensionStatus, Record<Locale, string>> = {
 };
 
 export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale }) {
-  const { profile } = useOrgDiagnosis();
+  const { profile, findingProgress } = useOrgDiagnosis();
   const t = strings[locale];
 
   const dimensionResults = useMemo(() => (profile ? computeDimensionResults(profile) : null), [profile]);
   const findings = useMemo(() => (profile ? computeFindings(profile) : []), [profile]);
   const selection = useMemo(() => selectPriorityFinding(findings), [findings]);
+  const journeyStageIndex = useMemo(
+    () => deriveJourneyStageIndex(findings.map((f) => f.id), findingProgress),
+    [findings, findingProgress]
+  );
 
   if (!profile || !dimensionResults) {
     return (
@@ -135,7 +139,7 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
       <p className="mt-1.5 max-w-2xl text-xs leading-relaxed text-muted/80">{t.disclaimer}</p>
 
       <div className="mt-8">
-        <JourneyMapCard locale={locale} />
+        <JourneyMapCard locale={locale} stageIndex={journeyStageIndex} />
       </div>
 
       <div className="mt-10">
