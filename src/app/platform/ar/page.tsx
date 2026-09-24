@@ -8,7 +8,7 @@ import { ChainTeaser } from "@/components/platform/ChainTeaser";
 export const metadata: Metadata = {
   title: "منصة MUDIU",
   description:
-    "MUDIU تشخّص وضع مؤسستك، تكشف أين تظهر الإشارات التي تستحق التحقق، وتقترح ما تحتاج العمل عليه بعد ذلك.",
+    "MUDIU تشخّص وضع مؤسستك، تكشف أين تظهر الإشارات التي تستحق التحقق، وتساعدك على تحديد ما يستحق العمل عليه بعد ذلك.",
 };
 
 const journey = [
