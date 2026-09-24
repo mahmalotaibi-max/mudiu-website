@@ -8,14 +8,14 @@ import { ChainTeaser } from "@/components/platform/ChainTeaser";
 export const metadata: Metadata = {
   title: "منصة MUDIU",
   description:
-    "MUDIU تشخّص وضع مؤسستك، تكشف ما يعيق تقدمها، وتقترح ما تحتاج العمل عليه بعد ذلك.",
+    "MUDIU تشخّص وضع مؤسستك، تكشف أين تظهر الإشارات التي تستحق التحقق، وتقترح ما تحتاج العمل عليه بعد ذلك.",
 };
 
 const journey = [
   { title: "شخّص", body: "أجب على أسئلة قصيرة عن مؤسستك - بلا حاجة لرفع بيانات." },
   { title: "افهم", body: "اعرف أين تظهر الإشارات، وما الذي يستحق التحقق منه." },
-  { title: "طوّر", body: "لكل ملاحظة خطوة تالية واضحة، لا مجرد رقم بلا تفسير." },
-  { title: "تابع وحقّق القيمة", body: "ابنِ على التشخيص بمرور الوقت، بدلًا من تكراره من الصفر." },
+  { title: "قرر", body: "لكل ملاحظة خطوة تالية واضحة، لا مجرد رقم بلا تفسير." },
+  { title: "حدد النجاح", body: "ابنِ على ما اكتشفته." },
 ];
 
 const outcomes = [
@@ -66,8 +66,8 @@ export default function PlatformHomePageAr() {
               اكتشف ما يعيقك.
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-              تشخيص مؤسسي مجاني يوضح لك أين تقف مؤسستك اليوم، وما الذي يعيق تقدمها، وما الذي
-              يستحق العمل عليه بعد ذلك.
+              تشخيص مؤسسي مجاني يوضح لك أين تقف مؤسستك اليوم، وأين تظهر الإشارات التي تستحق
+              التحقق، وما الذي يستحق العمل عليه بعد ذلك.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
               <PlatformButton href="/platform/ar/diagnostic" locale="ar">
@@ -102,7 +102,7 @@ export default function PlatformHomePageAr() {
           <RevealOnScroll>
             <Eyebrow>كيف تعمل MUDIU</Eyebrow>
             <h2 className="mt-4 text-2xl font-semibold tracking-tight text-ink md:text-3xl">
-              رحلة واحدة: من التشخيص إلى القيمة
+              رحلة واحدة: من التشخيص إلى هدف واضح
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
               MUDIU ليست لوحة مؤشرات ولا أداة إدارة مشاريع - هي رحلة تبدأ بتشخيص قصير، وتنتهي
