@@ -7,11 +7,9 @@ import { PlatformButton } from "@/components/platform/PlatformButton";
 import { DimensionCard } from "@/components/platform/DimensionCard";
 import { JourneyMapCard } from "@/components/platform/JourneyMapCard";
 import { FindingCard } from "@/components/platform/FindingCard";
-import { SolutionsRecap } from "@/components/platform/SolutionsRecap";
 import { useOrgDiagnosis } from "@/components/platform/OrgDiagnosisProvider";
 import { computeDimensionResults, computeFindings } from "@/lib/platform/orgDiagnosis";
 import { selectPriorityFinding } from "@/lib/platform/orgDiagnosisPriority";
-import { solutionById } from "@/lib/platform/orgDiagnosisSolutions";
 import { deriveJourneyStageIndex, dimensionKeys } from "@/lib/platform/orgDiagnosisTypes";
 import { dimensionLabels } from "@/lib/platform/orgDiagnosisQuestions";
 import type { DimensionStatus } from "@/lib/platform/orgDiagnosisTypes";
@@ -39,8 +37,6 @@ const strings = {
     strongBody: "Based on the initial answers, nothing across the dimensions currently calls for a deeper review.",
     insufficientTitle: "Not enough information yet",
     insufficientBody: "Several dimensions don't have enough answers yet to know whether they need attention. Complete more of the diagnostic for a fuller picture.",
-    nextStepTitle: "From diagnosis to next step",
-    nextStepBody: "The diagnostic shows where the organization is worth looking first. The next step is turning that observation into an actionable move.",
     ctaTitle: "Continue to your organization",
     ctaBody: "Create your MUDIU workspace to keep this diagnostic, track improvement, and build on it over time.",
     ctaButton: "Create Account / Continue",
@@ -67,8 +63,6 @@ const strings = {
     strongBody: "بناءً على الإجابات الأولية، لم يتضح ما يستدعي فحصًا أعمق في أي من الأبعاد حاليًا.",
     insufficientTitle: "المعلومات غير كافية بعد",
     insufficientBody: "عدة أبعاد لا تملك إجابات كافية لمعرفة ما إذا كانت تحتاج انتباهًا. أكمل جزءًا أكبر من التشخيص للحصول على صورة أوضح.",
-    nextStepTitle: "من التشخيص إلى الخطوة التالية",
-    nextStepBody: "التشخيص يوضح أين تستحق المؤسسة أن تنظر أولًا. أما الخطوة التالية فهي تحويل هذه الملاحظة إلى إجراء قابل للتنفيذ.",
     ctaTitle: "تابع إلى مؤسستك",
     ctaBody: "أنشئ مساحة عمل MUDIU الخاصة بك لحفظ هذا التشخيص، ومتابعة التحسن، والبناء عليه لاحقًا.",
     ctaButton: "أنشئ حسابك / تابع",
@@ -125,12 +119,6 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
 
   const orgName = profile.organizationName || (locale === "ar" ? "مؤسستك" : "Your organization");
   const hasInsufficientData = dimensionKeys.some((d) => dimensionResults[d].status === "insufficient-data");
-  const solutionItems = findings
-    .map((finding) => {
-      const solution = solutionById(finding.solutionId);
-      return solution ? { finding, solution } : null;
-    })
-    .filter((item): item is { finding: (typeof findings)[number]; solution: NonNullable<ReturnType<typeof solutionById>> } => item !== null);
 
   return (
     <Container className="max-w-5xl py-12 md:py-16">
@@ -189,40 +177,20 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
                 </div>
                 <div className="space-y-3">
                   {selection.rest.map((finding) => (
-                    <FindingCard
-                      key={finding.id}
-                      finding={finding}
-                      solution={solutionById(finding.solutionId)}
-                      organizationName={profile.organizationName}
-                      locale={locale}
-                      variant="secondary"
-                    />
+                    <FindingCard key={finding.id} finding={finding} locale={locale} variant="secondary" />
                   ))}
                 </div>
               </div>
             ) : (
               <div className="mt-6 space-y-8">
-                <FindingCard
-                  finding={selection.top}
-                  solution={solutionById(selection.top.solutionId)}
-                  organizationName={profile.organizationName}
-                  locale={locale}
-                  variant="priority"
-                />
+                <FindingCard finding={selection.top} locale={locale} variant="priority" />
 
                 {selection.rest.length > 0 && (
                   <div>
                     <h3 className="text-base font-semibold text-ink">{t.otherAreasTitle}</h3>
                     <div className="mt-4 space-y-3">
                       {selection.rest.map((finding) => (
-                        <FindingCard
-                          key={finding.id}
-                          finding={finding}
-                          solution={solutionById(finding.solutionId)}
-                          organizationName={profile.organizationName}
-                          locale={locale}
-                          variant="secondary"
-                        />
+                        <FindingCard key={finding.id} finding={finding} locale={locale} variant="secondary" />
                       ))}
                     </div>
                   </div>
@@ -232,16 +200,6 @@ export function OrgDiagnosticResultsView({ locale = "en" }: { locale?: Locale })
           </>
         )}
       </div>
-
-      {findings.length > 0 && (
-        <div className="mt-14">
-          <div className="rounded-2xl border border-line bg-paper-alt p-6">
-            <p className="text-base font-semibold text-ink">{t.nextStepTitle}</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted">{t.nextStepBody}</p>
-          </div>
-          <SolutionsRecap items={solutionItems} organizationName={profile.organizationName} locale={locale} />
-        </div>
-      )}
 
       <div className="mt-14 rounded-2xl border border-line bg-paper-alt p-6 md:p-8">
         <h2 className="text-lg font-semibold tracking-tight text-ink">{t.ctaTitle}</h2>
