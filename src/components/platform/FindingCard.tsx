@@ -1,14 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { buildRequestHref } from "@/lib/platform/solutionRequest";
 import { useOrgDiagnosis } from "@/components/platform/OrgDiagnosisProvider";
 import type { Confidence, Finding, Priority } from "@/lib/platform/orgDiagnosisTypes";
-import type { MockSolution } from "@/lib/platform/orgDiagnosisTypes";
 import type { Locale } from "@/lib/platform/types";
+
+// The "explore/request solution" UI (recommended solution, per-dimension
+// MockSolution catalog) is deliberately hidden here - see the Phase 2
+// Solution-path audit. The catalog (`orgDiagnosisSolutions.ts`) and the
+// request-link builder (`solutionRequest.ts`) are kept as a future capability,
+// intentionally unused by this component for now: the current journey is
+// Signal -> Validation -> Adoption -> Objective only, with no competing
+// "explore the solution" path.
 
 const strings = {
   en: {
@@ -19,13 +24,7 @@ const strings = {
     whyItMatters: "Why it matters",
     whatToValidate: "What's worth validating",
     missingData: "Missing data",
-    recommendedSolution: "Recommended solution",
-    whenToUse: "Good fit when",
-    helpsWith: "What it helps with",
-    expectedOutcome: "Expected outcome",
     explore: "Explore what we found",
-    exploreSolution: "Explore solution",
-    requestSolution: "Request this solution",
     priorityBadge: "Priority to verify",
     priorityLabel: { high: "High", medium: "Medium", low: "Low" } as Record<Priority, string>,
     confidenceLabel: { low: "Low", medium: "Medium", high: "High" } as Record<Confidence, string>,
@@ -54,13 +53,7 @@ const strings = {
     whyItMatters: "لماذا تستحق الانتباه",
     whatToValidate: "ما الذي يستحق التحقق منه",
     missingData: "بيانات ناقصة",
-    recommendedSolution: "الحل المقترح",
-    whenToUse: "مناسب عندما",
-    helpsWith: "ما الذي يساعد عليه؟",
-    expectedOutcome: "المخرج المتوقع",
     explore: "استكشف ما اكتشفناه",
-    exploreSolution: "استكشف الحل",
-    requestSolution: "اطلب هذا الحل",
     priorityBadge: "الأولوية للتحقق",
     priorityLabel: { high: "عالية", medium: "متوسطة", low: "منخفضة" } as Record<Priority, string>,
     confidenceLabel: { low: "منخفضة", medium: "متوسطة", high: "عالية" } as Record<Confidence, string>,
@@ -114,31 +107,21 @@ function ChoiceButton({
 
 export function FindingCard({
   finding,
-  solution,
-  organizationName,
   locale = "en",
   variant = "secondary",
 }: {
   finding: Finding;
-  solution: MockSolution | undefined;
-  organizationName?: string;
   locale?: Locale;
   variant?: "priority" | "secondary";
 }) {
-  const { findingProgress, openFinding, setValidation, setAdoption, setObjective, markHelpRequested } =
-    useOrgDiagnosis();
+  const { findingProgress, openFinding, setValidation, setAdoption, setObjective } = useOrgDiagnosis();
   const [open, setOpen] = useState(false);
-  const [solutionOpen, setSolutionOpen] = useState(false);
   const progress = findingProgress[finding.id];
   const [validationNote, setValidationNote] = useState(progress?.validationNote ?? "");
   const [changeStatement, setChangeStatement] = useState(progress?.changeStatement ?? "");
   const [objectiveText, setObjectiveText] = useState(progress?.objective ?? "");
   const t = strings[locale];
   const isPriority = variant === "priority";
-
-  const requestHref = solution
-    ? buildRequestHref({ organizationName, solution, finding, locale, verificationNote: validationNote })
-    : undefined;
 
   function handleToggle() {
     setOpen((v) => {
@@ -170,10 +153,6 @@ export function FindingCard({
 
   function handleObjectiveBlur() {
     if (objectiveText.trim()) setObjective(finding.id, objectiveText.trim());
-  }
-
-  function handleRequestClick() {
-    markHelpRequested(finding.id);
   }
 
   const priorityPill = (
@@ -355,48 +334,6 @@ export function FindingCard({
               </div>
             )}
           </div>
-
-          {solution && (
-            <div className="rounded-xl bg-paper-alt p-4">
-              {!solutionOpen ? (
-                <button
-                  type="button"
-                  onClick={() => setSolutionOpen(true)}
-                  className="inline-flex items-center rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-navy"
-                >
-                  {t.exploreSolution}
-                </button>
-              ) : (
-                <div>
-                  <p className="text-xs font-semibold text-muted">{t.recommendedSolution}</p>
-                  <p className="mt-1 text-sm font-semibold text-ink">{solution.title[locale]}</p>
-
-                  <p className="mt-3 text-xs font-semibold text-muted">{t.whenToUse}</p>
-                  <p className="mt-1 text-sm leading-relaxed text-ink">{solution.whenToUse[locale]}</p>
-
-                  <p className="mt-3 text-xs font-semibold text-muted">{t.helpsWith}</p>
-                  <ul className="mt-1.5 list-inside list-disc space-y-1">
-                    {solution.includes[locale].map((item) => (
-                      <li key={item} className="text-sm text-ink">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <p className="mt-3 text-xs font-semibold text-muted">{t.expectedOutcome}</p>
-                  <p className="mt-1 text-sm leading-relaxed text-ink">{solution.expectedOutcome[locale]}</p>
-
-                  <Link
-                    href={requestHref!}
-                    onClick={handleRequestClick}
-                    className="mt-4 inline-flex items-center rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-navy"
-                  >
-                    {t.requestSolution}
-                  </Link>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       )}
     </div>
