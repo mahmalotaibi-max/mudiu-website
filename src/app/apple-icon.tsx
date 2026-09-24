@@ -18,10 +18,15 @@ export default function AppleIcon() {
         }}
       >
         <svg width="180" height="180" viewBox="0 0 32 32">
+          <defs>
+            <linearGradient id="path-fade" x1="7" y1="25" x2="25" y2="7" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#e8c6a8" stopOpacity={0.12} />
+              <stop offset="100%" stopColor="#c1622e" stopOpacity={0.95} />
+            </linearGradient>
+          </defs>
           <path
             d="M7 25C10.5 20.5 13 19 17 16.5C21 14 23 11 25 7"
-            stroke="#e8c6a8"
-            strokeOpacity={0.55}
+            stroke="url(#path-fade)"
             strokeWidth={2}
             strokeLinecap="round"
             fill="none"
