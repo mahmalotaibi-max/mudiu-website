@@ -359,7 +359,7 @@ export function FindingCard({
                   href="/platform/ar/my-organization"
                   locale={locale}
                   variant="secondary"
-                  className="mt-3"
+                  className="mt-3 !px-4 !py-1.5 !text-xs"
                 >
                   {t.closureCta}
                 </PlatformButton>
