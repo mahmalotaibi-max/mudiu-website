@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { InstitutionsSystemMark } from "@/components/sections/InstitutionsSystemMark";
 import { MethodologyPath } from "@/components/sections/MethodologyPath";
-import { institutionsHero, institutionsJourney, institutionsWhy } from "@/content/institutions";
+import { institutionsHero, institutionsJourney, institutionsPlatform, institutionsWhy } from "@/content/institutions";
 import { serviceCategories, getServicesByCategory } from "@/content/solutions";
 
 export const metadata: Metadata = {
@@ -78,6 +78,39 @@ export default function InstitutionsPage() {
               );
             })}
           </div>
+        </Container>
+      </section>
+
+      <section className="py-20 md:py-28">
+        <Container>
+          <RevealOnScroll>
+            <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(700px_500px_at_78%_22%,#2a3f66_0%,#17181c_55%,#101116_100%)] px-8 py-14 md:px-14 md:py-16">
+              <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:items-center">
+                <div>
+                  <Eyebrow tone="dark">{institutionsPlatform.eyebrow}</Eyebrow>
+                  <h2 className="mt-4 text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+                    {institutionsPlatform.title}
+                  </h2>
+                  <p className="mt-4 max-w-lg text-sm leading-relaxed text-paper/70 md:text-base">
+                    {institutionsPlatform.body}
+                  </p>
+                  <div className="mt-8">
+                    <Button href={institutionsPlatform.cta.href} variant="ghost-on-dark">
+                      {institutionsPlatform.cta.label}
+                    </Button>
+                  </div>
+                </div>
+                <ul className="flex flex-col gap-5">
+                  {institutionsPlatform.bullets.map((item) => (
+                    <li key={item} className="flex gap-3 text-sm leading-relaxed text-paper/80">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-orange" aria-hidden />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </RevealOnScroll>
         </Container>
       </section>
 
