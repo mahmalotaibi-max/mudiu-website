@@ -26,11 +26,22 @@ const strings = {
     explore: "Explore what we found",
     exploreSolution: "Explore solution",
     requestSolution: "Request this solution",
-    verificationTitle: "Want to check this more deeply?",
-    verificationPlaceholder: "Optional - your answer is only shared if you request help below.",
     priorityBadge: "Priority to verify",
     priorityLabel: { high: "High", medium: "Medium", low: "Low" } as Record<Priority, string>,
     confidenceLabel: { low: "Low", medium: "Medium", high: "High" } as Record<Confidence, string>,
+    validationQuestion: "Does this signal reflect your organization's reality?",
+    validationHelper: "Your answer helps us understand how accurate this signal is - it doesn't change the diagnostic result.",
+    validationYes: "Yes, it reflects our reality",
+    validationNo: "No, it doesn't reflect our reality",
+    validationNotePlaceholder: "Optional detail",
+    adoptionQuestion: "Is this worth acting on now?",
+    adoptionYes: "Yes, worth acting on now",
+    adoptionNotNow: "Not now",
+    changeQuestion: "What do you want to change?",
+    changePlaceholder: "e.g. Performance indicators actually used in monthly review meetings",
+    objectiveQuestion: "What would success look like?",
+    objectiveHelper: "Describe the situation you want to reach, not the problem itself.",
+    objectivePlaceholder: "e.g. Monthly decisions are based on recorded indicators, not impressions.",
   },
   ar: {
     evidence: "الدليل",
@@ -47,11 +58,22 @@ const strings = {
     explore: "استكشف ما اكتشفناه",
     exploreSolution: "استكشف الحل",
     requestSolution: "اطلب هذا الحل",
-    verificationTitle: "هل تريد التحقق بشكل أعمق؟",
-    verificationPlaceholder: "اختياري - لا تُشارَك إجابتك إلا إذا طلبت المساعدة أدناه.",
     priorityBadge: "الأولوية للتحقق",
     priorityLabel: { high: "عالية", medium: "متوسطة", low: "منخفضة" } as Record<Priority, string>,
     confidenceLabel: { low: "منخفضة", medium: "متوسطة", high: "عالية" } as Record<Confidence, string>,
+    validationQuestion: "هل تعكس هذه الإشارة واقع مؤسستك؟",
+    validationHelper: "إجابتك تساعدنا على فهم دقة هذه الإشارة، ولا تغيّر نتيجة التشخيص.",
+    validationYes: "نعم، تعكس واقعنا",
+    validationNo: "لا، لا تعكس واقعنا",
+    validationNotePlaceholder: "تفصيل اختياري",
+    adoptionQuestion: "هل يستحق هذا الأمر العمل عليه الآن؟",
+    adoptionYes: "نعم، يستحق العمل عليه الآن",
+    adoptionNotNow: "ليس الآن",
+    changeQuestion: "ما الذي تريد تغييره؟",
+    changePlaceholder: "مثال: أن تُستخدم مؤشرات الأداء فعليًا في اجتماعات المراجعة الشهرية",
+    objectiveQuestion: "كيف سيبدو النجاح؟",
+    objectiveHelper: "صف الوضع الذي تريد الوصول إليه، لا المشكلة نفسها.",
+    objectivePlaceholder: "مثال: قرارات الإدارة الشهرية تستند إلى مؤشرات مسجَّلة، لا إلى الانطباع.",
   },
 };
 
@@ -60,6 +82,29 @@ const priorityDot: Record<Priority, string> = {
   medium: "bg-navy",
   low: "bg-line",
 };
+
+function ChoiceButton({
+  selected,
+  onClick,
+  children,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "rounded-full border px-4 py-1.5 text-xs font-medium transition-colors",
+        selected ? "border-ink bg-ink text-paper" : "border-line text-ink hover:border-ink"
+      )}
+    >
+      {children}
+    </button>
+  );
+}
 
 export function FindingCard({
   finding,
@@ -74,31 +119,55 @@ export function FindingCard({
   locale?: Locale;
   variant?: "priority" | "secondary";
 }) {
-  const { advanceFindingStatus } = useOrgDiagnosis();
+  const { findingProgress, openFinding, setValidation, setAdoption, setObjective, markHelpRequested } =
+    useOrgDiagnosis();
   const [open, setOpen] = useState(false);
   const [solutionOpen, setSolutionOpen] = useState(false);
-  const [verificationNote, setVerificationNote] = useState("");
+  const progress = findingProgress[finding.id];
+  const [validationNote, setValidationNote] = useState(progress?.validationNote ?? "");
+  const [changeStatement, setChangeStatement] = useState(progress?.changeStatement ?? "");
+  const [objectiveText, setObjectiveText] = useState(progress?.objective ?? "");
   const t = strings[locale];
   const isPriority = variant === "priority";
 
   const requestHref = solution
-    ? buildRequestHref({ organizationName, solution, finding, locale, verificationNote })
+    ? buildRequestHref({ organizationName, solution, finding, locale, verificationNote: validationNote })
     : undefined;
 
   function handleToggle() {
     setOpen((v) => {
       const next = !v;
-      if (next) advanceFindingStatus(finding.id, "pending-verification");
+      if (next) openFinding(finding.id);
       return next;
     });
   }
 
-  function handleVerificationBlur() {
-    if (verificationNote.trim().length > 0) advanceFindingStatus(finding.id, "verified");
+  function handleValidate(confirmed: boolean) {
+    setValidation(finding.id, confirmed ? "validated" : "not-validated", validationNote.trim() || undefined);
+  }
+
+  function handleValidationNoteBlur() {
+    if (progress?.validation) {
+      setValidation(finding.id, progress.validation, validationNote.trim() || undefined);
+    }
+  }
+
+  function handleAdopt(adopted: boolean) {
+    setAdoption(finding.id, adopted ? "adopted" : "not-adopted", adopted ? changeStatement.trim() || undefined : undefined);
+  }
+
+  function handleChangeStatementBlur() {
+    if (progress?.adoption === "adopted") {
+      setAdoption(finding.id, "adopted", changeStatement.trim() || undefined);
+    }
+  }
+
+  function handleObjectiveBlur() {
+    if (objectiveText.trim()) setObjective(finding.id, objectiveText.trim());
   }
 
   function handleRequestClick() {
-    advanceFindingStatus(finding.id, "help-requested");
+    markHelpRequested(finding.id);
   }
 
   const priorityPill = (
@@ -201,17 +270,71 @@ export function FindingCard({
             </div>
           )}
 
-          <div>
-            <p className="text-sm font-medium text-ink">{t.verificationTitle}</p>
-            <p className="mt-1 text-xs text-muted">{finding.verificationPrompt[locale]}</p>
+          {/* Validation - "does this reflect reality?", never a score, never affects Confidence/Priority. */}
+          <div className="rounded-xl bg-paper-alt p-4">
+            <p className="text-sm font-medium text-ink">{t.validationQuestion}</p>
+            <p className="mt-1 text-xs text-muted">{t.validationHelper}</p>
+            <div className="mt-2.5 flex flex-wrap gap-2">
+              <ChoiceButton selected={progress?.validation === "validated"} onClick={() => handleValidate(true)}>
+                {t.validationYes}
+              </ChoiceButton>
+              <ChoiceButton selected={progress?.validation === "not-validated"} onClick={() => handleValidate(false)}>
+                {t.validationNo}
+              </ChoiceButton>
+            </div>
             <textarea
-              value={verificationNote}
-              onChange={(e) => setVerificationNote(e.target.value)}
-              onBlur={handleVerificationBlur}
-              placeholder={t.verificationPlaceholder}
+              value={validationNote}
+              onChange={(e) => setValidationNote(e.target.value)}
+              onBlur={handleValidationNoteBlur}
+              placeholder={finding.verificationPrompt[locale] || t.validationNotePlaceholder}
               rows={2}
-              className="mt-2 w-full resize-none rounded-xl border border-line px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-ink"
+              className="mt-2.5 w-full resize-none rounded-xl border border-line bg-paper px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-ink"
             />
+
+            {/* Adoption - only meaningful once the signal is validated. A "no" here is a valid, neutral stop, not a failure. */}
+            {progress?.validation === "validated" && (
+              <div className="mt-4 border-t border-line pt-4">
+                <p className="text-sm font-medium text-ink">{t.adoptionQuestion}</p>
+                <div className="mt-2.5 flex flex-wrap gap-2">
+                  <ChoiceButton selected={progress?.adoption === "adopted"} onClick={() => handleAdopt(true)}>
+                    {t.adoptionYes}
+                  </ChoiceButton>
+                  <ChoiceButton selected={progress?.adoption === "not-adopted"} onClick={() => handleAdopt(false)}>
+                    {t.adoptionNotNow}
+                  </ChoiceButton>
+                </div>
+
+                {progress?.adoption === "adopted" && (
+                  <div className="mt-3">
+                    <label className="text-xs font-semibold text-muted">{t.changeQuestion}</label>
+                    <input
+                      type="text"
+                      value={changeStatement}
+                      onChange={(e) => setChangeStatement(e.target.value)}
+                      onBlur={handleChangeStatementBlur}
+                      placeholder={t.changePlaceholder}
+                      className="mt-1.5 w-full rounded-xl border border-line bg-paper px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-ink"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Objective - only once the finding has been adopted for action. */}
+            {progress?.adoption === "adopted" && (
+              <div className="mt-4 border-t border-line pt-4">
+                <p className="text-sm font-medium text-ink">{t.objectiveQuestion}</p>
+                <p className="mt-1 text-xs text-muted">{t.objectiveHelper}</p>
+                <input
+                  type="text"
+                  value={objectiveText}
+                  onChange={(e) => setObjectiveText(e.target.value)}
+                  onBlur={handleObjectiveBlur}
+                  placeholder={t.objectivePlaceholder}
+                  className="mt-2 w-full rounded-xl border border-line bg-paper px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-ink"
+                />
+              </div>
+            )}
           </div>
 
           {solution && (

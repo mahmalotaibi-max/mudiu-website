@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useSyncExternalStore } from "react";
-import type { AnswerValue, FindingTrackingStatus, OrgDiagnosticProfile } from "@/lib/platform/orgDiagnosisTypes";
+import type { AnswerValue, FindingProgress, OrgDiagnosticProfile } from "@/lib/platform/orgDiagnosisTypes";
 
 // Independent from `PlatformProvider` (the old Goal->Impact engine's
 // hasRun flag) on purpose: this stores an actual profile (org name +
@@ -9,15 +9,8 @@ import type { AnswerValue, FindingTrackingStatus, OrgDiagnosticProfile } from "@
 const STORAGE_KEY = "mudiu-org-diagnosis-profile";
 // My Organization's local Finding tracker - never a backend record, and
 // never used to compute Confidence or scores, only to remember what the
-// visitor has already looked at on this device.
-const FINDING_STATUS_KEY = "mudiu-org-diagnosis-finding-status";
-
-const statusRank: Record<FindingTrackingStatus, number> = {
-  new: 0,
-  "pending-verification": 1,
-  verified: 2,
-  "help-requested": 3,
-};
+// visitor has already done with each finding on this device.
+const FINDING_PROGRESS_KEY = "mudiu-org-diagnosis-finding-status";
 
 let listeners: Array<() => void> = [];
 function notify() {
@@ -59,24 +52,38 @@ function getServerSnapshot(): OrgDiagnosticProfile | null {
 // value hasn't changed, or React throws its "getSnapshot should be cached"
 // infinite-loop guard. Returning `{}` fresh on every call (even from the
 // server snapshot) trips that guard just as easily as from the client one.
-const EMPTY_FINDING_STATUS: Record<string, FindingTrackingStatus> = {};
+const EMPTY_FINDING_PROGRESS: Record<string, FindingProgress> = {};
 
-let cachedStatusRaw: string | null = null;
-let cachedStatus: Record<string, FindingTrackingStatus> = EMPTY_FINDING_STATUS;
-function readFindingStatus(): Record<string, FindingTrackingStatus> {
+let cachedProgressRaw: string | null = null;
+let cachedProgress: Record<string, FindingProgress> = EMPTY_FINDING_PROGRESS;
+function readFindingProgress(): Record<string, FindingProgress> {
   try {
-    const raw = window.localStorage.getItem(FINDING_STATUS_KEY);
-    if (raw !== cachedStatusRaw) {
-      cachedStatusRaw = raw;
-      cachedStatus = raw ? (JSON.parse(raw) as Record<string, FindingTrackingStatus>) : EMPTY_FINDING_STATUS;
+    const raw = window.localStorage.getItem(FINDING_PROGRESS_KEY);
+    if (raw !== cachedProgressRaw) {
+      cachedProgressRaw = raw;
+      cachedProgress = raw ? (JSON.parse(raw) as Record<string, FindingProgress>) : EMPTY_FINDING_PROGRESS;
     }
-    return cachedStatus;
+    return cachedProgress;
   } catch {
-    return EMPTY_FINDING_STATUS;
+    return EMPTY_FINDING_PROGRESS;
   }
 }
-function getFindingStatusServerSnapshot(): Record<string, FindingTrackingStatus> {
-  return EMPTY_FINDING_STATUS;
+function getFindingProgressServerSnapshot(): Record<string, FindingProgress> {
+  return EMPTY_FINDING_PROGRESS;
+}
+
+function writeFindingProgress(findingId: string, patch: Partial<FindingProgress>) {
+  try {
+    const current = readFindingProgress();
+    const updated: Record<string, FindingProgress> = {
+      ...current,
+      [findingId]: { ...current[findingId], ...patch },
+    };
+    window.localStorage.setItem(FINDING_PROGRESS_KEY, JSON.stringify(updated));
+  } catch {
+    // Ignore - nothing to persist, but we still notify for this session.
+  }
+  notify();
 }
 
 interface OrgDiagnosisContextValue {
@@ -84,23 +91,30 @@ interface OrgDiagnosisContextValue {
   complete: (organizationName: string, answers: Partial<Record<string, AnswerValue>>) => void;
   completeWithProfile: (profile: OrgDiagnosticProfile) => void;
   reset: () => void;
-  findingStatus: Record<string, FindingTrackingStatus>;
-  /** Moves a finding's tracked status forward only - never downgrades it
-   * (e.g. re-opening a finding already marked "verified" keeps it there). */
-  advanceFindingStatus: (findingId: string, next: FindingTrackingStatus) => void;
+  findingProgress: Record<string, FindingProgress>;
+  /** Marks a finding as opened (drives "pending-verification" display) - a no-op past that point. */
+  openFinding: (findingId: string) => void;
+  /** "Does this signal reflect reality?" - never affects Confidence or Priority. */
+  setValidation: (findingId: string, outcome: "validated" | "not-validated", note?: string) => void;
+  /** "Is this worth acting on now?" - only meaningful once Validation is "validated". */
+  setAdoption: (findingId: string, outcome: "adopted" | "not-adopted", changeStatement?: string) => void;
+  /** "What would success look like?" - only meaningful once Adoption is "adopted". */
+  setObjective: (findingId: string, objective: string) => void;
+  /** The existing solution-request shortcut - independent of Validation/Adoption/Objective. */
+  markHelpRequested: (findingId: string) => void;
 }
 
 const OrgDiagnosisContext = createContext<OrgDiagnosisContextValue | null>(null);
 
 export function OrgDiagnosisProvider({ children }: { children: React.ReactNode }) {
   const profile = useSyncExternalStore(subscribe, readProfile, getServerSnapshot);
-  const findingStatus = useSyncExternalStore(subscribe, readFindingStatus, getFindingStatusServerSnapshot);
+  const findingProgress = useSyncExternalStore(subscribe, readFindingProgress, getFindingProgressServerSnapshot);
 
   const completeWithProfile = useCallback((next: OrgDiagnosticProfile) => {
     const withTimestamp: OrgDiagnosticProfile = { ...next, completedAt: new Date().toISOString() };
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(withTimestamp));
-      window.localStorage.removeItem(FINDING_STATUS_KEY);
+      window.localStorage.removeItem(FINDING_PROGRESS_KEY);
     } catch {
       // Ignore - nothing to persist, but we still notify for this session.
     }
@@ -117,29 +131,54 @@ export function OrgDiagnosisProvider({ children }: { children: React.ReactNode }
   const reset = useCallback(() => {
     try {
       window.localStorage.removeItem(STORAGE_KEY);
-      window.localStorage.removeItem(FINDING_STATUS_KEY);
+      window.localStorage.removeItem(FINDING_PROGRESS_KEY);
     } catch {
       // Ignore.
     }
     notify();
   }, []);
 
-  const advanceFindingStatus = useCallback((findingId: string, next: FindingTrackingStatus) => {
-    try {
-      const current = readFindingStatus();
-      const currentStatus = current[findingId] ?? "new";
-      if (statusRank[next] <= statusRank[currentStatus]) return;
-      const updated = { ...current, [findingId]: next };
-      window.localStorage.setItem(FINDING_STATUS_KEY, JSON.stringify(updated));
-    } catch {
-      // Ignore.
-    }
-    notify();
+  const openFinding = useCallback((findingId: string) => {
+    if (readFindingProgress()[findingId]?.opened) return;
+    writeFindingProgress(findingId, { opened: true });
+  }, []);
+
+  const setValidation = useCallback((findingId: string, outcome: "validated" | "not-validated", note?: string) => {
+    writeFindingProgress(findingId, { validation: outcome, validationNote: note });
+  }, []);
+
+  const setAdoption = useCallback(
+    (findingId: string, outcome: "adopted" | "not-adopted", changeStatement?: string) => {
+      writeFindingProgress(
+        findingId,
+        outcome === "adopted" ? { adoption: outcome, changeStatement } : { adoption: outcome }
+      );
+    },
+    []
+  );
+
+  const setObjective = useCallback((findingId: string, objective: string) => {
+    writeFindingProgress(findingId, { objective });
+  }, []);
+
+  const markHelpRequested = useCallback((findingId: string) => {
+    writeFindingProgress(findingId, { helpRequested: true });
   }, []);
 
   return (
     <OrgDiagnosisContext.Provider
-      value={{ profile, complete, completeWithProfile, reset, findingStatus, advanceFindingStatus }}
+      value={{
+        profile,
+        complete,
+        completeWithProfile,
+        reset,
+        findingProgress,
+        openFinding,
+        setValidation,
+        setAdoption,
+        setObjective,
+        markHelpRequested,
+      }}
     >
       {children}
     </OrgDiagnosisContext.Provider>
