@@ -8,7 +8,7 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { ArticleCover } from "@/components/sections/ArticleCover";
 import { ArticleLikeButton } from "@/components/ArticleLikeButton";
 import { ArticleDownloadButton } from "@/components/ArticleDownloadButton";
-import { getAllArticles, getArticleBySlug, type ArticleBlock } from "@/content/articles";
+import { formatReadTime, getAllArticles, getArticleBySlug, type ArticleBlock } from "@/content/articles";
 import { cn } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -145,7 +145,7 @@ export default async function ArticlePage({
             <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-muted">
               <span>{formatDate(article.date)}</span>
               <span aria-hidden>·</span>
-              <span>{article.readMinutes} دقائق قراءة</span>
+              <span>{formatReadTime(article.readMinutes)}</span>
             </div>
 
             <div className="no-print mt-6 flex flex-wrap items-center gap-3">
