@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ChevronLeft, Quote } from "lucide-react";
+import { ArrowLeft, ChevronLeft, FileText, Quote } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { ArticleCover } from "@/components/sections/ArticleCover";
 import { ArticleLikeButton } from "@/components/ArticleLikeButton";
 import { ArticleDownloadButton } from "@/components/ArticleDownloadButton";
-import { getAllArticles, getArticleBySlug, type ArticleBlock } from "@/content/articles";
+import { formatReadTime, getAllArticles, getArticleBySlug, type ArticleBlock } from "@/content/articles";
 import { cn } from "@/lib/utils";
 
 export function generateStaticParams() {
@@ -145,12 +145,12 @@ export default async function ArticlePage({
             <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-muted">
               <span>{formatDate(article.date)}</span>
               <span aria-hidden>·</span>
-              <span>{article.readMinutes} دقائق قراءة</span>
+              <span>{formatReadTime(article.readMinutes)}</span>
             </div>
 
             <div className="no-print mt-6 flex flex-wrap items-center gap-3">
               <ArticleLikeButton slug={article.slug} />
-              <ArticleDownloadButton />
+              <ArticleDownloadButton href={article.pdf} />
             </div>
 
             <ArticleCover
@@ -168,6 +168,26 @@ export default async function ArticlePage({
             {article.blocks.map((block, i) => (
               <Block key={i} block={block} />
             ))}
+
+            {article.pdf && (
+              <a
+                href={article.pdf}
+                target="_blank"
+                rel="noopener"
+                className="group mt-12 flex items-center gap-5 rounded-2xl border border-line bg-paper-alt p-6 transition-colors hover:border-ink"
+              >
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-orange text-paper">
+                  <FileText className="size-5" aria-hidden />
+                </span>
+                <span className="flex-1">
+                  <span className="block text-base font-semibold text-ink">للاستزادة: اقرأ المقالة كاملة</span>
+                  <span className="mt-1 block text-sm leading-relaxed text-muted">
+                    القصة كاملة، والأدلة العلمية بالتفصيل، والنماذج العملية، مع قائمة المراجع. ملف PDF.
+                  </span>
+                </span>
+                <ArrowLeft className="size-5 shrink-0 text-muted transition-transform group-hover:-translate-x-1" aria-hidden />
+              </a>
+            )}
           </RevealOnScroll>
         </Container>
       </section>

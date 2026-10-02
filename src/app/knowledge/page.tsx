@@ -5,7 +5,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { ArticleCover } from "@/components/sections/ArticleCover";
 import { knowledgeTypes } from "@/content/knowledge";
-import { getAllArticles } from "@/content/articles";
+import { formatReadTime, getAllArticles } from "@/content/articles";
 
 export const metadata: Metadata = {
   title: "المعرفة",
@@ -78,7 +78,7 @@ export default function KnowledgePage() {
                     <div className="mt-6 flex items-center gap-3 text-xs text-muted">
                       <span>{formatDate(item.date)}</span>
                       <span aria-hidden>·</span>
-                      <span>{item.readMinutes} دقائق قراءة</span>
+                      <span>{formatReadTime(item.readMinutes)}</span>
                     </div>
                   </Link>
                 </RevealOnScroll>
